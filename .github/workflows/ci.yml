@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      # No dependencies: the check uses only the standard library, so CI
+      # cannot fail because a package index was slow.
+      - name: Check the page
+        run: python scripts/check_site.py
