@@ -31,3 +31,11 @@
 .project-signals{margin-top:8px}
 .project-detail h3{margin-bottom:8px}
 @media(max-width:760px){.project-layout{min-height:0}.project-meta{align-items:flex-start;flex-direction:column}.project-brief{grid-template-columns:1fr}.project-evidence>div{flex-direction:column;gap:7px}}
+
+/* Direct proof links and accessible project tabs */
+.evidence-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:11px;border-top:1px solid #e0e5ec}
+.evidence-links a{display:inline-flex;align-items:center;min-height:34px;padding:7px 10px;border:1px solid #c4cede;border-radius:4px;color:#315fce;background:#f7f9fc;text-decoration:none;font:600 .64rem var(--mono);transition:transform .2s,border-color .2s,background .2s}
+.evidence-links a:hover{transform:translateY(-1px);border-color:#6688df;background:#eef3ff}
+.project-list button:focus-visible,.evidence-links a:focus-visible,.project-footer>a:focus-visible{outline:3px solid #55d6c2;outline-offset:3px}
+.project-detail:focus{outline:none}
+@media(max-width:580px){.evidence-links a{flex:1;justify-content:center;min-width:88px}}
