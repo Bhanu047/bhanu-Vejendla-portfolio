@@ -30,7 +30,9 @@ class Collector(HTMLParser):
             self.ids.add(d["id"])
         if tag == "a":
             self.links.append(d.get("href") or "")
-        if tag == "img" and not d.get("alt"):
+        # alt="" is valid for decorative images when adjacent text already
+        # communicates the same information. Fail only when alt is omitted.
+        if tag == "img" and "alt" not in d:
             self.imgs_without_alt.append(d.get("src") or "?")
         # Only the document title. An <svg><title> is an accessibility label
         # for the graphic, not the page name, and counting it produced a
