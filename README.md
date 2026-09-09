@@ -2,7 +2,7 @@
 
 Senior Data Engineer portfolio built with plain HTML, CSS and JavaScript.
 
-**Live at [bhanu-portfolio-preview.bhanumanideep.chatgpt.site](https://bhanu-portfolio-preview.bhanumanideep.chatgpt.site)**
+**Live at [bhanu047.github.io/bhanu-Vejendla-portfolio](https://bhanu047.github.io/bhanu-Vejendla-portfolio/)**
 
 ## Why there is no framework
 
