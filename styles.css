@@ -248,3 +248,6 @@
 @keyframes overviewStageFocus{0%,16%{opacity:1}21%,100%{opacity:0}}
 
 
+
+/* Hide Netlify promotional badge injected on the netlify.app preview domain. */
+iframe#nl-badge-frame{display:none!important;visibility:hidden!important;pointer-events:none!important}
