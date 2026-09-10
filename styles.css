@@ -250,15 +250,13 @@
 }
 
 /* CSS-driven motion layer: remains visible even if timer callbacks are throttled. */
-.workflow-track:after{content:"";position:absolute;z-index:3;top:54px;left:8%;width:10px;height:10px;border-radius:50%;background:#63ddbd;box-shadow:0 0 0 6px #63ddbd1c,0 0 18px #63ddbd;animation:workflowPacketRail 6.6s linear infinite;pointer-events:none}
 .workflow-track li:after{content:"";position:absolute;inset:-1px;border:1px solid #6e91eb;border-radius:6px;box-shadow:0 0 0 2px #557ce91c,0 12px 30px #0004;opacity:0;animation:workflowStageFocus 13.2s linear infinite;pointer-events:none}
 .workflow-track li:nth-child(2):after{animation-delay:-11s}.workflow-track li:nth-child(3):after{animation-delay:-8.8s}.workflow-track li:nth-child(4):after{animation-delay:-6.6s}.workflow-track li:nth-child(5):after{animation-delay:-4.4s}.workflow-track li:nth-child(6):after{animation-delay:-2.2s}
 .pipeline article:before{content:"";position:absolute;inset:-1px;border:1px solid #6590f0;border-radius:5px;box-shadow:0 0 0 2px #4d7be525,0 0 18px #4d7be52e;opacity:0;animation:overviewStageFocus 9s linear infinite;pointer-events:none}
 .pipeline article:nth-of-type(2):before{animation-delay:-7.2s}.pipeline article:nth-of-type(3):before{animation-delay:-5.4s}.pipeline article:nth-of-type(4):before{animation-delay:-3.6s}.pipeline article:nth-of-type(5):before{animation-delay:-1.8s}
-@keyframes workflowPacketRail{0%{left:8%;opacity:.35}8%,92%{opacity:1}100%{left:92%;opacity:.35}}
 @keyframes workflowStageFocus{0%,15%{opacity:1}19%,100%{opacity:0}}
 @keyframes overviewStageFocus{0%,16%{opacity:1}21%,100%{opacity:0}}
 
 @media(prefers-reduced-motion:reduce){
-  .workflow-track:after,.workflow-track li:after,.pipeline article:before{animation:none!important;display:none}
+  .workflow-track li:after,.pipeline article:before{animation:none!important;display:none}
 }
