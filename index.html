@@ -79,16 +79,22 @@
 </i> LIVE DATA FLOW</em>
 </div>
 <div class="metrics">
-<span>WORKLOADS <b>BATCH + STREAM</b>
+<span>INGESTION <b>BATCH + STREAM</b>
 </span>
-<span>DELIVERY <b>CI/CD</b>
+<span>QUALITY <b>CONTRACTS + TESTS</b>
 </span>
-<span>DESIGN <b>CLOUD NATIVE</b>
+<span>OPERATIONS <b>MONITORED + RECOVERABLE</b>
 </span>
 </div>
 <div class="activity">
-<span>EVENT STREAM</span>
+<span>PIPELINE TELEMETRY</span>
 <div>
+<i>
+</i>
+<i>
+</i>
+<i>
+</i>
 <i>
 </i>
 <i>
@@ -103,17 +109,26 @@
 <b id="live-state">INGESTING EVENTS</b>
 </div>
 <div class="pipeline">
-<article>
-<small>SOURCES</small>
+<article class="active">
+<small>SOURCES <em>READY</em></small>
 <div>API / CDC</div>
-<div>KAFKA</div>
+<div>EVENTS / FILES</div>
 </article>
 <i>
 <b>
 </b>
 </i>
 <article>
-<small>COMPUTE</small>
+<small>INGEST <em>READY</em></small>
+<div>KAFKA</div>
+<div>AIRFLOW / ADF</div>
+</article>
+<i>
+<b>
+</b>
+</i>
+<article>
+<small>PROCESS <em>READY</em></small>
 <div>SPARK</div>
 <div>DATABRICKS</div>
 </article>
@@ -122,7 +137,7 @@
 </b>
 </i>
 <article>
-<small>LAKEHOUSE</small>
+<small>STORE <em>READY</em></small>
 <div>DELTA LAKE</div>
 <div>SNOWFLAKE</div>
 </article>
@@ -131,16 +146,16 @@
 </b>
 </i>
 <article>
-<small>CONSUMERS</small>
+<small>SERVE <em>READY</em></small>
 <div>BI / ML</div>
 <div>DATA PRODUCTS</div>
 </article>
 </div>
 <div class="console-log">
-<span>✓ schema contracts</span>
-<span>✓ quality gates</span>
-<span>✓ lineage & observability</span>
-<span>✓ failure recovery</span>
+<span><i></i> schema contracts</span>
+<span><i></i> quality gates</span>
+<span><i></i> lineage & observability</span>
+<span><i></i> failure recovery</span>
 </div>
 </div>
 </div>
@@ -327,7 +342,7 @@
 <div class="workflow-console">
 <div class="workflow-console-bar">
 <span><i></i><i></i><i></i></span>
-<b>delivery_workflow.yml</b>
+<b>delivery_workflow.yaml</b>
 <em><i></i><span id="workflow-state">DISCOVERING SOURCES</span></em>
 </div>
 <div class="workflow-health">
@@ -335,29 +350,22 @@
 <span>QUALITY GATE <b>PASSING</b></span>
 <span>RECOVERY <b>IDEMPOTENT</b></span>
 </div>
-<div class="platform-map">
-<div class="platform-map-label"><span>DELIVERY PATH</span><b><i></i> DATA MOVING</b></div>
-<div class="platform-flow">
-<article class="is-active"><small>01 · SOURCES</small><h3>Understand</h3><p>APIs · CDC · Events · Files</p></article>
-<div class="platform-link"><i></i></div>
-<article><small>02 · INGEST</small><h3>Move safely</h3><p>Kafka · ADF · Airflow</p></article>
-<div class="platform-link"><i></i></div>
-<article><small>03 · PROCESS</small><h3>Transform</h3><p>Spark · Databricks · dbt</p></article>
-<div class="platform-link"><i></i></div>
-<article><small>04 · STORE</small><h3>Organize</h3><p>Delta · Snowflake · BigQuery</p></article>
-<div class="platform-link"><i></i></div>
-<article><small>05 · SERVE</small><h3>Deliver</h3><p>BI · ML · Data products</p></article>
+<div class="workflow-track-wrap">
+<ol class="workflow-track">
+<li class="is-active"><small>01 · DISCOVER</small><h3>Understand the source</h3><p>Volume, latency, ownership and failure modes.</p></li>
+<li><small>02 · CONTRACT</small><h3>Define expectations</h3><p>Schemas, quality rules, SLAs and access.</p></li>
+<li><small>03 · INGEST</small><h3>Move data safely</h3><p>Replayable batch or streaming ingestion.</p></li>
+<li><small>04 · TRANSFORM</small><h3>Build trusted models</h3><p>Tested, incremental and scalable processing.</p></li>
+<li><small>05 · DELIVER</small><h3>Serve the right shape</h3><p>Governed tables and analytics-ready products.</p></li>
+<li><small>06 · OPERATE</small><h3>Design for reality</h3><p>Monitoring, recovery, performance and cost.</p></li>
+</ol>
 </div>
-<div class="control-plane">
-<div class="control-heading"><span>OPERATIONAL CONTROL PLANE</span><b>Continuous feedback and recovery ↺</b></div>
-<div class="control-grid">
-<span><i>01</i><b>Contracts</b><small>Schema + ownership</small></span>
-<span><i>02</i><b>Quality</b><small>Tests + reconciliation</small></span>
-<span><i>03</i><b>Observability</b><small>Logs + lineage + alerts</small></span>
-<span><i>04</i><b>Security</b><small>RBAC + encryption</small></span>
-<span><i>05</i><b>Recovery</b><small>Retries + backfills</small></span>
-</div>
-</div>
+<div class="workflow-guardrails">
+<span><i>✓</i> Schema contracts</span>
+<span><i>✓</i> Quality checks</span>
+<span><i>✓</i> Lineage</span>
+<span><i>✓</i> Observability</span>
+<span><i>✓</i> Failure recovery</span>
 </div>
 </div>
 </section>
