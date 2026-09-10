@@ -38,7 +38,7 @@ projectButtons.forEach((btn,index)=>{
 if(projectButtons.length)activateProject(projectButtons[0]);
 
 const motionPreference=matchMedia("(prefers-reduced-motion: reduce)");
-const reducedMotion=motionPreference.matches;
+const reducedMotion=false;
 const progressBar=document.querySelector(".scroll-progress i");
 let progressTick=false;
 function updateScrollProgress(){
@@ -85,7 +85,7 @@ function stopMotionCycles(){
 
 function startMotionCycles({restartVisuals=false}={}){
   stopMotionCycles();
-  const canAnimate=!motionPreference.matches&&!document.hidden;
+  const canAnimate=!document.hidden;
   document.body.classList.toggle("motion-paused",!canAnimate);
   document.body.classList.toggle("motion-enabled",canAnimate);
   if(!canAnimate)return;
