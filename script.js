@@ -50,9 +50,9 @@ function updateScrollProgress(){
 addEventListener("scroll",()=>{if(!progressTick){requestAnimationFrame(updateScrollProgress);progressTick=true}},{passive:true});
 updateScrollProgress();
 
-const workflowStages=[...document.querySelectorAll(".workflow-track li")];
+const workflowStages=[...document.querySelectorAll(".platform-flow article")];
 const workflowState=document.getElementById("workflow-state");
-const workflowStates=["DISCOVERING SOURCES","DEFINING CONTRACTS","INGESTING DATA","TRANSFORMING MODELS","PUBLISHING PRODUCTS","MONITORING PIPELINE"];
+const workflowStates=["DISCOVERING SOURCES","INGESTING DATA","TRANSFORMING MODELS","PUBLISHING PRODUCTS","MONITORING PIPELINE"];
 let workflowIndex=0;
 if(workflowStages.length&&!reducedMotion){
   setInterval(()=>{
