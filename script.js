@@ -37,3 +37,56 @@ projectButtons.forEach((btn,index)=>{
 activateProject(projectButtons[0]);
 
 if(!matchMedia("(prefers-reduced-motion: reduce)").matches){const els=document.querySelectorAll(".section-title,.career article,.stack-group");const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.animate([{opacity:0,transform:"translateY(18px)"},{opacity:1,transform:"none"}],{duration:550,easing:"ease",fill:"both"});observer.unobserve(e.target)}}),{threshold:.15});els.forEach(x=>observer.observe(x));}
+
+const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const progressBar=document.querySelector(".scroll-progress i");
+let progressTick=false;
+function updateScrollProgress(){
+  const available=document.documentElement.scrollHeight-innerHeight;
+  const progress=available>0?Math.min(1,scrollY/available):0;
+  if(progressBar)progressBar.style.width=`${progress*100}%`;
+  progressTick=false;
+}
+addEventListener("scroll",()=>{if(!progressTick){requestAnimationFrame(updateScrollProgress);progressTick=true}},{passive:true});
+updateScrollProgress();
+
+const workflowStages=[...document.querySelectorAll(".workflow-track li")];
+const workflowState=document.getElementById("workflow-state");
+const workflowStates=["DISCOVERING SOURCES","DEFINING CONTRACTS","INGESTING DATA","TRANSFORMING MODELS","PUBLISHING PRODUCTS","MONITORING PIPELINE"];
+let workflowIndex=0;
+if(workflowStages.length&&!reducedMotion){
+  setInterval(()=>{
+    workflowStages[workflowIndex].classList.remove("is-active");
+    workflowIndex=(workflowIndex+1)%workflowStages.length;
+    workflowStages[workflowIndex].classList.add("is-active");
+    if(workflowState)workflowState.textContent=workflowStates[workflowIndex];
+  },1700);
+}
+
+const proof=document.querySelector(".proof");
+if(proof&&!reducedMotion){
+  const numbers=[...proof.querySelectorAll("strong")];
+  const targetValues=numbers.map(el=>({el,value:Number.parseInt(el.textContent,10),suffix:el.textContent.includes("+")?"+":""}));
+  const counterObserver=new IntersectionObserver(entries=>{
+    if(!entries[0].isIntersecting)return;
+    const start=performance.now();
+    const duration=900;
+    function frame(now){
+      const t=Math.min(1,(now-start)/duration);
+      const eased=1-Math.pow(1-t,3);
+      targetValues.forEach(item=>item.el.textContent=`${Math.round(item.value*eased)}${item.suffix}`);
+      if(t<1)requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+    counterObserver.disconnect();
+  },{threshold:.35});
+  counterObserver.observe(proof);
+}
+
+if(!reducedMotion){
+  const revealItems=document.querySelectorAll(".about-grid,.workflow-console,.project-layout,.cta h2");
+  const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add("is-visible");revealObserver.unobserve(entry.target)}
+  }),{threshold:.12});
+  revealItems.forEach(item=>{item.classList.add("reveal-ready");revealObserver.observe(item)});
+}
