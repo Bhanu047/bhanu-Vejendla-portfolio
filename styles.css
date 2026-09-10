@@ -190,3 +190,61 @@
   .scroll-progress i,.workflow-track:before,.workflow-console-bar>em i{animation:none!important}
   .reveal-ready{opacity:1;transform:none}
 }
+
+/* Production data-platform workflow */
+.platform-map{padding:20px 18px 18px;background:
+  linear-gradient(#17223a55 1px,transparent 1px),
+  linear-gradient(90deg,#17223a55 1px,transparent 1px),#0b1020;
+  background-size:28px 28px}
+.platform-map-label,.control-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;font:500 .58rem var(--mono);letter-spacing:.08em;color:#75869f}
+.platform-map-label b{display:flex;align-items:center;gap:7px;color:#5bd9bb;font-weight:500}
+.platform-map-label b i{width:7px;height:7px;border-radius:50%;background:#5bd9bb;box-shadow:0 0 0 5px #5bd9bb18;animation:pulse 2s infinite}
+.platform-flow{display:grid;grid-template-columns:1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr;align-items:stretch;margin-top:14px}
+.platform-flow article{position:relative;min-height:126px;padding:17px 14px;border:1px solid #33435e;border-radius:7px;background:linear-gradient(145deg,#121d31,#0d1627);box-shadow:inset 0 1px #ffffff08;transition:border-color .35s,box-shadow .35s,transform .35s}
+.platform-flow article:after{content:"";position:absolute;inset:auto 14px 0;height:2px;background:#2f4160;transition:background .35s,box-shadow .35s}
+.platform-flow article.is-active{transform:translateY(-3px);border-color:#6286e1;box-shadow:0 12px 26px #0006,0 0 0 2px #5177d71c}
+.platform-flow article.is-active:after{background:#5bd9bb;box-shadow:0 0 12px #5bd9bb}
+.platform-flow small{font:500 .54rem var(--mono);letter-spacing:.07em;color:#7193eb}
+.platform-flow h3{margin:16px 0 6px;font-size:1rem}
+.platform-flow p{margin:0;color:#8999b0;font:400 .62rem/1.55 var(--mono)}
+.platform-link{position:relative;align-self:center;height:2px;background:#385687;overflow:hidden}
+.platform-link:after{content:"";position:absolute;right:0;top:-3px;border-left:6px solid #5e83dc;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.platform-link i{position:absolute;left:-8px;top:-3px;width:8px;height:8px;border-radius:50%;background:#5bd9bb;box-shadow:0 0 10px #5bd9bb;animation:platformPacket 1.45s linear infinite}
+.platform-link:nth-child(4) i{animation-delay:.25s}.platform-link:nth-child(6) i{animation-delay:.5s}.platform-link:nth-child(8) i{animation-delay:.75s}
+.control-plane{margin-top:18px;border:1px solid #2c3b55;border-radius:7px;background:#0e1728;overflow:hidden}
+.control-heading{padding:10px 12px;border-bottom:1px solid #2c3b55;background:#111c30}
+.control-heading b{color:#8294ae;font-weight:400;letter-spacing:0}
+.control-grid{display:grid;grid-template-columns:repeat(5,1fr)}
+.control-grid>span{min-height:78px;padding:13px 12px;border-right:1px solid #2c3b55;display:grid;grid-template-columns:25px 1fr;align-content:center;column-gap:8px}
+.control-grid>span:last-child{border-right:0}
+.control-grid i{grid-row:1/3;width:22px;height:22px;display:grid;place-items:center;border:1px solid #405579;border-radius:5px;color:#5bd9bb;font:500 .5rem var(--mono);font-style:normal}
+.control-grid b{font-size:.72rem;font-weight:600;color:#dce4f1}
+.control-grid small{font:400 .54rem var(--mono);color:#77889f;margin-top:2px}
+@keyframes platformPacket{to{transform:translateX(38px)}}
+
+@media(max-width:900px){
+  .platform-map{overflow-x:auto}
+  .platform-map-label,.control-plane{min-width:1000px}
+  .platform-flow{min-width:1000px}
+  .control-grid{grid-template-columns:repeat(3,1fr)}
+  .control-grid>span{border-bottom:1px solid #2c3b55}
+}
+
+@media(max-width:700px){
+  .platform-map{padding:16px 12px;background-size:24px 24px}
+  .platform-map-label,.control-plane{min-width:0}
+  .platform-map-label{font-size:.53rem}
+  .platform-flow{grid-template-columns:1fr;min-width:0;margin-top:12px}
+  .platform-flow article{min-height:94px;padding:14px}
+  .platform-flow article:nth-of-type(n+4){margin-top:0}
+  .platform-flow h3{margin:10px 0 4px}
+  .platform-link{width:2px;height:20px;justify-self:center}
+  .platform-link:after{right:-3px;top:auto;bottom:0;border-top:6px solid #5e83dc;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:0}
+  .platform-link i{left:-3px;top:-7px;animation:platformPacketMobile 1.45s linear infinite}
+  .control-heading{align-items:flex-start;flex-direction:column;gap:4px}
+  .control-grid{grid-template-columns:1fr 1fr}
+  .control-grid>span{min-height:72px;border-right:1px solid #2c3b55}
+  .control-grid>span:nth-child(2n){border-right:0}
+  .control-grid>span:last-child{grid-column:1/-1}
+}
+@keyframes platformPacketMobile{to{transform:translateY(28px)}}
