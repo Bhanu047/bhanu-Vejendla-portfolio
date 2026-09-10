@@ -373,3 +373,60 @@ header nav a,.social a{font-size:.82rem;font-weight:700}
     25%,100%{opacity:0;transform:translateY(25px)}
   }
 }
+
+/* Softer dark theme for comfortable long-form viewing */
+:root{
+  --ink:#172033;
+  --panel:#202c42;
+  --white:#f2f5fa;
+  --muted:#aeb9ca;
+  --line:#3a4962;
+}
+.dark{background:#172033;color:#f2f5fa}
+header{background:#172033;border-bottom-color:#3b4a63}
+footer{background:#172033;color:#aeb9ca}
+.console{
+  background:
+    radial-gradient(circle at 82% 12%,#547fd326,transparent 30%),
+    linear-gradient(155deg,#202c42,#172033);
+  border-color:#465775;
+  box-shadow:0 28px 58px #0d14263d;
+}
+.console-bar,.workflow-console-bar{background:#26334a;border-bottom-color:#465775;color:#b4bfd0}
+.activity{background:#202c42;border-bottom-color:#465775;color:#aeb9ca}
+.metrics,.console-log{border-color:#465775}
+.metrics span{border-color:#465775;color:#aeb9ca}
+.pipeline article div{background:#26354f;border-color:#50617d}
+.pipeline article.active{background:#2b3b58;border-color:#6f91db;box-shadow:0 8px 22px #1118273d,0 0 0 2px #6f91db22}
+.pipeline article.active div{background:#314563;border-color:#7390c7}
+.toolchips span,.practice-list span,.logo-grid>span{
+  background:#202c42;
+  border-color:#465775;
+  color:#eef3f9;
+}
+.logo-grid>span:hover{background:#293750;border-color:#6f88ad}
+.stack-groups,.stack-grid{border-color:#465775}
+.stack-group,.stack-grid article{border-color:#465775}
+.workflow-console{
+  background:#172033;
+  border-color:#465775;
+  box-shadow:0 22px 52px #1118272b;
+}
+.workflow-health{border-bottom-color:#465775}
+.workflow-health span{border-right-color:#465775;color:#9eacc0}
+.workflow-track-wrap{scrollbar-color:#60708c #172033}
+.workflow-track:before{background:linear-gradient(90deg,#52637f,#6f91db,#68d6c1,#52637f);background-size:220% 100%}
+.workflow-track li{background:#202c42;border-color:#465775}
+.workflow-track li:before{background:#202c42}
+.workflow-track li.is-active{background:#2a3954;border-color:#7798df;box-shadow:0 12px 26px #11182738,0 0 0 2px #6f91db22}
+.workflow-track p{color:#b4bfd0}
+.workflow-guardrails{background:#202c42;border-top-color:#465775}
+.workflow-guardrails span{color:#c7d0dd}
+.lede{color:#cbd3df}
+.stack .section-title>p{color:#b2bdcc}
+.group-heading p{color:#aab6c8}
+.engineering-principles p{color:#b4bfd0}
+@media(max-width:700px){
+  .console{box-shadow:0 16px 36px #11182733}
+  .workflow-console-bar>em{border-top-color:#465775}
+}
