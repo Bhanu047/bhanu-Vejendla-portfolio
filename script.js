@@ -107,7 +107,7 @@ function startMotionCycles({restartVisuals=false}={}){
     workflowTimer=setInterval(()=>{
       workflowIndex=(workflowIndex+1)%Math.min(workflowStates.length,workflowStages.length);
       showWorkflowStage(workflowIndex,{follow:true});
-    },2200);
+    },3200);
   }
 }
 
