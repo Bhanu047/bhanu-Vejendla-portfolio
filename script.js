@@ -1,9 +1,9 @@
-document.getElementById("year").textContent=new Date().getFullYear();
-document.body.classList.add("motion-enabled");
+const year=document.getElementById("year");
+if(year)year.textContent=new Date().getFullYear();
 const liveStates=["READING SOURCE EVENTS","ORCHESTRATING INGESTION","PROCESSING MICRO-BATCH","COMMITTING TRUSTED TABLES","SERVING DATA PRODUCTS"];
+const liveState=document.getElementById("live-state");
 const overviewStages=[...document.querySelectorAll(".console .pipeline article")];
 let liveIndex=0;
-setInterval(()=>{const state=document.getElementById("live-state");if(state){overviewStages[liveIndex]?.classList.remove("active");liveIndex=(liveIndex+1)%liveStates.length;state.textContent=liveStates[liveIndex];overviewStages[liveIndex]?.classList.add("active")}},1800);
 const projects={
  stream:{label:"STREAMING DATA PLATFORM",title:"Weblog Stream",text:"Web events can arrive late, duplicated or malformed. This project shows how I keep a real-time pipeline useful when the input is imperfect and the job has to recover from interruption.",decision:"I separated invalid events into a dead-letter path, used event-time watermarks for bounded state and checkpointed the stream so restart and replay behavior stay explicit.",flow:[{step:"SOURCE",name:"Web events",detail:"JSON events"},{step:"INGEST",name:"Kafka",detail:"Durable stream"},{step:"PROCESS",name:"Spark",detail:"Watermarks + state"},{step:"STORE",name:"Delta Lake",detail:"Idempotent writes"}],signals:["Schema validation","Checkpoint recovery","Late-event handling"],evidence:["Automated Python tests","GitHub Actions CI","Docker Compose environment"],tags:["Kafka","PySpark","Delta Lake","Docker"],url:"https://github.com/Bhanu047/weblog-stream"},
  taxi:{label:"BATCH LAKEHOUSE",title:"NYC Taxi Lakehouse",text:"Monthly public taxi files can change shape, contain invalid records and create duplicate output when a failed load is repeated. This project treats those conditions as design inputs rather than cleanup work.",decision:"I used declared schemas, bronze/silver/gold boundaries and manifest-driven loading. Quality rules stop bad data early, while salted aggregation handles skew without hiding it.",flow:[{step:"SOURCE",name:"NYC TLC",detail:"Monthly trip files"},{step:"BRONZE",name:"Raw + manifest",detail:"Traceable ingestion"},{step:"SILVER",name:"PySpark",detail:"Validated records"},{step:"GOLD",name:"Parquet marts",detail:"Analytics-ready"}],signals:["Idempotent reloads","Schema enforcement","Skew-aware aggregation"],evidence:["Pytest suite","GitHub Actions CI","Documented backfill path"],tags:["PySpark","Parquet","Data Quality","Lakehouse"],url:"https://github.com/Bhanu047/nyc-taxi-lakehouse"},
@@ -35,11 +35,10 @@ projectButtons.forEach((btn,index)=>{
     activateProject(projectButtons[next]);
   });
 });
-activateProject(projectButtons[0]);
+if(projectButtons.length)activateProject(projectButtons[0]);
 
-if(!matchMedia("(prefers-reduced-motion: reduce)").matches){const els=document.querySelectorAll(".section-title,.career article,.stack-group");const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.animate([{opacity:0,transform:"translateY(18px)"},{opacity:1,transform:"none"}],{duration:550,easing:"ease",fill:"both"});observer.unobserve(e.target)}}),{threshold:.15});els.forEach(x=>observer.observe(x));}
-
-const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const motionPreference=matchMedia("(prefers-reduced-motion: reduce)");
+const reducedMotion=motionPreference.matches;
 const progressBar=document.querySelector(".scroll-progress i");
 let progressTick=false;
 function updateScrollProgress(){
@@ -53,19 +52,90 @@ updateScrollProgress();
 
 const workflowStages=[...document.querySelectorAll(".workflow-track li")];
 const workflowState=document.getElementById("workflow-state");
+const workflowTrackWrap=document.querySelector(".workflow-track-wrap");
 const workflowStates=["DISCOVERING SOURCES","DEFINING CONTRACTS","INGESTING DATA","TRANSFORMING MODELS","PUBLISHING PRODUCTS","MONITORING PIPELINE"];
 let workflowIndex=0;
-if(workflowStages.length&&!reducedMotion){
-  setInterval(()=>{
-    workflowStages[workflowIndex].classList.remove("is-active");
-    workflowIndex=(workflowIndex+1)%workflowStages.length;
-    workflowStages[workflowIndex].classList.add("is-active");
-    if(workflowState)workflowState.textContent=workflowStates[workflowIndex];
-  },1700);
+let overviewTimer;
+let workflowTimer;
+let workflowInteractionUntil=0;
+
+function showOverviewStage(index){
+  if(!overviewStages.length||!liveState)return;
+  overviewStages.forEach((stage,stageIndex)=>stage.classList.toggle("active",stageIndex===index));
+  liveState.textContent=liveStates[index];
+}
+
+function showWorkflowStage(index,{follow=false}={}){
+  if(!workflowStages.length)return;
+  workflowStages.forEach((stage,stageIndex)=>stage.classList.toggle("is-active",stageIndex===index));
+  if(workflowState)workflowState.textContent=workflowStates[index];
+  if(follow&&workflowTrackWrap&&innerWidth<=700&&Date.now()>workflowInteractionUntil){
+    const stage=workflowStages[index];
+    const left=stage.offsetLeft-(workflowTrackWrap.clientWidth-stage.offsetWidth)/2;
+    workflowTrackWrap.scrollTo({left:Math.max(0,left),behavior:"smooth"});
+  }
+}
+
+function stopMotionCycles(){
+  clearInterval(overviewTimer);
+  clearInterval(workflowTimer);
+  overviewTimer=undefined;
+  workflowTimer=undefined;
+}
+
+function startMotionCycles({restartVisuals=false}={}){
+  stopMotionCycles();
+  const canAnimate=!motionPreference.matches&&!document.hidden;
+  document.body.classList.toggle("motion-paused",!canAnimate);
+  document.body.classList.toggle("motion-enabled",canAnimate);
+  if(!canAnimate)return;
+
+  if(restartVisuals){
+    document.body.classList.remove("motion-enabled");
+    void document.body.offsetWidth;
+    document.body.classList.add("motion-enabled");
+  }
+
+  if(overviewStages.length&&liveState){
+    overviewTimer=setInterval(()=>{
+      liveIndex=(liveIndex+1)%Math.min(liveStates.length,overviewStages.length);
+      showOverviewStage(liveIndex);
+    },1800);
+  }
+
+  if(workflowStages.length){
+    workflowTimer=setInterval(()=>{
+      workflowIndex=(workflowIndex+1)%Math.min(workflowStates.length,workflowStages.length);
+      showWorkflowStage(workflowIndex,{follow:true});
+    },2200);
+  }
+}
+
+if(workflowTrackWrap){
+  ["pointerdown","touchstart","wheel"].forEach(eventName=>workflowTrackWrap.addEventListener(eventName,()=>{
+    workflowInteractionUntil=Date.now()+8000;
+  },{passive:true}));
+}
+
+document.addEventListener("visibilitychange",()=>startMotionCycles({restartVisuals:!document.hidden}));
+addEventListener("pageshow",()=>startMotionCycles({restartVisuals:true}));
+if(motionPreference.addEventListener)motionPreference.addEventListener("change",()=>startMotionCycles({restartVisuals:true}));
+else motionPreference.addListener(()=>startMotionCycles({restartVisuals:true}));
+startMotionCycles({restartVisuals:true});
+
+if(!reducedMotion&&"IntersectionObserver" in window){
+  const els=document.querySelectorAll(".section-title,.career article,.stack-group");
+  const observer=new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(e.isIntersecting){
+      if(e.target.animate)e.target.animate([{opacity:0,transform:"translateY(18px)"},{opacity:1,transform:"none"}],{duration:550,easing:"ease",fill:"both"});
+      observer.unobserve(e.target);
+    }
+  }),{threshold:.15});
+  els.forEach(x=>observer.observe(x));
 }
 
 const proof=document.querySelector(".proof");
-if(proof&&!reducedMotion){
+if(proof&&!reducedMotion&&"IntersectionObserver" in window){
   const numbers=[...proof.querySelectorAll("strong")];
   const targetValues=numbers.map(el=>({el,value:Number.parseInt(el.textContent,10),suffix:el.textContent.includes("+")?"+":""}));
   const counterObserver=new IntersectionObserver(entries=>{
@@ -84,7 +154,7 @@ if(proof&&!reducedMotion){
   counterObserver.observe(proof);
 }
 
-if(!reducedMotion){
+if(!reducedMotion&&"IntersectionObserver" in window){
   const revealItems=document.querySelectorAll(".about-grid,.workflow-console,.project-layout,.cta h2");
   const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
     if(entry.isIntersecting){entry.target.classList.add("is-visible");revealObserver.unobserve(entry.target)}
