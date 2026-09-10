@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="scroll-progress" aria-hidden="true"><i></i></div>
 <header>
 <a class="logo" href="#top">
 <b>BV</b>
@@ -33,6 +34,7 @@
 <a href="#about">About</a>
 <a href="#experience">Experience</a>
 <a href="#stack">Skills</a>
+<a href="#workflow">Workflow</a>
 <a href="#work">Projects</a>
 </nav>
 <div class="social">
@@ -314,10 +316,48 @@
 <div class="engineering-principles"><small>ENGINEERING PRINCIPLES</small><p>Idempotent pipelines · Data contracts · Automated testing · Checkpointing · Backfills · Lineage · Monitoring · Secure access</p></div>
 </div>
 </section>
+<section class="workflow-section" id="workflow">
+<div class="section-title">
+<div>
+<small>04 · ENGINEERING WORKFLOW</small>
+<h2>How I take a pipeline from idea to reliable operation.</h2>
+</div>
+<p>The tools change by platform. The engineering discipline stays consistent.</p>
+</div>
+<div class="workflow-console">
+<div class="workflow-console-bar">
+<span><i></i><i></i><i></i></span>
+<b>delivery_workflow.yml</b>
+<em><i></i><span id="workflow-state">DISCOVERING SOURCES</span></em>
+</div>
+<div class="workflow-health">
+<span>PIPELINE STATE <b>HEALTHY</b></span>
+<span>QUALITY GATE <b>PASSING</b></span>
+<span>RECOVERY <b>IDEMPOTENT</b></span>
+</div>
+<div class="workflow-track-wrap">
+<ol class="workflow-track">
+<li class="is-active"><small>01 · DISCOVER</small><h3>Understand the source</h3><p>Volume, latency, ownership and failure modes.</p></li>
+<li><small>02 · CONTRACT</small><h3>Define expectations</h3><p>Schemas, quality rules, SLAs and access.</p></li>
+<li><small>03 · INGEST</small><h3>Move data safely</h3><p>Replayable batch or streaming ingestion.</p></li>
+<li><small>04 · TRANSFORM</small><h3>Build trusted models</h3><p>Tested, incremental and scalable processing.</p></li>
+<li><small>05 · DELIVER</small><h3>Serve the right shape</h3><p>Governed tables and analytics-ready products.</p></li>
+<li><small>06 · OPERATE</small><h3>Design for reality</h3><p>Monitoring, recovery, performance and cost.</p></li>
+</ol>
+</div>
+<div class="workflow-guardrails">
+<span><i>✓</i> Schema contracts</span>
+<span><i>✓</i> Quality checks</span>
+<span><i>✓</i> Lineage</span>
+<span><i>✓</i> Observability</span>
+<span><i>✓</i> Failure recovery</span>
+</div>
+</div>
+</section>
 <section class="projects light" id="work">
 <div class="section-title">
 <div>
-<small>04 · SELECTED ENGINEERING WORK</small>
+<small>05 · SELECTED ENGINEERING WORK</small>
 <h2>Projects that show how I work.</h2>
 </div>
 <p>Four personal engineering projects, each built around a practical data problem, a defensible architecture and production-minded reliability.</p>
