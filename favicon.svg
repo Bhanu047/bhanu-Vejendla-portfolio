@@ -1,11 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BV">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4e7cff"/>
-      <stop offset="1" stop-color="#55d6c2"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="#0b1020"/>
-  <path d="M2 16 16 2h32l14 14v32L48 62H16L2 48Z" fill="none" stroke="url(#g)" stroke-width="3"/>
-  <text x="32" y="40" text-anchor="middle" fill="#f7f9fc" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="800" letter-spacing="-2">BV</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126 126" role="img" aria-label="BV">
+  <defs><linearGradient id="brand" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6e94ff"/><stop offset=".52" stop-color="#4ea7f5"/><stop offset="1" stop-color="#55d6c2"/></linearGradient></defs>
+  <path d="M20 3h86l16 16v86l-16 16H20L4 105V19Z" fill="#0b1020" stroke="#3b4e70" stroke-width="3"/>
+  <path d="M20 3h50M122 19v35M106 121H63M4 105V70" fill="none" stroke="url(#brand)" stroke-width="6"/>
+  <path d="M29 27h31c21 0 32 10 32 25 0 10-5 18-15 22 12 4 19 12 19 24 0 18-14 27-36 27H29V27Zm19 15v24h12c10 0 15-4 15-12s-5-12-15-12H48Zm0 38v28h14c11 0 17-5 17-14s-6-14-17-14H48Z" fill="#f7f9fc"/>
+  <path d="M62 39h19l16 48 15-48h19l-25 70H88L62 39Z" fill="url(#brand)"/>
 </svg>
