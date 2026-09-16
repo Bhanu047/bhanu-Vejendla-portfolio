@@ -1,17 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126 126" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
   <title id="title">BV</title>
   <desc id="desc">Bhanu Vejendla monogram</desc>
-  <defs>
-    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#6e94ff"/><stop offset=".52" stop-color="#4ea7f5"/><stop offset="1" stop-color="#55d6c2"/>
-    </linearGradient>
-    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#121d33"/><stop offset="1" stop-color="#0b1020"/>
-    </linearGradient>
-  </defs>
-  <path d="M20 3h86l16 16v86l-16 16H20L4 105V19Z" fill="url(#panel)" stroke="#3b4e70" stroke-width="2"/>
-  <path d="M20 3h50M122 19v35M106 121H63M4 105V70" fill="none" stroke="url(#brand)" stroke-width="4"/>
-  <path d="M29 27h31c21 0 32 10 32 25 0 10-5 18-15 22 12 4 19 12 19 24 0 18-14 27-36 27H29V27Zm19 15v24h12c10 0 15-4 15-12s-5-12-15-12H48Zm0 38v28h14c11 0 17-5 17-14s-6-14-17-14H48Z" fill="#f7f9fc"/>
-  <path d="M62 39h19l16 48 15-48h19l-25 70H88L62 39Z" fill="url(#brand)"/>
-  <circle cx="106" cy="121" r="4" fill="#55d6c2"/>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6e94ff"/><stop offset="1" stop-color="#55d6c2"/></linearGradient></defs>
+  <path d="M12 3h40l9 9v40l-9 9H12l-9-9V12Z" fill="#10182b" stroke="#40506c" stroke-width="2"/>
+  <path d="M12 3h22M61 12v15M52 61H30M3 52V37" fill="none" stroke="url(#g)" stroke-width="3"/>
+  <text x="32" y="40" text-anchor="middle" fill="#f7f9fc" font-family="IBM Plex Mono,Arial,sans-serif" font-size="23" font-weight="700" letter-spacing="-2">BV</text>
+  <circle cx="52" cy="61" r="2.5" fill="#55d6c2"/>
 </svg>
