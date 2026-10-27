@@ -24,16 +24,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260910k">
+<link rel="stylesheet" href="styles.css?v=20261027a">
 </head>
 <body>
+<a class="skip-link" href="#top">Skip to main content</a>
 <div class="scroll-progress" aria-hidden="true"><i></i></div>
 <header>
 <a class="logo" href="#top">
 <img class="logo-mark" src="/assets/bv-mark.svg" alt="" aria-hidden="true">
 <span>BHANU VEJENDLA</span>
 </a>
-<nav>
+<nav aria-label="Main navigation">
 <a href="#about">About</a>
 <a href="#experience">Experience</a>
 <a href="#stack">Skills</a>
@@ -46,7 +47,7 @@
 <a class="contact" href="mailto:bhanumanideepvejendla@gmail.com">Contact me</a>
 </div>
 </header>
-<main id="top">
+<main id="top" tabindex="-1">
 <section class="hero dark">
 <div class="orb one">
 </div>
@@ -381,7 +382,7 @@
 <p>Five projects showing production ownership, practical architecture and reliability—from a live community platform to data engineering systems.</p>
 </div>
 <div class="project-layout">
-<div class="project-list" role="tablist">
+<div class="project-list" role="tablist" aria-label="Featured projects" aria-orientation="vertical">
 <button class="active" data-project="kingdom">
 <b>01</b>
 <span>Kingdom846<small>Live community platform</small>
@@ -429,7 +430,7 @@
 </b> BHANU VEJENDLA</span>
 <span>Senior Data Engineer · Raleigh, NC</span>
 </footer>
-<script src="script.js?v=20260910i">
+<script src="script.js?v=20261027a">
 </script>
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>
