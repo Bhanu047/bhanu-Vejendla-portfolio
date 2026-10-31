@@ -487,13 +487,13 @@ main,section[id]{scroll-margin-top:100px}
 .hero-actions{flex-wrap:wrap}
 .resume-link{background:none;border:0;padding:0;color:inherit;font:700 .82rem var(--sans);cursor:pointer}
 .print-identity{display:none}
-.about-grid{grid-template-columns:240px minmax(0,1fr);align-items:start}
-.portrait{margin:0;grid-row:span 2}
-.portrait img{display:block;width:100%;height:260px;object-fit:cover;object-position:center top;border:0;border-radius:0;background:transparent;mask-image:none;-webkit-mask-image:none}
+.about-grid{grid-template-columns:300px minmax(0,1fr);align-items:start;column-gap:48px}
+.portrait{margin:0;grid-row:span 2;align-self:stretch}
+.portrait img{display:block;width:100%;height:auto;max-height:440px;object-fit:contain;object-position:center top;border:0;border-radius:0;background:transparent;mask-image:none;-webkit-mask-image:none}
 .about-grid>aside{grid-column:2}
 @media(max-width:700px){
   .about-grid{grid-template-columns:1fr}
-  .portrait{grid-row:auto;width:min(240px,100%)}
+  .portrait{grid-row:auto;width:min(300px,100%);justify-self:center}
   .about-grid>aside{grid-column:auto}
 }
 @media print{
