@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A batch is finished only after its output commits — Bhanu Vejendla</title>
+<meta name="description" content="A practical engineering note from Bhanu Vejendla on retry-safe monthly PySpark loads, partition replacement and durable manifests.">
+<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=3">
+<meta name="theme-color" content="#172033">
+<link rel="canonical" href="https://bhanuvejendla.com/notes/retry-safe-monthly-loads.html">
+<meta property="og:title" content="A batch is finished only after its output commits — Bhanu Vejendla">
+<meta property="og:description" content="How partition replacement and commit-ordered manifests make a monthly lakehouse load safe to retry.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bhanuvejendla.com/notes/retry-safe-monthly-loads.html">
+<meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=20261031-notes">
+</head>
+<body class="note-page">
+<a class="skip-link" href="#article">Skip to article</a>
+<header>
+<a class="logo" href="/">
+<img class="logo-mark" src="/assets/bv-mark.svg" alt="" aria-hidden="true">
+<span>BHANU VEJENDLA</span>
+</a>
+<nav aria-label="Article navigation">
+<a href="/#work">Projects</a>
+<a href="/#about">About</a>
+</nav>
+<div class="social">
+<a href="https://github.com/Bhanu047/nyc-taxi-lakehouse" target="_blank" rel="noreferrer">Source ↗</a>
+<a class="contact" href="/#contact">Contact me</a>
+</div>
+</header>
+<main class="note-main" id="article" tabindex="-1">
+<article>
+<div class="note-hero">
+<a class="note-back" href="/#project-nyc-taxi-lakehouse">← NYC Taxi Lakehouse case study</a>
+<p class="note-kicker">ENGINEERING NOTE · BATCH RECOVERY</p>
+<h1>A batch is finished only after its output commits.</h1>
+<p class="note-deck">A manifest can make monthly backfills resumable, but only when it records the truth. I designed the load so a failed month remains eligible for retry and a successful retry replaces only the partitions it owns.</p>
+<dl class="note-facts">
+<div><dt>System</dt><dd>PySpark bronze → silver → gold</dd></div>
+<div><dt>Unit of work</dt><dd>One source month</dd></div>
+<div><dt>Validation</dt><dd>49 offline tests</dd></div>
+</dl>
+</div>
+
+<section class="note-section">
+<p class="note-section-number">01 · THE FAILURE WINDOW</p>
+<h2>A status file can lie before the data exists.</h2>
+<p>The pipeline processes one month at a time and uses a JSON manifest to skip months that already completed. The dangerous sequence is to mark a month complete before its gold output is durable.</p>
+<p>If the process crashes between those two actions, the next run trusts the manifest and skips unfinished work. Recovery appears successful while the dataset remains incomplete.</p>
+<figure class="write-path" aria-labelledby="manifest-path-caption">
+<div class="write-path-danger"><small>UNSAFE ORDER</small><strong>Record month first</strong><span>A crash can leave missing output</span></div>
+<i aria-hidden="true">→</i>
+<div><small>SAFE ORDER</small><strong>Commit output first</strong><span>Record the month only afterward</span></div>
+<figcaption id="manifest-path-caption">The manifest is evidence of a completed write, not a promise that one will happen.</figcaption>
+</figure>
+</section>
+
+<section class="note-section">
+<p class="note-section-number">02 · THE WRITE</p>
+<h2>Replace the touched partitions, not the table.</h2>
+<p>Each month can contain several <code>pickup_date</code> partitions. Dynamic partition overwrite replaces only those dates touched by the current batch, preserving partitions written by other months.</p>
+<p>That makes a retry deterministic: rerunning a month repairs its own dates instead of appending duplicates or deleting unrelated history.</p>
+<pre class="note-code"><code>spark.conf.set(
+    "spark.sql.sources.partitionOverwriteMode",
+    "dynamic",
+)
+
+frame.write.mode("overwrite") \
+    .partitionBy("pickup_date") \
+    .parquet(target)</code></pre>
+</section>
+
+<section class="note-section">
+<p class="note-section-number">03 · THE COMMIT</p>
+<h2>Advance the manifest only after gold succeeds.</h2>
+<p>The month is added to the manifest after the final gold write completes. If any earlier stage fails, the month stays absent and the next run retries it.</p>
+<p>The manifest itself is written through a temporary file and rename, so an interrupted update does not destroy the last known-good state. Together, output ordering and atomic replacement make the resume point trustworthy.</p>
+<ul class="note-checks">
+<li>Write and validate bronze, silver and gold outputs.</li>
+<li>Leave the month unrecorded if any stage raises an error.</li>
+<li>Replace the manifest only after the new content is complete.</li>
+<li>Skip a month only when the durable manifest says it committed.</li>
+</ul>
+</section>
+
+<section class="note-section note-tradeoff">
+<p class="note-section-number">04 · THE SCOPE</p>
+<h2>Plain Parquet can still have a clear recovery contract.</h2>
+<p>This project deliberately avoids Delta Lake and Iceberg so the recovery mechanics remain visible. That means the manifest and partition strategy carry responsibilities that a transactional table format would normally handle.</p>
+<p>For this bounded monthly pipeline, the design is easy to inspect and test. At larger scale or with concurrent writers, I would use a transactional table format and keep the same core rule: completion metadata follows a successful commit.</p>
+</section>
+
+<aside class="note-source">
+<div><small>INSPECT THE IMPLEMENTATION</small><h2>Read the pipeline contract and tests.</h2><p>The repository documents the bronze, silver and gold stages, retry behaviour, partition strategy and offline test suite.</p></div>
+<div class="note-source-links"><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse" target="_blank" rel="noreferrer">Open the repository ↗</a><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse/tree/main/tests" target="_blank" rel="noreferrer">Read the tests ↗</a></div>
+</aside>
+
+<nav class="note-series" aria-labelledby="note-series-title">
+<h2 id="note-series-title">Continue the engineering notes</h2>
+<div class="note-series-list">
+<a href="/notes/conflict-safe-collaboration.html">01 · Conflict-safe collaboration</a>
+<a href="/notes/replay-safe-streaming.html">02 · Replay-safe streaming</a>
+<a href="/notes/retry-safe-monthly-loads.html" aria-current="page">03 · Retry-safe monthly loads</a>
+<a href="/notes/incremental-model-lookback.html">04 · Incremental model lookbacks</a>
+<a href="/notes/terraform-production-guardrails.html">05 · Terraform production guardrails</a>
+</div>
+</nav>
+</article>
+</main>
+<footer>
+<span>© 2026 BHANU VEJENDLA</span>
+<a href="/#work">Back to projects ↑</a>
+</footer>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>
+</body>
+</html>

@@ -26,7 +26,7 @@ are consolidated while responsive rules retain their cascade ordering.
 
 `python scripts/check_site.py` runs standard-library checks. CI installs pinned
 Playwright tooling and runs `node scripts/check_browser.cjs` in Chromium.
-Browser checks cover seven portfolio widths (360–1692px), the engineering note at
+Browser checks cover seven portfolio widths (360–1692px), all five engineering notes at
 mobile and desktop widths, heading collisions, horizontal
 overflow, project selection and keyboard navigation, portrait loading, JavaScript
 fallback, and fallback content with JavaScript disabled or blocked.
@@ -86,11 +86,11 @@ The project-sharing controls and screenshot caption are intentionally omitted
 from the page to keep the case studies focused. Existing project URLs continue
 to work.
 
-## Personal story and engineering note
+## Personal story and engineering notes
 
 The About copy now connects Bhanu's India-to-North-Carolina career path to his
-focus on dependable data systems. `notes/replay-safe-streaming.html` is a
-standalone technical write-up based on the Weblog Stream sink implementation and
-its regression tests. It documents the observed multi-batch failure, the
-batch-scoped Parquet write, its validation and the small-file trade-off. The
-home-page project card and the Weblog Stream tab both link to the note.
+focus on dependable data systems. Each featured project now has a standalone
+technical note grounded in its implementation: conflict-safe collaboration,
+replay-safe streaming, retry-safe monthly loads, incremental-model lookbacks and
+Terraform production guardrails. The homepage presents the five-note series and
+each project tab links directly to its corresponding note.

@@ -70,6 +70,8 @@ const projects={
     ],
     "url": "https://kingdom846.com",
     "action": "Visit live website ↗",
+    "noteUrl": "/notes/conflict-safe-collaboration.html",
+    "noteAction": "Read engineering note →",
     "artifacts": []
   },
   "stream": {
@@ -117,7 +119,7 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/weblog-stream",
     "action": "Explore repository ↗",
-    "noteUrl": "notes/replay-safe-streaming.html",
+    "noteUrl": "/notes/replay-safe-streaming.html",
     "noteAction": "Read engineering note →",
     "artifacts": [
       {
@@ -183,6 +185,8 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/nyc-taxi-lakehouse",
     "action": "Explore repository ↗",
+    "noteUrl": "/notes/retry-safe-monthly-loads.html",
+    "noteAction": "Read engineering note →",
     "artifacts": [
       {
         "kind": "BUNDLED SAMPLE DATA",
@@ -247,6 +251,8 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/retail-warehouse",
     "action": "Explore repository ↗",
+    "noteUrl": "/notes/incremental-model-lookback.html",
+    "noteAction": "Read engineering note →",
     "artifacts": [
       {
         "kind": "RECONCILIATION SQL",
@@ -312,6 +318,8 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/data-platform-terraform",
     "action": "Explore repository ↗",
+    "noteUrl": "/notes/terraform-production-guardrails.html",
+    "noteAction": "Read engineering note →",
     "artifacts": [
       {
         "kind": "ACCESS-BOUNDARY TEST",
@@ -517,15 +525,22 @@ if(proof&&!reducedMotion&&"IntersectionObserver" in window){
   const targetValues=numbers.map(el=>({el,value:Number.parseInt(el.textContent,10),suffix:el.textContent.includes("+")?"+":""}));
   const counterObserver=new IntersectionObserver(entries=>{
     if(!entries[0].isIntersecting)return;
-    const start=performance.now();
-    const duration=900;
-    function frame(now){
-      const t=Math.min(1,(now-start)/duration);
-      const eased=1-Math.pow(1-t,3);
-      targetValues.forEach(item=>item.el.textContent=`${Math.round(item.value*eased)}${item.suffix}`);
-      if(t<1)requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
+    targetValues.forEach((item,index)=>{
+      const delay=index*110;
+      const start=performance.now()+delay;
+      const duration=850;
+      if(item.el.animate)item.el.animate(
+        [{opacity:.3,transform:"translateY(8px) scale(.94)"},{opacity:1,transform:"translateY(0) scale(1)"}],
+        {duration:520,delay,easing:"cubic-bezier(.2,.8,.2,1)",fill:"both"}
+      );
+      function frame(now){
+        const t=Math.max(0,Math.min(1,(now-start)/duration));
+        const eased=1-Math.pow(1-t,3);
+        item.el.textContent=`${Math.round(item.value*eased)}${item.suffix}`;
+        if(t<1)requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
     counterObserver.disconnect();
   },{threshold:.35});
   counterObserver.observe(proof);

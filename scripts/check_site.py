@@ -57,7 +57,14 @@ def main() -> int:
     root = Path(__file__).resolve().parent.parent
     failures: list[str] = []
     total_links = 0
-    pages = ("index.html", "notes/replay-safe-streaming.html")
+    pages = (
+        "index.html",
+        "notes/conflict-safe-collaboration.html",
+        "notes/replay-safe-streaming.html",
+        "notes/retry-safe-monthly-loads.html",
+        "notes/incremental-model-lookback.html",
+        "notes/terraform-production-guardrails.html",
+    )
     titles: list[str] = []
 
     for page_name in pages:
