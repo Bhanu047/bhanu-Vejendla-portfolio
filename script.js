@@ -51,15 +51,7 @@ const projects={
     ],
     "url": "https://kingdom846.com",
     "action": "Visit live website ↗",
-    "artifacts": [
-      {
-        "kind": "DEPLOYED PLATFORM",
-        "title": "Explore the public community experience",
-        "text": "Visit the running platform to inspect its alliance information, community pages and responsive interface.",
-        "url": "https://kingdom846.com",
-        "action": "Open live platform"
-      }
-    ]
+    "artifacts": []
   },
   "stream": {
     "label": "STREAMING DATA PLATFORM",
@@ -328,6 +320,7 @@ function renderProjectSharing(key){return '<div class="project-sharing"><a class
 const detail=document.getElementById("project-detail");
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
 function renderArtifacts(project){
+  if(!project.artifacts?.length)return "";
   return '<section class="project-artifacts" aria-label="Project evidence"><h4>Inspect the evidence</h4><div class="artifact-grid">'+(project.artifacts||[]).map(item=>
     '<article class="artifact-card"><span class="artifact-kind">'+escapeHTML(item.kind)+'</span><h5>'+escapeHTML(item.title)+'</h5><p>'+escapeHTML(item.text)+'</p>'+
     (item.snippet?'<details><summary>View excerpt</summary><pre><code>'+escapeHTML(item.snippet)+'</code></pre></details>':'')+

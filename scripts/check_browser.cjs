@@ -73,8 +73,13 @@ const server = http.createServer((req, res) => {
         await tab.click();
         assert.equal(await tab.getAttribute('aria-selected'), 'true');
         assert(await page.locator('.project-footer > a').isVisible());
-        assert(await page.locator('.project-artifacts h4').isVisible());
-        assert(await page.locator('.artifact-card a').first().isVisible());
+        if (await tab.getAttribute('data-project') === 'kingdom') {
+          assert(await page.locator('.project-showcase img').isVisible());
+          assert.equal(await page.getByRole('link', { name: 'Open live platform ↗', exact: true }).count(), 0);
+        } else {
+          assert(await page.locator('.project-artifacts h4').isVisible());
+          assert(await page.locator('.artifact-card a').first().isVisible());
+        }
       }
       if (width === 1280) {
         await page.getByRole('button', { name: 'Copy project link', exact: true }).click();
@@ -118,7 +123,7 @@ const server = http.createServer((req, res) => {
       assert.match(await page.locator('#project-detail').innerText(), /Kingdom846/);
       assert(await page.locator('.project-footer > a').isVisible());
       assert.equal(await page.locator('.project-list').isVisible(), false);
-      assert(await page.locator('.artifact-card a').first().isVisible());
+      assert(await page.locator('.project-showcase img').isVisible());
       assert(await page.locator('.stack-group').first().isVisible());
       await context.close();
     }
