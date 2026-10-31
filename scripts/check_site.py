@@ -55,31 +55,36 @@ class Collector(HTMLParser):
 
 def main() -> int:
     root = Path(__file__).resolve().parent.parent
-    html = (root / "index.html").read_text(encoding="utf-8")
-
-    parser = Collector()
-    parser.feed(html)
-
     failures: list[str] = []
+    total_links = 0
+    pages = ("index.html", "notes/replay-safe-streaming.html")
+    titles: list[str] = []
 
-    if not parser.title:
-        failures.append("index.html has no <title>")
+    for page_name in pages:
+        html = (root / page_name).read_text(encoding="utf-8")
+        parser = Collector()
+        parser.feed(html)
+        titles.append(parser.title)
+        total_links += len(parser.links)
 
-    for marker in PLACEHOLDERS:
-        if marker.lower() in html.lower():
-            failures.append(f"placeholder text left in the page: {marker!r}")
+        if not parser.title:
+            failures.append(f"{page_name} has no <title>")
 
-    for href in parser.links:
-        if not href:
-            failures.append("an <a> has an empty href")
-        elif href.startswith("#") and href != "#":
-            if href[1:] not in parser.ids:
-                failures.append(f"in-page link {href} points at no element")
+        for marker in PLACEHOLDERS:
+            if marker.lower() in html.lower():
+                failures.append(f"placeholder text left in {page_name}: {marker!r}")
 
-    for src in parser.imgs_without_alt:
-        failures.append(f"<img> without alt text: {src}")
+        for href in parser.links:
+            if not href:
+                failures.append(f"an <a> in {page_name} has an empty href")
+            elif href.startswith("#") and href != "#":
+                if href[1:] not in parser.ids:
+                    failures.append(f"in-page link {href} in {page_name} points at no element")
 
-    for name in ("styles.css", "script.js", "assets/favicon.svg"):
+        for src in parser.imgs_without_alt:
+            failures.append(f"<img> without alt text in {page_name}: {src}")
+
+    for name in ("styles.css", "script.js", "assets/favicon.svg", *pages):
         if not (root / name).exists():
             failures.append(f"referenced file is missing: {name}")
 
@@ -89,10 +94,11 @@ def main() -> int:
             print(f"  - {f}")
         return 1
 
-    print(f"Site check passed. title={parser.title!r}, "
-          f"{len(parser.links)} links, {len(parser.ids)} anchors.")
+    print(f"Site check passed. {len(pages)} pages, {total_links} links, "
+          f"titles={titles!r}.")
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
