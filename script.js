@@ -319,6 +319,12 @@ const projects={
     ]
   }
 };
+const projectSlugs={kingdom:'kingdom846',stream:'weblog-stream',taxi:'nyc-taxi-lakehouse',retail:'retail-warehouse',infra:'data-platform-terraform'};
+function projectHash(key){return '#project-'+projectSlugs[key];}
+function projectKeyFromHash(){return Object.keys(projectSlugs).find(key=>projectHash(key)===location.hash);}
+function canonicalProjectURL(key){const url=new URL(location.href);url.search='';url.hash=projectHash(key);return url.href;}
+function renderFlagship(){return '<figure class="project-showcase"><a href="https://kingdom846.com" target="_blank" rel="noreferrer"><img src="assets/kingdom846-showcase.webp" width="1280" height="699" alt="Kingdom846 public homepage showing the royal portal, alliance navigation and community features" loading="lazy" decoding="async"></a><figcaption>Actual Kingdom846 public homepage · captured October 2026</figcaption></figure>';}
+function renderProjectSharing(key){return '<div class="project-sharing"><a class="project-permalink" href="'+projectHash(key)+'">Direct project link ↗</a><button type="button" class="copy-project-link" hidden>Copy project link</button><span class="project-share-status" role="status" aria-live="polite"></span></div>';}
 const detail=document.getElementById("project-detail");
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
 function renderArtifacts(project){
@@ -331,7 +337,7 @@ function renderArtifacts(project){
 function render(key){
   const p=projects[key];
   const workflow=p.flow.map((stage,index)=>`${index?'<div class="flow-link"><i></i></div>':''}<div class="flow-stage"><small>${String(index+1).padStart(2,'0')} · ${stage.step}</small><b>${stage.name}</b><em>${stage.detail}</em></div>`).join('');
-  detail.innerHTML=`<div class="project-meta"><span class="label">${p.label}</span></div><h3>${p.title}</h3><div class="project-brief"><section><small>PROBLEM</small><p>${p.text}</p></section><section><small>ENGINEERING DECISION</small><p>${p.decision}</p></section></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow">${workflow}</div><div class="project-signals" aria-label="Engineering focus">${p.signals.map(x=>'<span>'+x+'</span>').join('')}</div><div class="project-evidence"><small>${p.evidenceLabel||'REPOSITORY EVIDENCE'}</small><div>${p.evidence.map(x=>'<span><i>✓</i>'+x+'</span>').join('')}</div></div>${renderArtifacts(p)}<div class="project-footer"><div class="tags">${p.tags.map(x=>'<span>'+x+'</span>').join('')}</div><a href="${p.url}" target="_blank" rel="noreferrer">${p.action||'Explore project ↗'}</a></div>`;
+  detail.innerHTML=`<div class="project-meta"><span class="label">${p.label}</span></div><h3 id="${projectHash(key).slice(1)}">${p.title}</h3><div class="project-overview ${key==='kingdom'?'is-flagship':''}">${key==='kingdom'?renderFlagship():''}<div class="project-brief"><section><small>PROBLEM</small><p>${p.text}</p></section><section><small>ENGINEERING DECISION</small><p>${p.decision}</p></section></div></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow">${workflow}</div><div class="project-signals" aria-label="Engineering focus">${p.signals.map(x=>'<span>'+x+'</span>').join('')}</div><div class="project-evidence"><small>${p.evidenceLabel||'REPOSITORY EVIDENCE'}</small><div>${p.evidence.map(x=>'<span><i>✓</i>'+x+'</span>').join('')}</div></div>${renderArtifacts(p)}<div class="project-footer"><div class="tags">${p.tags.map(x=>'<span>'+x+'</span>').join('')}</div><a href="${p.url}" target="_blank" rel="noreferrer">${p.action||'Explore project ↗'}</a></div>${renderProjectSharing(key)}`;
 }
 const projectList=document.querySelector(".project-list");
 const projectButtons=[...document.querySelectorAll(".project-list button")];
@@ -341,10 +347,24 @@ if(projectList){
   projectList.setAttribute("aria-orientation","horizontal");
 }
 if(detail){detail.setAttribute("role","tabpanel");detail.setAttribute("aria-live","polite");}
-function activateProject(btn){
-  projectButtons.forEach(x=>{const active=x===btn;x.classList.toggle("active",active);x.setAttribute("aria-selected",String(active));x.tabIndex=active?0:-1});
-  render(btn.dataset.project);
-  detail.setAttribute("aria-labelledby",btn.id);
+function activateProject(btn,{historyMode='push'}={}){
+  const key=btn.dataset.project;
+  projectButtons.forEach(x=>{const active=x===btn;x.classList.toggle('active',active);x.setAttribute('aria-selected',String(active));x.tabIndex=active?0:-1});
+  render(key);
+  detail.setAttribute('aria-labelledby',btn.id);
+  if(historyMode!=='none'&&location.hash!==projectHash(key)){
+    history[historyMode==='replace'?'replaceState':'pushState'](null,'',projectHash(key));
+  }
+  const copy=detail.querySelector('.copy-project-link');
+  const status=detail.querySelector('.project-share-status');
+  if(copy&&status){
+    copy.hidden=false;
+    copy.addEventListener('click',async()=>{
+      const url=canonicalProjectURL(key);
+      try{await navigator.clipboard.writeText(url);status.textContent='Project link copied.';}
+      catch{status.textContent='Copy this URL: '+url;}
+    });
+  }
 }
 projectButtons.forEach((btn,index)=>{
   btn.setAttribute("role","tab");
@@ -360,10 +380,22 @@ projectButtons.forEach((btn,index)=>{
     else return;
     event.preventDefault();
     projectButtons[next].focus();
-    activateProject(projectButtons[next]);
+    activateProject(projectButtons[next],{historyMode:'replace'});
   });
 });
-if(projectButtons.length)activateProject(projectButtons[0]);
+function selectProjectFromLocation({scroll=false}={}){
+  const key=projectKeyFromHash();
+  if(!key)return;
+  const button=projectButtons.find(btn=>btn.dataset.project===key);
+  if(button)activateProject(button,{historyMode:'none'});
+  if(scroll)document.getElementById('work')?.scrollIntoView({block:'start',behavior:'instant'});
+}
+if(projectButtons.length){
+  const requested=projectKeyFromHash();
+  activateProject(projectButtons.find(btn=>btn.dataset.project===requested)||projectButtons[0],{historyMode:'none'});
+  if(requested)requestAnimationFrame(()=>document.getElementById('work')?.scrollIntoView({block:'start',behavior:'instant'}));
+}
+addEventListener('hashchange',()=>selectProjectFromLocation({scroll:true}));
 
 const motionPreference=matchMedia("(prefers-reduced-motion: reduce)");
 let reducedMotion=motionPreference.matches;
@@ -515,5 +547,6 @@ if(copyEmailButton&&copyEmailStatus){
     }finally{copyEmailButton.disabled=false;}
   });
 }
+
 
 

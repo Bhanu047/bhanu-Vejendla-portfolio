@@ -63,3 +63,20 @@ as responsive layouts and no-JavaScript content.
 
 Project choices use a horizontal row above a full-width case study. On smaller
 screens the selector scrolls horizontally within its own container.
+
+
+## Project sharing and flagship showcase
+
+Kingdom846 includes an optimised screenshot captured from its public homepage.
+The asset is a real page capture; the historical launch figures remain labelled
+as reported figures. Experience copy also uses the terabyte-scale processing
+claim from the owner's existing CV, without adding throughput benchmarks.
+
+Each case study has a direct fragment link and a Copy project link action:
+`#project-kingdom846`, `#project-weblog-stream`, `#project-nyc-taxi-lakehouse`,
+`#project-retail-warehouse` and `#project-data-platform-terraform`.
+Opening a link selects the corresponding tab and scrolls to Projects. Tab
+selection updates the URL, and browser Back/Forward restores the selection.
+Keyboard selection replaces the current history entry. Unsupported project
+fragments fall back to the flagship, and a denied clipboard request displays
+the URL for manual copying.
