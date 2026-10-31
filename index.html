@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261031-clean">
+<link rel="stylesheet" href="styles.css?v=20261031-density">
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to main content</a>
@@ -68,6 +68,7 @@
 </div>
 <p class="recruiter-context"><a href="#experience">Review my professional experience ↓</a></p>
 </div>
+<div class="hero-visual">
 <div class="console" id="architecture">
 <div class="console-bar">
 <span>
@@ -163,8 +164,6 @@
 <span><i></i> failure recovery</span>
 </div>
 </div>
-</div>
-</section>
 <section class="proof">
 <div>
 <strong>7+</strong>
@@ -183,6 +182,10 @@
 <span>industry domains<br>Insurance · Gaming · Financial Services · Healthcare</span>
 </div>
 </section>
+</div>
+</div>
+</section>
+
 <section class="about" id="about">
 <div class="section-title">
 <div>
@@ -196,7 +199,6 @@
 <div>
 <p>My work has taken me across insurance, gaming, financial services and healthcare. I’ve built pipelines that ingest, process and organize data for analytics, reporting and downstream applications.</p>
 <p>I focus on the work that keeps a platform useful after launch: data quality, failure recovery, monitoring, security, performance and cost. I also build reusable patterns so other engineers can deliver and support pipelines more consistently.</p>
-</div>
 <aside>
 <img src="assets/dsu-logo.png" alt="Dakota State University">
 <div>
@@ -205,6 +207,8 @@
 <p>Information Systems · Data Management<br>Dakota State University</p>
 </div>
 </aside>
+</div>
+
 </div>
 </section>
 <section class="experience" id="experience">
@@ -266,15 +270,6 @@
 </div>
 <p>Grouped by where they fit in the work, from ingestion through production delivery.</p>
 </div>
-<div class="core-skills"><h3>My core stack</h3><div class="logo-grid core-logo-grid">
-<span><img src="assets/tools/python.svg" alt="">Python / PySpark</span>
-<span><img src="assets/tools/postgresql.svg" alt="">SQL</span>
-<span><img src="assets/tools/databricks.svg" alt="">Databricks</span>
-<span><img src="assets/tools/azure.svg" alt="">Azure Data Factory</span>
-<span><img src="assets/tools/apachekafka.svg" alt="">Kafka</span>
-<span><img src="assets/tools/snowflake.svg" alt="">Snowflake</span>
-<span><img src="assets/tools/apacheairflow.svg" alt="">Airflow</span>
-</div><p>The tools I focus on for ingestion, processing, orchestration and analytics.</p></div>
 <div class="all-skills">
 <div class="stack-groups">
 <article class="stack-group">
@@ -429,7 +424,7 @@
 <em>→</em>
 </button>
 </div>
-<article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">FLAGSHIP PRODUCTION PLATFORM</span></div><h3 id="project-kingdom846">Kingdom846</h3><div class="project-overview is-flagship"><figure class="project-showcase"><a href="https://kingdom846.com" target="_blank" rel="noreferrer"><img src="assets/kingdom846-showcase.webp" width="1280" height="699" alt="Kingdom846 public homepage showing the royal portal, alliance navigation and community features" loading="lazy" decoding="async"></a></figure><div class="project-brief"><section><small>PROBLEM</small><p>A gaming community needed one dependable place for alliance information, live rosters, applications, rankings, voting and operational updates. I built Kingdom846 as a responsive platform used by real community members.</p></section><section><small>ENGINEERING DECISION</small><p>I separated the React interface from an Express API, persisted operational data in SQLite and enforced role boundaries for administrators, alliance leaders and War Room users. Rate-limited authentication, version-aware updates and a server-side Royal Advisor make the platform practical to operate.</p></section></div></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · EXPERIENCE</small><b>React + Vite</b><em>Responsive portal</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · SERVICES</small><b>Express API</b><em>Role-based access</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · DATA</small><b>SQLite</b><em>Live community state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · OPERATE</small><b>Production site</b><em>Real users + updates</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Role-based access</span><span>Version-aware writes</span><span>Responsive experience</span></div><div class="project-evidence"><small>SITE USAGE</small><div><span><i>✓</i>1,719 visits</span><span><i>✓</i>5,968 pageviews</span><span><i>✓</i>58 countries</span><span><i>✓</i>3.5 pages per visit</span></div></div><div class="project-footer"><div class="tags"><span>React</span><span>Express</span><span>SQLite</span><span>REST APIs</span></div><a href="https://kingdom846.com" target="_blank" rel="noreferrer">Visit live website ↗</a></div>
+<article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">FLAGSHIP PRODUCTION PLATFORM</span></div><h3 id="project-kingdom846">Kingdom846</h3><div class="project-overview is-flagship"><div class="flagship-media"><figure class="project-showcase"><a href="https://kingdom846.com" target="_blank" rel="noreferrer"><img src="assets/kingdom846-showcase.webp" width="1280" height="699" alt="Kingdom846 public homepage showing the royal portal, alliance navigation and community features" loading="lazy" decoding="async"></a></figure><div class="project-evidence"><small>SITE USAGE</small><div><span><i>✓</i>1,719 visits</span><span><i>✓</i>5,968 pageviews</span><span><i>✓</i>58 countries</span><span><i>✓</i>3.5 pages per visit</span></div></div></div><div class="project-brief"><section><small>PROBLEM</small><p>A gaming community needed one dependable place for alliance information, live rosters, applications, rankings, voting and operational updates. I built Kingdom846 as a responsive platform used by real community members.</p></section><section><small>ENGINEERING DECISION</small><p>I separated the React interface from an Express API, persisted operational data in SQLite and enforced role boundaries for administrators, alliance leaders and War Room users. Rate-limited authentication, version-aware updates and a server-side Royal Advisor make the platform practical to operate.</p></section></div></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · EXPERIENCE</small><b>React + Vite</b><em>Responsive portal</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · SERVICES</small><b>Express API</b><em>Role-based access</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · DATA</small><b>SQLite</b><em>Live community state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · OPERATE</small><b>Production site</b><em>Real users + updates</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Role-based access</span><span>Version-aware writes</span><span>Responsive experience</span></div><div class="project-footer"><div class="tags"><span>React</span><span>Express</span><span>SQLite</span><span>REST APIs</span></div><a href="https://kingdom846.com" target="_blank" rel="noreferrer">Visit live website ↗</a></div>
 </article>
 </div>
 <noscript><nav class="project-fallback-links" aria-label="More project repositories"><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse">NYC Taxi Lakehouse</a><a href="https://kingdom846.com">Kingdom846</a><a href="https://github.com/Bhanu047/retail-warehouse">Retail Warehouse</a><a href="https://github.com/Bhanu047/data-platform-terraform">Data Platform Terraform</a></nav></noscript>
@@ -451,13 +446,14 @@
 <span>© <b id="year">2026</b> BHANU VEJENDLA</span>
 <span>Senior Data Engineer · Raleigh, NC</span>
 </footer>
-<script src="script.js?v=20261031-usage">
+<script src="script.js?v=20261031-density">
 </script>
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>
 <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
+
 
 
 
