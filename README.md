@@ -8,7 +8,7 @@ Live at [bhanuvejendla.com](https://bhanuvejendla.com/).
 
 The HTML contains a complete Weblog Stream case study. If JavaScript is disabled
 or blocked, the case study remains readable and its repository link works. With
-JavaScript enabled, the selector becomes an accessible vertical tab list with
+JavaScript enabled, the selector becomes an accessible horizontal tab list with
 arrow-key, Home and End navigation. A noscript navigation links to the other
 four projects.
 
@@ -59,3 +59,7 @@ The Copy email button uses the Clipboard API after an explicit click. If access
 is unavailable, it selects the visible address and provides manual-copy guidance.
 Browser checks cover both paths, skill disclosure and project evidence as well
 as responsive layouts and no-JavaScript content.
+
+
+Project choices use a horizontal row above a full-width case study. On smaller
+screens the selector scrolls horizontally within its own container.

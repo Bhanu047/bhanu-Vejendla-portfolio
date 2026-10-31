@@ -44,6 +44,13 @@ const server = http.createServer((req, res) => {
         }
         return issues;
       });
+      const projectLayout = await page.evaluate(() => {
+        const tabs = document.querySelector('.project-list').getBoundingClientRect();
+        const detail = document.querySelector('.project-detail').getBoundingClientRect();
+        return { tabsBottom: tabs.bottom, detailTop: detail.top, tabsWidth: tabs.width, detailWidth: detail.width };
+      });
+      assert(projectLayout.detailTop >= projectLayout.tabsBottom - 1, `project content is below tabs at ${width}px`);
+      assert(Math.abs(projectLayout.tabsWidth - projectLayout.detailWidth) < 2, `project uses full width at ${width}px`);
       assert.deepEqual(issues, [], `layout at ${width}px`);
       assert.deepEqual(errors, [], `JavaScript errors at ${width}px`);
       const portrait = page.locator('.portrait img');
@@ -57,7 +64,8 @@ const server = http.createServer((req, res) => {
       assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
       await first.focus();
-      await first.press('ArrowDown');
+      await first.press('ArrowRight');
+      assert.equal(await page.getByRole('tablist').getAttribute('aria-orientation'), 'horizontal');
       assert.match(await page.getByRole('tabpanel').innerText(), /NYC Taxi Lakehouse/);
       for (const tab of await page.getByRole('tab').all()) {
         await tab.click();
@@ -102,5 +110,6 @@ const server = http.createServer((req, res) => {
     server.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
 
 

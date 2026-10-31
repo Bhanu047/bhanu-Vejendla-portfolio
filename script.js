@@ -338,7 +338,7 @@ const projectButtons=[...document.querySelectorAll(".project-list button")];
 if(projectList){
   projectList.hidden=false;
   projectList.setAttribute("role","tablist");
-  projectList.setAttribute("aria-orientation","vertical");
+  projectList.setAttribute("aria-orientation","horizontal");
 }
 if(detail){detail.setAttribute("role","tabpanel");detail.setAttribute("aria-live","polite");}
 function activateProject(btn){
@@ -513,3 +513,4 @@ if(copyEmailButton&&copyEmailStatus){
     }finally{copyEmailButton.disabled=false;}
   });
 }
+
