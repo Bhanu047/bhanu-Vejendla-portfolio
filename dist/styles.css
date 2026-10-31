@@ -844,5 +844,5 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
 }
 
 /* Education: larger university logo */
-.about-grid>div>aside img,.about-grid aside img{width:88px;height:auto;max-height:102px;object-fit:contain;flex:0 0 auto}
-@media(max-width:700px){.about-grid>div>aside img,.about-grid aside img{width:68px;max-height:79px}}
+.about-grid>div>aside img,.about-grid aside img{width:70px;height:auto;max-height:81px;object-fit:contain;flex:0 0 auto}
+@media(max-width:700px){.about-grid>div>aside img,.about-grid aside img{width:60px;max-height:70px}}
