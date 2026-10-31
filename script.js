@@ -377,7 +377,7 @@ projectButtons.forEach((btn,index)=>{
   });
 });
 function selectProjectFromLocation({scroll=false}={}){
-  const key=projectKeyFromHash();
+  const key=projectKeyFromHash()||(location.hash.startsWith('#project-')?projectButtons[0]?.dataset.project:undefined);
   if(!key)return;
   const button=projectButtons.find(btn=>btn.dataset.project===key);
   if(button)activateProject(button,{historyMode:'none'});
