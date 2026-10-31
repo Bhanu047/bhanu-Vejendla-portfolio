@@ -586,3 +586,14 @@ body{font-size:17px;line-height:1.75}
   .career article>div{grid-column:2;grid-row:2}
   .career article>i:after{bottom:-42px}
 }
+
+/* A gentle, staggered pulse for the experience markers. */
+.motion-enabled .career article>i:before{animation:careerDotPulse 4s ease-in-out infinite;transform-origin:center}
+.motion-enabled .career article:nth-child(2)>i:before{animation-delay:1s}
+.motion-enabled .career article:nth-child(3)>i:before{animation-delay:2s}
+.motion-enabled .career article:nth-child(4)>i:before{animation-delay:3s}
+@keyframes careerDotPulse{
+  0%,35%,100%{transform:scale(1);opacity:1}
+  17%{transform:scale(1.3);opacity:.65}
+}
+@media(prefers-reduced-motion:reduce){.career article>i:before{animation:none!important;transform:none!important;opacity:1!important}}
