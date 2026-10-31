@@ -845,3 +845,14 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
 @media(max-width:1000px){.why-inner{grid-template-columns:1fr;gap:24px}}
 @media(max-width:800px){.why-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.why{padding:56px 16px}}
+
+/* About: larger portrait that fills the column beside the story */
+@media(min-width:701px){
+  .about-grid{grid-template-columns:clamp(300px,30vw,400px) minmax(0,1fr);column-gap:clamp(32px,4vw,56px);align-items:center}
+  .portrait img{width:100%;max-height:none;height:auto}
+  .about-grid>div>p{max-width:none}
+}
+@media(max-width:700px){
+  .portrait{width:min(340px,100%)}
+  .portrait img{max-height:none}
+}
