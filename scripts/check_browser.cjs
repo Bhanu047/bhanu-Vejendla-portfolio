@@ -28,6 +28,7 @@ const server = http.createServer((req, res) => {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
+      if (width === 1280) await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], { origin: url });
       await page.goto(url);
       await page.evaluate(() => document.fonts.ready);
       const issues = await page.evaluate(() => {
@@ -49,6 +50,11 @@ const server = http.createServer((req, res) => {
       await portrait.scrollIntoViewIfNeeded();
       await portrait.evaluate(img => img.decode());
       assert(await portrait.evaluate(img => img.naturalWidth > 0));
+      const allSkills = page.locator('.all-skills');
+      assert.equal(await page.locator('.stack-group').first().isVisible(), false);
+      await allSkills.locator('summary').first().click();
+      assert.equal(await allSkills.getAttribute('open'), '');
+      assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
       await first.focus();
       await first.press('ArrowDown');
@@ -56,7 +62,14 @@ const server = http.createServer((req, res) => {
       for (const tab of await page.getByRole('tab').all()) {
         await tab.click();
         assert.equal(await tab.getAttribute('aria-selected'), 'true');
-        assert(await page.getByRole('tabpanel').getByRole('link').isVisible());
+        assert(await page.locator('.project-footer > a').isVisible());
+        assert(await page.locator('.project-artifacts h4').isVisible());
+        assert(await page.locator('.artifact-card a').first().isVisible());
+      }
+      if (width === 1280) {
+        await page.getByRole('button', { name: 'Copy email', exact: true }).click();
+        await page.getByRole('status').filter({ hasText: 'Email copied to clipboard.' }).waitFor();
+        assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'bhanumanideepvejendla@gmail.com');
       }
       await page.close();
     }
@@ -67,14 +80,27 @@ const server = http.createServer((req, res) => {
       if (!disabled) await page.route('**/script.js*', route => route.abort());
       await page.goto(url);
       assert.match(await page.locator('#project-detail').innerText(), /Weblog Stream/);
-      assert(await page.locator('#project-detail a').isVisible());
+      assert(await page.locator('.project-footer > a').isVisible());
       assert.equal(await page.locator('.project-list').isVisible(), false);
+      assert(await page.locator('.artifact-card a').first().isVisible());
+      await page.locator('.all-skills > summary').click();
+      assert(await page.locator('.stack-group').first().isVisible());
       await context.close();
     }
-    console.log('Browser checks passed: 7 viewport widths, project tabs, portrait and JavaScript fallback.');
+    const fallbackPage = await browser.newPage();
+    await fallbackPage.addInitScript(() => {
+      Object.defineProperty(navigator, 'clipboard', { value: { writeText: async () => { throw new Error('Clipboard denied'); } } });
+    });
+    await fallbackPage.goto(url);
+    await fallbackPage.getByRole('button', { name: 'Copy email', exact: true }).click();
+    await fallbackPage.getByRole('status').filter({ hasText: 'copy it manually' }).waitFor();
+    assert.equal(await fallbackPage.evaluate(() => window.getSelection().toString()), 'bhanumanideepvejendla@gmail.com');
+    await fallbackPage.close();
+    console.log('Browser checks passed: 7 viewports, project evidence, skill disclosure, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
 

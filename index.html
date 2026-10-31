@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261031-resume">
+<link rel="stylesheet" href="styles.css?v=20261031-readability">
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to main content</a>
@@ -81,7 +81,7 @@
 <b>platform_overview.yaml</b>
 <em>
 <i class="live-dot">
-</i> LIVE DATA FLOW</em>
+</i> ILLUSTRATED PIPELINE</em>
 </div>
 <div class="metrics">
 <span>INGESTION <b>BATCH + STREAM</b>
@@ -92,7 +92,7 @@
 </span>
 </div>
 <div class="activity">
-<span>PIPELINE TELEMETRY</span>
+<span>EXAMPLE FLOW</span>
 <div>
 <i>
 </i>
@@ -223,7 +223,7 @@
 <div>
 <small>METLIFE · CARY, NORTH CAROLINA</small>
 <h3>Azure Data Engineer</h3>
-<p>At MetLife, I build and maintain Azure pipelines with Kafka, NiFi, Data Factory and Databricks. I’ve also developed reusable Python patterns for Synapse integration and change data capture.</p>
+<p class="career-impact">Reusable ingestion patterns and reliable reporting datasets.</p><ul class="career-results"><li>Build Azure Data Factory and Databricks pipelines from ADLS Gen2 into Synapse and Azure SQL.</li><li>Develop reusable Python patterns for change data capture, deduplication and incremental loading.</li><li>Monitor dataset freshness, triage failed loads and apply masking and role-based access for sensitive data.</li></ul>
 </div>
 </article>
 <article>
@@ -233,7 +233,7 @@
 <div>
 <small>EPIC GAMES · CARY, NORTH CAROLINA</small>
 <h3>AWS Data Engineer</h3>
-<p>At Epic Games, I developed AWS workflows with Spark, Glue, Snowflake and Redshift. Automating infrastructure with Terraform reduced management time by 90% and helped improve uptime.</p>
+<p class="career-impact"><strong>90% less infrastructure management time</strong> through Terraform automation.</p><ul class="career-results"><li>Developed AWS Glue and Spark workflows to move campaign data from S3 into Redshift.</li><li>Added metadata validation, reconciliation and error handling to protect reporting accuracy.</li><li>Tuned Snowflake queries and built Elasticsearch/Kibana monitoring for transaction visibility.</li></ul>
 </div>
 </article>
 <article>
@@ -243,7 +243,7 @@
 <div>
 <small>INCRED FINANCIAL SERVICES · MAHARASHTRA, INDIA</small>
 <h3>GCP Data Engineer</h3>
-<p>At InCred, I built GCP pipelines with Dataflow, Apache Beam, Dataproc, BigQuery and Spark, and monitored jobs for performance and cost.</p>
+<p class="career-impact">Curated BigQuery datasets and visibility into platform costs.</p><ul class="career-results"><li>Built Airflow pipelines on GCP and PySpark notebooks for business data models.</li><li>Processed and monitored workloads across BigQuery, Dataproc and Dataflow.</li><li>Created billing and usage reports to support query optimisation and cost decisions.</li></ul>
 </div>
 </article>
 <article>
@@ -253,7 +253,7 @@
 <div>
 <small>SIEMENS HEALTHINEERS · MAHARASHTRA, INDIA</small>
 <h3>Data Engineer</h3>
-<p>At Siemens Healthineers, I developed batch and streaming ETL pipelines with Kafka, Spark Streaming, Python and Snowflake, supported by validation and data-quality checks.</p>
+<p class="career-impact">Batch and streaming pipelines with built-in quality checks.</p><ul class="career-results"><li>Developed warehouse ETL with Python, Snowflake and SnowSQL.</li><li>Integrated Kafka with Spark Streaming and provisioned Databricks workloads.</li><li>Implemented validation, anomaly detection and profiling, with Airflow and ADF scheduling.</li></ul>
 </div>
 </article>
 </div>
@@ -266,7 +266,16 @@
 </div>
 <p>Grouped by where they fit in the work, from ingestion through production delivery.</p>
 </div>
-<p class="core-stack"><strong>Core stack:</strong> Python · SQL · PySpark · Databricks · Azure Data Factory · Kafka · Snowflake</p>
+<div class="core-skills"><h3>My core stack</h3><div class="logo-grid core-logo-grid">
+<span><img src="assets/tools/python.svg" alt="">Python / PySpark</span>
+<span><img src="assets/tools/postgresql.svg" alt="">SQL</span>
+<span><img src="assets/tools/databricks.svg" alt="">Databricks</span>
+<span><img src="assets/tools/azure.svg" alt="">Azure Data Factory</span>
+<span><img src="assets/tools/apachekafka.svg" alt="">Kafka</span>
+<span><img src="assets/tools/snowflake.svg" alt="">Snowflake</span>
+<span><img src="assets/tools/apacheairflow.svg" alt="">Airflow</span>
+</div><p>The tools I focus on for ingestion, processing, orchestration and analytics.</p></div>
+<details class="all-skills"><summary>View all skills</summary>
 <div class="stack-groups">
 <article class="stack-group">
 <div class="group-heading"><span>01</span><div><small>INGESTION & ORCHESTRATION</small><p>Reliable movement from source to platform.</p></div></div>
@@ -337,6 +346,7 @@
 </article>
 <div class="engineering-principles"><small>ENGINEERING PRINCIPLES</small><p>Idempotent pipelines · Data contracts · Automated testing · Checkpointing · Backfills · Lineage · Monitoring · Secure access</p></div>
 </div>
+</details>
 </section>
 <section class="workflow-section" id="workflow">
 <div class="section-title">
@@ -352,9 +362,10 @@
 <b>delivery_workflow.yaml</b>
 <em><i></i><span id="workflow-state">DISCOVERING SOURCES</span></em>
 </div>
+<p class="illustration-note">Illustrated workflow showing my delivery process.</p>
 <div class="workflow-health">
-<span>PIPELINE STATE <b>HEALTHY</b></span>
-<span>QUALITY GATE <b>PASSING</b></span>
+<span>EXAMPLE STATE <b>HEALTHY</b></span>
+<span>EXAMPLE QUALITY <b>PASSING</b></span>
 <span>RECOVERY <b>IDEMPOTENT</b></span>
 </div>
 <div class="workflow-track-wrap">
@@ -418,7 +429,10 @@
 <em>→</em>
 </button>
 </div>
-<article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">STREAMING DATA PLATFORM</span></div><h3>Weblog Stream</h3><div class="project-brief"><section><small>PROBLEM</small><p>Web events can arrive late, duplicated or malformed. This project shows how I keep a real-time pipeline useful when the input is imperfect and the job has to recover from interruption.</p></section><section><small>ENGINEERING DECISION</small><p>I separated invalid events into a dead-letter path, used event-time watermarks for bounded state and checkpointed the stream so restart and replay behavior stay explicit.</p></section></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · SOURCE</small><b>Web events</b><em>JSON events</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · INGEST</small><b>Kafka</b><em>Durable stream</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · PROCESS</small><b>Spark</b><em>Watermarks + state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · STORE</small><b>Delta Lake</b><em>Idempotent writes</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Schema validation</span><span>Checkpoint recovery</span><span>Late-event handling</span></div><div class="project-evidence"><small>REPOSITORY EVIDENCE</small><div><span><i>✓</i>Automated Python tests</span><span><i>✓</i>GitHub Actions CI</span><span><i>✓</i>Docker Compose environment</span></div></div><div class="project-footer"><div class="tags"><span>Kafka</span><span>PySpark</span><span>Delta Lake</span><span>Docker</span></div><a href="https://github.com/Bhanu047/weblog-stream" target="_blank" rel="noreferrer">Explore repository ↗</a></div>
+<article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">STREAMING DATA PLATFORM</span></div><h3>Weblog Stream</h3><div class="project-brief"><section><small>PROBLEM</small><p>Web events can arrive late, duplicated or malformed. This project shows how I keep a real-time pipeline useful when the input is imperfect and the job has to recover from interruption.</p></section><section><small>ENGINEERING DECISION</small><p>I separated invalid events into a dead-letter path, used event-time watermarks for bounded state and checkpointed the stream. The Parquet writer keeps replayed micro-batches safe without erasing earlier batches.</p></section></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · SOURCE</small><b>Web events</b><em>JSON events</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · INGEST</small><b>Kafka</b><em>Durable stream</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · PROCESS</small><b>Spark</b><em>Watermarks + state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · STORE</small><b>Parquet</b><em>Replay-safe batches</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Schema validation</span><span>Checkpoint recovery</span><span>Late-event handling</span></div><div class="project-evidence"><small>REPOSITORY EVIDENCE</small><div><span><i>✓</i>Automated Python tests</span><span><i>✓</i>GitHub Actions CI</span><span><i>✓</i>Docker Compose environment</span></div></div><section class="project-artifacts" aria-label="Project evidence"><h4>Inspect the evidence</h4><div class="artifact-grid"><article class="artifact-card"><span class="artifact-kind">REGRESSION TEST</span><h5>Replay a batch without duplicating rows</h5><p>The sink test writes the same two-record batch twice and expects two stored rows. A separate case checks that later batches preserve earlier records.</p><details><summary>View excerpt</summary><pre><code>sinks.write_batch(frame, path, &quot;event_date&quot;, 7)
+sinks.write_batch(frame, path, &quot;event_date&quot;, 7)
+assert spark.read.parquet(str(path)).count() == 2</code></pre></details><a href="https://github.com/Bhanu047/weblog-stream/blob/6e974e5371c089b8248de1742f139b57fc1b2478/tests/test_sinks.py" target="_blank" rel="noreferrer">Read sink tests ↗</a></article><article class="artifact-card"><span class="artifact-kind">REGRESSION TEST</span><h5>Keep malformed records individually traceable</h5><p>Three different malformed payloads must survive deduplication as three records so the dead-letter path can inspect each one.</p><details><summary>View excerpt</summary><pre><code>frame = schema.parse(kafka_like([&quot;{broken one&quot;, &quot;{broken two&quot;, &quot;also bad&quot;]))
+assert transform.deduplicate(frame, &quot;10 minutes&quot;).count() == 3</code></pre></details><a href="https://github.com/Bhanu047/weblog-stream/blob/6e974e5371c089b8248de1742f139b57fc1b2478/tests/test_transform.py" target="_blank" rel="noreferrer">Read deduplication tests ↗</a></article></div></section><div class="project-footer"><div class="tags"><span>Kafka</span><span>PySpark</span><span>Parquet</span><span>Docker</span></div><a href="https://github.com/Bhanu047/weblog-stream" target="_blank" rel="noreferrer">Explore repository ↗</a></div>
 </article>
 </div>
 <noscript><nav class="project-fallback-links" aria-label="More project repositories"><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse">NYC Taxi Lakehouse</a><a href="https://kingdom846.com">Kingdom846</a><a href="https://github.com/Bhanu047/retail-warehouse">Retail Warehouse</a><a href="https://github.com/Bhanu047/data-platform-terraform">Data Platform Terraform</a></nav></noscript>
@@ -431,20 +445,22 @@
 <a class="contact-primary" href="mailto:bhanumanideepvejendla@gmail.com?subject=Senior%20Data%20Engineer%20opportunity">Email me about a role <span aria-hidden="true">↗</span></a>
 <a href="https://www.linkedin.com/in/vejendlabhanu" target="_blank" rel="noreferrer">Connect on LinkedIn <span aria-hidden="true">↗</span></a>
 </div>
-<p class="contact-email">Prefer to copy my email? <a href="mailto:bhanumanideepvejendla@gmail.com">bhanumanideepvejendla@gmail.com</a></p>
+<div class="copy-email-row"><button type="button" class="copy-email" id="copy-email" hidden>Copy email</button><span id="copy-email-status" role="status" aria-live="polite"></span></div>
+<p class="contact-email"> <a href="mailto:bhanumanideepvejendla@gmail.com">bhanumanideepvejendla@gmail.com</a></p>
 </section>
 </main>
 <footer>
 <span>© <b id="year">2026</b> BHANU VEJENDLA</span>
 <span>Senior Data Engineer · Raleigh, NC</span>
 </footer>
-<script src="script.js?v=20261031-resume">
+<script src="script.js?v=20261031-evidence">
 </script>
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>
 <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
+
 
 
 
