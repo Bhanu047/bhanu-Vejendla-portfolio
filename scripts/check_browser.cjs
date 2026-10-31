@@ -58,7 +58,6 @@ const server = http.createServer((req, res) => {
       await portrait.scrollIntoViewIfNeeded();
       await portrait.evaluate(img => img.decode());
       assert(await portrait.evaluate(img => img.naturalWidth > 0));
-      assert.equal(await page.locator('.why-grid article').count(), 3);
       assert.equal(await page.locator('.workflow-track li').count(), 6);
       assert.equal(await page.locator('.stack-group').count(), 4);
       assert.equal(await page.locator('.stack-group .logo-grid > span').count(), 47);
@@ -136,7 +135,6 @@ const server = http.createServer((req, res) => {
       assert(await page.locator('.project-footer a').last().isVisible());
       assert.equal(await page.locator('.project-list').isVisible(), false);
       assert(await page.locator('.project-showcase img').isVisible());
-      assert(await page.locator('.why-grid').isVisible());
       assert(await page.locator('.stack-group').first().isVisible());
       await context.close();
     }
@@ -168,7 +166,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
       await notePage.close();
     }
-    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, why-hire-me band, workflow, all 47 skills, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
+    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, workflow, all 47 skills, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();

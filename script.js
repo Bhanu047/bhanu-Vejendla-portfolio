@@ -547,7 +547,7 @@ if(proof&&!reducedMotion&&"IntersectionObserver" in window){
 }
 
 if(!reducedMotion&&"IntersectionObserver" in window){
-  const revealItems=document.querySelectorAll(".about-grid,.why-grid,.workflow-console,.project-layout,.cta h2");
+  const revealItems=document.querySelectorAll(".about-grid,.workflow-console,.project-layout,.cta h2");
   const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
     if(entry.isIntersecting){entry.target.classList.add("is-visible");revealObserver.unobserve(entry.target)}
   }),{threshold:.12});

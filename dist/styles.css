@@ -828,23 +828,9 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
   .note-series-list{grid-template-columns:1fr}
 }
 
-/* Recruiter scan: why-hire-me band, scannable experience */
-.why{padding:72px max(28px,calc((100vw - 1240px)/2));background:#fff;border-bottom:1px solid #d6dce5}
-.why-inner{display:grid;grid-template-columns:300px 1fr;gap:44px;align-items:start}
-.why-heading small{font:500 .7rem var(--mono);letter-spacing:.09em;color:#3868e8}
-.why-heading h2{margin:12px 0 0;font-size:clamp(1.6rem,2.4vw,2.1rem);line-height:1.15;letter-spacing:-.03em;color:#172033}
-.why-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.why-grid article{display:flex;flex-direction:column;padding:22px;border:1px solid #d3dae5;border-radius:8px;background:#f7f9fc}
-.why-grid article>span{font:500 .7rem var(--mono);color:#5275ce}
-.why-grid h3{margin:12px 0 8px;font-size:1.08rem;line-height:1.3;color:#172033}
-.why-grid p{margin:0 0 16px;color:#4d5b72;font-size:.95rem;line-height:1.6}
-.why-grid p strong{color:#172033}
-.why-grid a{margin-top:auto;color:#2f5bcc;font-size:.85rem;font-weight:700;text-decoration-thickness:1px;text-underline-offset:3px}
+/* Scannable experience */
 .career-results strong{color:#1e2a40;font-weight:700}
 .career-stack{margin:12px 0 0!important;font:500 .75rem/1.6 var(--mono)!important;letter-spacing:.02em;color:#5c6b83!important}
-@media(max-width:1000px){.why-inner{grid-template-columns:1fr;gap:24px}}
-@media(max-width:800px){.why-grid{grid-template-columns:1fr}}
-@media(max-width:700px){.why{padding:56px 16px}}
 
 /* About: larger portrait that fills the column beside the story */
 @media(min-width:701px){
