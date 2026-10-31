@@ -58,12 +58,10 @@ const server = http.createServer((req, res) => {
       await portrait.scrollIntoViewIfNeeded();
       await portrait.evaluate(img => img.decode());
       assert(await portrait.evaluate(img => img.naturalWidth > 0));
-      const showcase = page.locator('.project-showcase img');
-      await showcase.scrollIntoViewIfNeeded();
-      await showcase.evaluate(img => img.decode());
-      assert(await showcase.evaluate(img => img.naturalWidth > 0));
+      assert.equal(await page.locator('.workflow-track li').count(), 6);
       assert.equal(await page.locator('.stack-group').count(), 4);
       assert.equal(await page.locator('.stack-group .logo-grid > span').count(), 47);
+      assert.equal(await page.getByRole('tab').first().getAttribute('data-project'), 'kingdom');
       assert.equal(await page.locator('.engineering-note-tile').count(), 5);
       assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
@@ -77,7 +75,11 @@ const server = http.createServer((req, res) => {
         assert.equal(await tab.getAttribute('aria-selected'), 'true');
         assert(await page.locator('.project-footer a').last().isVisible());
         if (await tab.getAttribute('data-project') === 'kingdom') {
-          assert(await page.locator('.project-showcase img').isVisible());
+          const showcase = page.locator('.project-showcase img');
+          await showcase.scrollIntoViewIfNeeded();
+          await showcase.evaluate(img => img.decode());
+          assert(await showcase.evaluate(img => img.naturalWidth > 0));
+          assert(await showcase.isVisible());
           assert(await page.locator('.case-study-story').isVisible());
           assert.match(await page.locator('.case-study-story').innerText(), /silently overwriting another/);
           assert.equal(await page.getByRole('link', { name: 'Open live platform ↗', exact: true }).count(), 0);
@@ -164,7 +166,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
       await notePage.close();
     }
-    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
+    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, workflow, all 47 skills, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();

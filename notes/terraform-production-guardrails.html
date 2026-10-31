@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Asking for force-destroy is not the same as receiving it — Bhanu Vejendla</title>
-<meta name="description" content="A practical engineering note from Bhanu Vejendla on Terraform guardrails that refuse destructive production settings.">
+<meta name="description" content="Bhanu Vejendla on Terraform guardrails that block destructive settings in production.">
 <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=3">
 <meta name="theme-color" content="#172033">
 <link rel="canonical" href="https://bhanuvejendla.com/notes/terraform-production-guardrails.html">
 <meta property="og:title" content="Asking for force-destroy is not the same as receiving it — Bhanu Vejendla">
-<meta property="og:description" content="How a Terraform module makes a dangerous production request ineffective and proves the guardrail during plan.">
+<meta property="og:description" content="How a Terraform module ignores a force-destroy request in production, and how a plan-time test checks it.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bhanuvejendla.com/notes/terraform-production-guardrails.html">
 <meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=20261031-notes">
+<link rel="stylesheet" href="/styles.css?v=20261031-recruiter9">
 </head>
 <body class="note-page">
 <a class="skip-link" href="#article">Skip to article</a>
@@ -40,7 +40,7 @@
 <a class="note-back" href="/#project-data-platform-terraform">← Data Platform Terraform case study</a>
 <p class="note-kicker">ENGINEERING NOTE · INFRASTRUCTURE SAFETY</p>
 <h1>Asking for force-destroy is not the same as receiving it.</h1>
-<p class="note-deck">A production safeguard should survive a mistaken input, not depend on everyone remembering the right value. This Terraform module makes destructive bucket removal impossible in production even when a caller explicitly requests it.</p>
+<p class="note-deck">I didn’t want production safety to depend on someone remembering the right setting. In this Terraform module, production buckets can’t be force-destroyed, even if the caller asks for it.</p>
 <dl class="note-facts">
 <div><dt>Platform</dt><dd>AWS data lake</dd></div>
 <div><dt>Production rule</dt><dd>force_destroy is always false</dd></div>
@@ -49,34 +49,34 @@
 </div>
 
 <section class="note-section">
-<p class="note-section-number">01 · THE HAZARD</p>
-<h2>A flexible variable can become a destructive escape hatch.</h2>
-<p>Terraform’s S3 <code>force_destroy</code> setting allows a non-empty bucket to be deleted. That convenience can be useful in a disposable development environment and dangerous in a production data lake.</p>
-<p>Exposing the same Boolean everywhere leaves production safety dependent on a variable file, a command-line override or a rushed operator. The configuration accepts the request, even when the environment should never permit the outcome.</p>
+<p class="note-section-number">01 · THE RISK</p>
+<h2>One flag can let Terraform delete a full bucket.</h2>
+<p>Terraform’s S3 <code>force_destroy</code> setting lets you delete a bucket that still has objects in it. That’s handy in a throwaway development environment and dangerous in a production data lake.</p>
+<p>If the same Boolean is exposed in every environment, production is only as safe as a variable file, a command-line override or someone in a hurry. Terraform will accept the setting even where it should never be allowed.</p>
 <figure class="write-path" aria-labelledby="guardrail-path-caption">
 <div class="write-path-danger"><small>REQUEST</small><strong>force_destroy = true</strong><span>Caller asks for destructive cleanup</span></div>
 <i aria-hidden="true">→</i>
-<div><small>PRODUCTION POLICY</small><strong>effective value = false</strong><span>The dangerous request is neutralized</span></div>
-<figcaption id="guardrail-path-caption">The environment policy decides the effective value, not the caller alone.</figcaption>
+<div><small>PRODUCTION POLICY</small><strong>effective value = false</strong><span>The request is ignored</span></div>
+<figcaption id="guardrail-path-caption">The environment decides the final value. The caller only makes a request.</figcaption>
 </figure>
 </section>
 
 <section class="note-section">
 <p class="note-section-number">02 · THE GUARDRAIL</p>
-<h2>Derive the effective setting from environment policy.</h2>
-<p>The module distinguishes the requested value from the value resources actually receive. Development can honor the input, while production always resolves to false.</p>
+<h2>Let the environment decide the real value.</h2>
+<p>The module keeps the requested value separate from the value the resources actually get. In development the input is used as given. In production it always comes out false.</p>
 <pre class="note-code"><code>force_destroy_effective = (
   var.environment == "prod"
   ? false
   : var.force_destroy
 )</code></pre>
-<p>The module also rejects unknown environments. That keeps a misspelled value from falling into a permissive default path.</p>
+<p>It also rejects unknown environment names, so a typo can’t fall through to a permissive default.</p>
 </section>
 
 <section class="note-section">
-<p class="note-section-number">03 · THE PROOF</p>
-<h2>Test the denied outcome, not only the happy path.</h2>
-<p>The strongest test deliberately supplies the dangerous combination: production plus <code>force_destroy = true</code>. A mocked provider allows Terraform to plan without AWS credentials, and the assertion verifies that the effective output is still false.</p>
+<p class="note-section-number">03 · HOW I TESTED IT</p>
+<h2>Testing the case that should be refused</h2>
+<p>The most useful test passes in the bad combination on purpose: production plus <code>force_destroy = true</code>. A mocked provider lets Terraform plan without AWS credentials, and the test checks that the effective value is still false.</p>
 <pre class="note-code"><code>run "prod_refuses_force_destroy_even_when_asked" {
   command = plan
 
@@ -92,19 +92,19 @@
 </section>
 
 <section class="note-section note-tradeoff">
-<p class="note-section-number">04 · THE LIMIT</p>
-<h2>A mocked plan proves configuration logic, not cloud behaviour.</h2>
-<p>The tests also cover least-privilege boundaries such as preventing the pipeline role from writing raw data and avoiding wildcard IAM actions. They are fast because the AWS provider is mocked.</p>
-<p>That speed has a boundary: the suite proves the planned graph and policy logic, not a real AWS deployment. The next confidence layer would apply the stack in a sandbox account and run live permission checks before promotion.</p>
+<p class="note-section-number">04 · WHAT IT DOESN’T PROVE</p>
+<h2>A mocked plan only tests the configuration.</h2>
+<p>The tests also cover least-privilege rules, like stopping the pipeline role from writing raw data and not using wildcard IAM actions. They run fast because the AWS provider is mocked.</p>
+<p>The downside is that they only check the planned resources and the policy logic. Nothing gets deployed to AWS. The next step would be to apply the stack in a sandbox account and run live permission checks before promoting it.</p>
 </section>
 
 <aside class="note-source">
-<div><small>INSPECT THE IMPLEMENTATION</small><h2>Read the guardrails and plan-time tests.</h2><p>The public repository includes the environment policy, least-privilege IAM configuration and mocked provider test suite.</p></div>
+<div><small>SOURCE CODE</small><h2>The guardrails and tests are on GitHub.</h2><p>The repo has the environment rules, the least-privilege IAM setup and the tests that run against the mocked provider.</p></div>
 <div class="note-source-links"><a href="https://github.com/Bhanu047/data-platform-terraform/blob/main/tests/guardrails.tftest.hcl" target="_blank" rel="noreferrer">Open the guardrail tests ↗</a><a href="https://github.com/Bhanu047/data-platform-terraform" target="_blank" rel="noreferrer">View the repository ↗</a></div>
 </aside>
 
 <nav class="note-series" aria-labelledby="note-series-title">
-<h2 id="note-series-title">Continue the engineering notes</h2>
+<h2 id="note-series-title">More engineering notes</h2>
 <div class="note-series-list">
 <a href="/notes/conflict-safe-collaboration.html">01 · Conflict-safe collaboration</a>
 <a href="/notes/replay-safe-streaming.html">02 · Replay-safe streaming</a>

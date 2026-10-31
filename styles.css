@@ -828,3 +828,21 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
   .note-series-list{grid-template-columns:1fr}
 }
 
+/* Scannable experience */
+.career-results strong{color:#1e2a40;font-weight:700}
+.career-stack{margin:12px 0 0!important;font:500 .75rem/1.6 var(--mono)!important;letter-spacing:.02em;color:#5c6b83!important}
+
+/* About: larger portrait that fills the column beside the story */
+@media(min-width:701px){
+  .about-grid{grid-template-columns:clamp(300px,30vw,400px) minmax(0,1fr);column-gap:clamp(32px,4vw,56px);align-items:center}
+  .portrait img{width:100%;max-height:none;height:auto}
+  .about-grid>div>p{max-width:none}
+}
+@media(max-width:700px){
+  .portrait{width:min(340px,100%)}
+  .portrait img{max-height:none}
+}
+
+/* Education: logo matches the height of the degree, field and university lines */
+.about-grid>div>aside img,.about-grid aside img{width:auto;height:76px;max-height:none;object-fit:contain;flex:0 0 auto;align-self:flex-end}
+@media(max-width:700px){.about-grid>div>aside,.about-grid aside{padding:16px 14px;gap:12px}}
