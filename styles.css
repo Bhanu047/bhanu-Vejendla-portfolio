@@ -705,3 +705,16 @@ body{font-size:17px;line-height:1.75}
   .career article{padding-bottom:24px}
   .career article>i:after{bottom:-34px}
 }
+
+/* Clear pointer and keyboard feedback without shifting the navigation. */
+header nav a{position:relative;display:inline-flex;align-items:center;min-height:44px;transition:color .18s ease}
+header nav a:after{content:"";position:absolute;left:0;right:0;bottom:4px;height:2px;background:#55d6c2;transform:scaleX(0);transform-origin:left;transition:transform .18s ease;pointer-events:none}
+header nav a:hover,header nav a:focus-visible{color:#79e7d3}
+header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
+.social>a:not(.contact){position:relative;transition:color .18s ease}
+.social>a:not(.contact):after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:2px;background:#55d6c2;transform:scaleX(0);transform-origin:left;transition:transform .18s ease;pointer-events:none}
+.social>a:not(.contact):hover,.social>a:not(.contact):focus-visible{color:#79e7d3}
+.social>a:not(.contact):hover:after,.social>a:not(.contact):focus-visible:after{transform:scaleX(1)}
+.social .contact{transition:background-color .18s ease,border-color .18s ease}
+.social .contact:hover,.social .contact:focus-visible{background:#315fce;border-color:#9cb6ff}
+@media(prefers-reduced-motion:reduce){header nav a,header nav a:after,.social>a,.social>a:after{transition:none!important}}
