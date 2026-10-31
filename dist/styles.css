@@ -842,3 +842,7 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
   .portrait{width:min(340px,100%)}
   .portrait img{max-height:none}
 }
+
+/* Education: larger university logo */
+.about-grid>div>aside img,.about-grid aside img{width:88px;height:auto;max-height:102px;object-fit:contain;flex:0 0 auto}
+@media(max-width:700px){.about-grid>div>aside img,.about-grid aside img{width:68px;max-height:79px}}
