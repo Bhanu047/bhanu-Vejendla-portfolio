@@ -398,41 +398,38 @@
 <p class="project-guide">Choose a project to review the problem, engineering decisions and supporting evidence. Each case study links to the live site or source repository.</p>
 <div class="project-layout">
 <div class="project-list" aria-label="Featured projects" hidden>
-<button class="active" data-project="stream">
+<button class="active" data-project="kingdom">
 <b>01</b>
+<span>Kingdom846<small>Live community platform</small>
+</span>
+<em>→</em>
+</button>
+<button data-project="stream">
+<b>02</b>
 <span>Weblog Stream<small>Real-time data platform</small>
 </span>
 <em>→</em>
 </button>
 <button data-project="taxi">
-<b>02</b>
+<b>03</b>
 <span>NYC Taxi Lakehouse<small>Batch analytics architecture</small>
 </span>
 <em>→</em>
 </button>
 <button data-project="retail">
-<b>03</b>
+<b>04</b>
 <span>Retail Warehouse<small>Dimensional data model</small>
 </span>
 <em>→</em>
 </button>
 <button data-project="infra">
-<b>04</b>
+<b>05</b>
 <span>Data Platform Terraform<small>Cloud infrastructure as code</small>
 </span>
 <em>→</em>
 </button>
-<button data-project="kingdom">
-<b>05</b>
-<span>Kingdom846<small>Live community platform</small>
-</span>
-<em>→</em>
-</button>
 </div>
-<article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">STREAMING DATA PLATFORM</span></div><h3>Weblog Stream</h3><div class="project-brief"><section><small>PROBLEM</small><p>Web events can arrive late, duplicated or malformed. This project shows how I keep a real-time pipeline useful when the input is imperfect and the job has to recover from interruption.</p></section><section><small>ENGINEERING DECISION</small><p>I separated invalid events into a dead-letter path, used event-time watermarks for bounded state and checkpointed the stream. The Parquet writer keeps replayed micro-batches safe without erasing earlier batches.</p></section></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · SOURCE</small><b>Web events</b><em>JSON events</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · INGEST</small><b>Kafka</b><em>Durable stream</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · PROCESS</small><b>Spark</b><em>Watermarks + state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · STORE</small><b>Parquet</b><em>Replay-safe batches</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Schema validation</span><span>Checkpoint recovery</span><span>Late-event handling</span></div><div class="project-evidence"><small>REPOSITORY EVIDENCE</small><div><span><i>✓</i>Automated Python tests</span><span><i>✓</i>GitHub Actions CI</span><span><i>✓</i>Docker Compose environment</span></div></div><section class="project-artifacts" aria-label="Project evidence"><h4>Inspect the evidence</h4><div class="artifact-grid"><article class="artifact-card"><span class="artifact-kind">REGRESSION TEST</span><h5>Replay a batch without duplicating rows</h5><p>The sink test writes the same two-record batch twice and expects two stored rows. A separate case checks that later batches preserve earlier records.</p><details><summary>View excerpt</summary><pre><code>sinks.write_batch(frame, path, &quot;event_date&quot;, 7)
-sinks.write_batch(frame, path, &quot;event_date&quot;, 7)
-assert spark.read.parquet(str(path)).count() == 2</code></pre></details><a href="https://github.com/Bhanu047/weblog-stream/blob/6e974e5371c089b8248de1742f139b57fc1b2478/tests/test_sinks.py" target="_blank" rel="noreferrer">Read sink tests ↗</a></article><article class="artifact-card"><span class="artifact-kind">REGRESSION TEST</span><h5>Keep malformed records individually traceable</h5><p>Three different malformed payloads must survive deduplication as three records so the dead-letter path can inspect each one.</p><details><summary>View excerpt</summary><pre><code>frame = schema.parse(kafka_like([&quot;{broken one&quot;, &quot;{broken two&quot;, &quot;also bad&quot;]))
-assert transform.deduplicate(frame, &quot;10 minutes&quot;).count() == 3</code></pre></details><a href="https://github.com/Bhanu047/weblog-stream/blob/6e974e5371c089b8248de1742f139b57fc1b2478/tests/test_transform.py" target="_blank" rel="noreferrer">Read deduplication tests ↗</a></article></div></section><div class="project-footer"><div class="tags"><span>Kafka</span><span>PySpark</span><span>Parquet</span><span>Docker</span></div><a href="https://github.com/Bhanu047/weblog-stream" target="_blank" rel="noreferrer">Explore repository ↗</a></div>
+<article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">FLAGSHIP PRODUCTION PLATFORM</span></div><h3>Kingdom846</h3><div class="project-brief"><section><small>PROBLEM</small><p>A gaming community needed one dependable place for alliance information, live rosters, applications, rankings, voting and operational updates. I built Kingdom846 as a responsive platform used by real community members.</p></section><section><small>ENGINEERING DECISION</small><p>I separated the React interface from an Express API, persisted operational data in SQLite and enforced role boundaries for administrators, alliance leaders and War Room users. Rate-limited authentication, version-aware updates and a server-side Royal Advisor make the platform practical to operate.</p></section></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · EXPERIENCE</small><b>React + Vite</b><em>Responsive portal</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · SERVICES</small><b>Express API</b><em>Role-based access</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · DATA</small><b>SQLite</b><em>Live community state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · OPERATE</small><b>Production site</b><em>Real users + updates</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Role-based access</span><span>Version-aware writes</span><span>Responsive experience</span></div><div class="project-evidence"><small>REPORTED LAUNCH SNAPSHOT</small><div><span><i>✓</i>596 visitors in first 19 days</span><span><i>✓</i>3,298 pageviews across 49 countries</span><span><i>✓</i>4.4 pages per visit</span></div></div><section class="project-artifacts" aria-label="Project evidence"><h4>Inspect the evidence</h4><div class="artifact-grid"><article class="artifact-card"><span class="artifact-kind">DEPLOYED PLATFORM</span><h5>Explore the public community experience</h5><p>Visit the running platform to inspect its alliance information, community pages and responsive interface.</p><a href="https://kingdom846.com" target="_blank" rel="noreferrer">Open live platform ↗</a></article></div></section><div class="project-footer"><div class="tags"><span>React</span><span>Express</span><span>SQLite</span><span>REST APIs</span></div><a href="https://kingdom846.com" target="_blank" rel="noreferrer">Visit live website ↗</a></div>
 </article>
 </div>
 <noscript><nav class="project-fallback-links" aria-label="More project repositories"><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse">NYC Taxi Lakehouse</a><a href="https://kingdom846.com">Kingdom846</a><a href="https://github.com/Bhanu047/retail-warehouse">Retail Warehouse</a><a href="https://github.com/Bhanu047/data-platform-terraform">Data Platform Terraform</a></nav></noscript>
@@ -445,8 +442,9 @@ assert transform.deduplicate(frame, &quot;10 minutes&quot;).count() == 3</code><
 <a class="contact-primary" href="mailto:bhanumanideepvejendla@gmail.com?subject=Senior%20Data%20Engineer%20opportunity">Email me about a role <span aria-hidden="true">↗</span></a>
 <a href="https://www.linkedin.com/in/vejendlabhanu" target="_blank" rel="noreferrer">Connect on LinkedIn <span aria-hidden="true">↗</span></a>
 </div>
-<div class="copy-email-row"><button type="button" class="copy-email" id="copy-email" hidden>Copy email</button><span id="copy-email-status" role="status" aria-live="polite"></span></div>
-<p class="contact-email"> <a href="mailto:bhanumanideepvejendla@gmail.com">bhanumanideepvejendla@gmail.com</a></p>
+<div class="copy-email-row"><p class="contact-email"><a href="mailto:bhanumanideepvejendla@gmail.com">bhanumanideepvejendla@gmail.com</a></p><button type="button" class="copy-email" id="copy-email" hidden>Copy email</button></div>
+<p class="copy-confirmation" id="copy-email-status" role="status" aria-live="polite"></p>
+
 </section>
 </main>
 <footer>
@@ -460,6 +458,7 @@ assert transform.deduplicate(frame, &quot;10 minutes&quot;).count() == 3</code><
 <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
+
 
 
 

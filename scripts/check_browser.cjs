@@ -66,7 +66,8 @@ const server = http.createServer((req, res) => {
       await first.focus();
       await first.press('ArrowRight');
       assert.equal(await page.getByRole('tablist').getAttribute('aria-orientation'), 'horizontal');
-      assert.match(await page.getByRole('tabpanel').innerText(), /NYC Taxi Lakehouse/);
+      assert.equal(await page.getByRole('tab').nth(1).getAttribute('aria-selected'), 'true');
+      assert.equal(await page.getByRole('tabpanel').getAttribute('aria-labelledby'), await page.getByRole('tab').nth(1).getAttribute('id'));
       for (const tab of await page.getByRole('tab').all()) {
         await tab.click();
         assert.equal(await tab.getAttribute('aria-selected'), 'true');
@@ -76,7 +77,7 @@ const server = http.createServer((req, res) => {
       }
       if (width === 1280) {
         await page.getByRole('button', { name: 'Copy email', exact: true }).click();
-        await page.getByRole('status').filter({ hasText: 'Email copied to clipboard.' }).waitFor();
+        await page.getByRole('status').filter({ hasText: 'Copied!' }).waitFor();
         assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'bhanumanideepvejendla@gmail.com');
       }
       await page.close();
@@ -87,7 +88,7 @@ const server = http.createServer((req, res) => {
       const page = await context.newPage();
       if (!disabled) await page.route('**/script.js*', route => route.abort());
       await page.goto(url);
-      assert.match(await page.locator('#project-detail').innerText(), /Weblog Stream/);
+      assert.match(await page.locator('#project-detail').innerText(), /Kingdom846/);
       assert(await page.locator('.project-footer > a').isVisible());
       assert.equal(await page.locator('.project-list').isVisible(), false);
       assert(await page.locator('.artifact-card a').first().isVisible());
@@ -110,6 +111,7 @@ const server = http.createServer((req, res) => {
     server.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
 
 
 

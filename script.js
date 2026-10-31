@@ -505,7 +505,9 @@ if(copyEmailButton&&copyEmailStatus){
     copyEmailButton.disabled=true;
     try{
       await navigator.clipboard.writeText(email.textContent.trim());
-      copyEmailStatus.textContent='Email copied to clipboard.';
+      copyEmailStatus.textContent='Copied!';
+      clearTimeout(copyEmailButton.confirmationTimer);
+      copyEmailButton.confirmationTimer=setTimeout(()=>{copyEmailStatus.textContent='';},2500);
     }catch{
       const selection=window.getSelection();
       if(selection){const range=document.createRange();range.selectNodeContents(email);selection.removeAllRanges();selection.addRange(range);}
@@ -513,4 +515,5 @@ if(copyEmailButton&&copyEmailStatus){
     }finally{copyEmailButton.disabled=false;}
   });
 }
+
 
