@@ -8,8 +8,8 @@ const projects={
   "kingdom": {
     "label": "FLAGSHIP PRODUCTION PLATFORM",
     "title": "Kingdom846",
-    "text": "A gaming community needed one dependable place for alliance information, live rosters, applications, rankings, voting and operational updates. I built Kingdom846 as a responsive platform used by real community members.",
-    "decision": "I separated the React interface from an Express API, persisted operational data in SQLite and enforced role boundaries for administrators, alliance leaders and War Room users. Rate-limited authentication, version-aware updates and a server-side Royal Advisor make the platform practical to operate.",
+    "text": "A gaming community needed one place for alliance information, live rosters, applications, rankings, voting and updates. I built Kingdom846 for them, and real members use it.",
+    "decision": "The React front end talks to an Express API, and the data lives in SQLite. Admins, alliance leaders and War Room users each get different permissions. Login is rate-limited, saves check the version first, and the Royal Advisor runs on the server.",
     "flow": [
       {
         "step": "EXPERIENCE",
@@ -38,20 +38,20 @@ const projects={
       "Recoverable editing"
     ],
     "caseStudy": {
-      "eyebrow": "DECISION UNDER PRESSURE",
+      "eyebrow": "ONE DESIGN DECISION",
       "title": "Preventing one teammate from silently overwriting another",
       "steps": [
         {
-          "title": "The failure mode",
-          "text": "Several authorised War Room users can edit one shared roster. A simple last-write-wins save could erase newer work without warning."
+          "title": "The problem",
+          "text": "Several War Room users can edit the same roster. With a plain last-write-wins save, one person could wipe out someone else’s newer changes without either of them noticing."
         },
         {
-          "title": "The safeguard",
-          "text": "Each client saves the version it started from. The API refuses a stale version with a conflict response instead of accepting an unsafe write."
+          "title": "The fix",
+          "text": "Each save includes the version the editor started from. If that version is out of date, the API rejects the save with a conflict instead of overwriting."
         },
         {
-          "title": "The recovery path",
-          "text": "The interface shows who saved the current version and lets the editor load it or deliberately replace it. The conflict becomes visible and recoverable."
+          "title": "What the editor sees",
+          "text": "The page shows who saved the latest version. The editor can load it, or choose to replace it on purpose."
         }
       ]
     },
@@ -77,8 +77,8 @@ const projects={
   "stream": {
     "label": "STREAMING DATA PLATFORM",
     "title": "Weblog Stream",
-    "text": "Web events can arrive late, duplicated or malformed. This project shows how I keep a real-time pipeline useful when the input is imperfect and the job has to recover from interruption.",
-    "decision": "I separated invalid events into a dead-letter path, used event-time watermarks for bounded state and checkpointed the stream. The Parquet writer keeps replayed micro-batches safe without erasing earlier batches.",
+    "text": "Web events show up late, twice, or broken. This project is about keeping a real-time pipeline correct when the input is messy and the job gets restarted.",
+    "decision": "Bad events go to a dead-letter path. Event-time watermarks stop state from growing forever, and the stream is checkpointed. The Parquet writer can replay a micro-batch without wiping out earlier ones.",
     "flow": [
       {
         "step": "SOURCE",
@@ -143,8 +143,8 @@ const projects={
   "taxi": {
     "label": "BATCH LAKEHOUSE",
     "title": "NYC Taxi Lakehouse",
-    "text": "Monthly public taxi files can change shape, contain invalid records and create duplicate output when a failed load is repeated. This project treats those conditions as design inputs rather than cleanup work.",
-    "decision": "I used declared schemas, bronze/silver/gold boundaries and manifest-driven loading. Quality rules stop bad data early, while salted aggregation handles skew without hiding it.",
+    "text": "The monthly NYC taxi files change shape, contain bad records, and can produce duplicates if a failed load is rerun. I designed for those problems from the start instead of cleaning up afterwards.",
+    "decision": "Schemas are declared up front, data moves through bronze, silver and gold layers, and a manifest tracks what has been loaded. Quality rules stop bad rows early, and salted aggregation deals with skewed keys.",
     "flow": [
       {
         "step": "SOURCE",
@@ -190,7 +190,7 @@ const projects={
     "artifacts": [
       {
         "kind": "BUNDLED SAMPLE DATA",
-        "title": "A real zone lookup to inspect",
+        "title": "Real taxi-zone sample data",
         "text": "The repository includes an offline subset of the taxi-zone dimension, including airport and Manhattan locations.",
         "url": "https://github.com/Bhanu047/nyc-taxi-lakehouse/blob/4077f5295d752b53672dfde739048ecac155c6c7/conf/taxi_zone_lookup.sample.csv",
         "action": "Open sample CSV",
@@ -198,7 +198,7 @@ const projects={
       },
       {
         "kind": "CORRECTNESS TEST",
-        "title": "Optimise skew without changing totals",
+        "title": "Fixing skew without changing the totals",
         "text": "The test compares salted and ordinary aggregation results, then checks that totals stay consistent across different bucket counts.",
         "url": "https://github.com/Bhanu047/nyc-taxi-lakehouse/blob/4077f5295d752b53672dfde739048ecac155c6c7/tests/test_skew.py",
         "action": "Read aggregation tests",
@@ -209,8 +209,8 @@ const projects={
   "retail": {
     "label": "ANALYTICS WAREHOUSE",
     "title": "Retail Warehouse",
-    "text": "Retail reporting becomes unreliable when order totals, customer history and incremental loads are defined differently across models. This project creates one tested path from raw records to business-ready marts.",
-    "decision": "I separated staging, intermediate and mart layers, kept money in integer cents until presentation, added a three-day incremental lookback and used an SCD Type 2 snapshot for product history.",
+    "text": "Retail numbers stop matching when different models calculate order totals, customer history or incremental loads in different ways. This project has one tested path from raw records to the reporting tables.",
+    "decision": "Staging, intermediate and mart layers are kept separate. Money stays in integer cents until it’s displayed, incremental models look back three days, and product history uses an SCD Type 2 snapshot.",
     "flow": [
       {
         "step": "SOURCE",
@@ -264,7 +264,7 @@ const projects={
       },
       {
         "kind": "ANALYTICS MODEL",
-        "title": "Inspect the business-facing output",
+        "title": "The daily revenue model",
         "text": "The daily mart defines order counts, cancellations, returns, customer counts, units, revenue and average order value from one order fact.",
         "url": "https://github.com/Bhanu047/retail-warehouse/blob/8629c0ad2960c5e997e07a66312b3c605bb52607/models/marts/fct_daily_revenue.sql",
         "action": "Read daily revenue model",
@@ -275,8 +275,8 @@ const projects={
   "infra": {
     "label": "CLOUD FOUNDATION",
     "title": "Data Platform Terraform",
-    "text": "Cloud data platforms become risky when environments drift and pipeline identities receive broad permissions. This project makes the platform repeatable, reviewable and constrained by design.",
-    "decision": "I split the platform into reusable data-lake, catalog and identity modules, separated environment inputs and gave the pipeline only the S3 access its data path requires.",
+    "text": "Problems start when dev and prod drift apart, or when a pipeline has more permissions than it needs. This project builds the platform the same way every time and keeps permissions tight.",
+    "decision": "The platform is split into reusable modules for the data lake, the catalog and identity. Each environment has its own inputs, and the pipeline only gets the S3 access it actually needs.",
     "flow": [
       {
         "step": "DEFINE",
@@ -332,7 +332,7 @@ const projects={
       {
         "kind": "PRODUCTION GUARDRAIL",
         "title": "Refuse destructive bucket settings in production",
-        "text": "The mocked-provider test requests force_destroy in production and expects the effective value to remain false. This checks configuration at plan time.",
+        "text": "The mocked-provider test asks for force_destroy in production and expects the effective value to stay false, so the check happens at plan time.",
         "url": "https://github.com/Bhanu047/data-platform-terraform/blob/ed0809d745b5964801e8eac561ded0e5604b33e1/tests/guardrails.tftest.hcl",
         "action": "Read guardrail tests",
         "snippet": "environment = \"prod\"\nforce_destroy_buckets = true\n\ncondition = output.force_destroy_effective == false"
@@ -348,7 +348,7 @@ const detail=document.getElementById("project-detail");
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
 function renderArtifacts(project){
   if(!project.artifacts?.length)return "";
-  return '<section class="project-artifacts" aria-label="Project evidence"><h4>Inspect the evidence</h4><div class="artifact-grid">'+(project.artifacts||[]).map(item=>
+  return '<section class="project-artifacts" aria-label="Project evidence"><h4>Code and tests</h4><div class="artifact-grid">'+(project.artifacts||[]).map(item=>
     '<article class="artifact-card"><span class="artifact-kind">'+escapeHTML(item.kind)+'</span><h5>'+escapeHTML(item.title)+'</h5><p>'+escapeHTML(item.text)+'</p>'+
     (item.snippet?'<details><summary>View excerpt</summary><pre><code>'+escapeHTML(item.snippet)+'</code></pre></details>':'')+
     '<a href="'+escapeHTML(item.url)+'" target="_blank" rel="noreferrer">'+escapeHTML(item.action)+' ↗</a></article>'
