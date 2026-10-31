@@ -59,10 +59,10 @@ const server = http.createServer((req, res) => {
       await portrait.evaluate(img => img.decode());
       assert(await portrait.evaluate(img => img.naturalWidth > 0));
       assert.equal(await page.locator('.why-grid article').count(), 3);
-      assert.equal(await page.locator('header nav a[href="#workflow"]').count(), 0);
+      assert.equal(await page.locator('.workflow-track li').count(), 6);
       assert.equal(await page.locator('.stack-group').count(), 4);
       assert.equal(await page.locator('.stack-group .logo-grid > span').count(), 47);
-      assert.equal(await page.getByRole('tab').first().getAttribute('data-project'), 'stream');
+      assert.equal(await page.getByRole('tab').first().getAttribute('data-project'), 'kingdom');
       assert.equal(await page.locator('.engineering-note-tile').count(), 5);
       assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
@@ -124,7 +124,7 @@ const server = http.createServer((req, res) => {
     await linkedPage.goForward();
     await linkedPage.getByRole('tabpanel').getByRole('heading', { name: 'NYC Taxi Lakehouse', exact: true }).waitFor();
     await linkedPage.goto(url + '/#project-unknown');
-    await linkedPage.getByRole('tabpanel').getByRole('heading', { name: 'Weblog Stream', exact: true }).waitFor();
+    await linkedPage.getByRole('tabpanel').getByRole('heading', { name: 'Kingdom846', exact: true }).waitFor();
     await linkedPage.close();
     // Both disabled JavaScript and an unavailable script must retain evidence.
     for (const disabled of [true, false]) {
@@ -132,10 +132,10 @@ const server = http.createServer((req, res) => {
       const page = await context.newPage();
       if (!disabled) await page.route('**/script.js*', route => route.abort());
       await page.goto(url);
-      assert.match(await page.locator('#project-detail').innerText(), /Weblog Stream/);
+      assert.match(await page.locator('#project-detail').innerText(), /Kingdom846/);
       assert(await page.locator('.project-footer a').last().isVisible());
       assert.equal(await page.locator('.project-list').isVisible(), false);
-      assert(await page.locator('.artifact-card a').first().isVisible());
+      assert(await page.locator('.project-showcase img').isVisible());
       assert(await page.locator('.why-grid').isVisible());
       assert(await page.locator('.stack-group').first().isVisible());
       await context.close();
@@ -168,7 +168,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
       await notePage.close();
     }
-    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, why-hire-me band, all 47 skills, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
+    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, why-hire-me band, workflow, all 47 skills, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();

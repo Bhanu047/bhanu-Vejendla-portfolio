@@ -6,7 +6,7 @@ const overviewStages=[...document.querySelectorAll(".console .pipeline article")
 let liveIndex=0;
 const projects={
   "kingdom": {
-    "label": "LIVE PRODUCTION PLATFORM",
+    "label": "FLAGSHIP PRODUCTION PLATFORM",
     "title": "Kingdom846",
     "text": "A gaming community needed one dependable place for alliance information, live rosters, applications, rankings, voting and operational updates. I built Kingdom846 as a responsive platform used by real community members.",
     "decision": "I separated the React interface from an Express API, persisted operational data in SQLite and enforced role boundaries for administrators, alliance leaders and War Room users. Rate-limited authentication, version-aware updates and a server-side Royal Advisor make the platform practical to operate.",
@@ -434,7 +434,14 @@ function updateScrollProgress(){
 addEventListener("scroll",()=>{if(!progressTick){requestAnimationFrame(updateScrollProgress);progressTick=true}},{passive:true});
 updateScrollProgress();
 
+const workflowStages=[...document.querySelectorAll(".workflow-track li")];
+const workflowState=document.getElementById("workflow-state");
+const workflowTrackWrap=document.querySelector(".workflow-track-wrap");
+const workflowStates=["DISCOVERING SOURCES","DEFINING CONTRACTS","INGESTING DATA","TRANSFORMING MODELS","PUBLISHING PRODUCTS","MONITORING PIPELINE"];
+let workflowIndex=0;
 let overviewTimer;
+let workflowTimer;
+let workflowInteractionUntil=0;
 
 function showOverviewStage(index){
   if(!overviewStages.length||!liveState)return;
@@ -442,9 +449,22 @@ function showOverviewStage(index){
   liveState.textContent=liveStates[index];
 }
 
+function showWorkflowStage(index,{follow=false}={}){
+  if(!workflowStages.length)return;
+  workflowStages.forEach((stage,stageIndex)=>stage.classList.toggle("is-active",stageIndex===index));
+  if(workflowState)workflowState.textContent=workflowStates[index];
+  if(follow&&workflowTrackWrap&&innerWidth<=700&&Date.now()>workflowInteractionUntil){
+    const stage=workflowStages[index];
+    const left=stage.offsetLeft-(workflowTrackWrap.clientWidth-stage.offsetWidth)/2;
+    workflowTrackWrap.scrollTo({left:Math.max(0,left),behavior:"smooth"});
+  }
+}
+
 function stopMotionCycles(){
   clearInterval(overviewTimer);
+  clearInterval(workflowTimer);
   overviewTimer=undefined;
+  workflowTimer=undefined;
 }
 
 function startMotionCycles({restartVisuals=false}={}){
@@ -467,6 +487,19 @@ function startMotionCycles({restartVisuals=false}={}){
       showOverviewStage(liveIndex);
     },1800);
   }
+
+  if(workflowStages.length){
+    workflowTimer=setInterval(()=>{
+      workflowIndex=(workflowIndex+1)%Math.min(workflowStates.length,workflowStages.length);
+      showWorkflowStage(workflowIndex,{follow:true});
+    },3200);
+  }
+}
+
+if(workflowTrackWrap){
+  ["pointerdown","touchstart","wheel"].forEach(eventName=>workflowTrackWrap.addEventListener(eventName,()=>{
+    workflowInteractionUntil=Date.now()+8000;
+  },{passive:true}));
 }
 
 document.addEventListener("visibilitychange",()=>startMotionCycles({restartVisuals:!document.hidden}));
@@ -514,7 +547,7 @@ if(proof&&!reducedMotion&&"IntersectionObserver" in window){
 }
 
 if(!reducedMotion&&"IntersectionObserver" in window){
-  const revealItems=document.querySelectorAll(".about-grid,.why-grid,.project-layout,.cta h2");
+  const revealItems=document.querySelectorAll(".about-grid,.why-grid,.workflow-console,.project-layout,.cta h2");
   const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
     if(entry.isIntersecting){entry.target.classList.add("is-visible");revealObserver.unobserve(entry.target)}
   }),{threshold:.12});
