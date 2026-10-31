@@ -43,7 +43,7 @@ const projects={
       "58 countries",
       "3.5 pages per visit"
     ],
-    "evidenceLabel": "SITE USAGE · AUG 3–OCT 31, 2026 (UTC)",
+    "evidenceLabel": "SITE USAGE",
     "tags": [
       "React",
       "Express",
