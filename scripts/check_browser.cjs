@@ -82,9 +82,6 @@ const server = http.createServer((req, res) => {
         }
       }
       if (width === 1280) {
-        await page.getByRole('button', { name: 'Copy project link', exact: true }).click();
-        await page.getByRole('status').filter({ hasText: 'Project link copied.' }).waitFor();
-        assert.equal(await page.evaluate(() => navigator.clipboard.readText()), url + '/#project-data-platform-terraform');
         await page.getByRole('button', { name: 'Copy email', exact: true }).click();
         await page.getByRole('status').filter({ hasText: 'Copied!' }).waitFor();
         assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'bhanumanideepvejendla@gmail.com');
@@ -135,8 +132,6 @@ const server = http.createServer((req, res) => {
     await fallbackPage.getByRole('button', { name: 'Copy email', exact: true }).click();
     await fallbackPage.getByRole('status').filter({ hasText: 'copy it manually' }).waitFor();
     assert.equal(await fallbackPage.evaluate(() => window.getSelection().toString()), 'bhanumanideepvejendla@gmail.com');
-    await fallbackPage.getByRole('button', { name: 'Copy project link', exact: true }).click();
-    await fallbackPage.getByRole('status').filter({ hasText: 'Copy this URL:' }).waitFor();
     await fallbackPage.close();
     console.log('Browser checks passed: 7 viewports, showcase loading, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
@@ -144,6 +139,7 @@ const server = http.createServer((req, res) => {
     server.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
 
 
 

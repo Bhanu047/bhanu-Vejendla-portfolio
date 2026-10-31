@@ -72,11 +72,15 @@ The asset is a real page capture; the historical launch figures remain labelled
 as reported figures. Experience copy also uses the terabyte-scale processing
 claim from the owner's existing CV, without adding throughput benchmarks.
 
-Each case study has a direct fragment link and a Copy project link action:
+Each case study supports direct fragment URLs:
 `#project-kingdom846`, `#project-weblog-stream`, `#project-nyc-taxi-lakehouse`,
 `#project-retail-warehouse` and `#project-data-platform-terraform`.
 Opening a link selects the corresponding tab and scrolls to Projects. Tab
 selection updates the URL, and browser Back/Forward restores the selection.
 Keyboard selection replaces the current history entry. Unsupported project
-fragments fall back to the flagship, and a denied clipboard request displays
-the URL for manual copying.
+fragments fall back to the flagship, without adding visible sharing controls.
+
+
+The project-sharing controls and screenshot caption are intentionally omitted
+from the page to keep the case studies focused. Existing project URLs continue
+to work.
