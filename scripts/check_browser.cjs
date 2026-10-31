@@ -61,8 +61,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.why-grid article').count(), 3);
       assert.equal(await page.locator('header nav a[href="#workflow"]').count(), 0);
       assert.equal(await page.locator('.stack-group').count(), 4);
-      assert.equal(await page.locator('.stack-group .logo-grid > span').count(), 24);
-      assert.equal(await page.locator('.stack-also').count(), 4);
+      assert.equal(await page.locator('.stack-group .logo-grid > span').count(), 47);
       assert.equal(await page.getByRole('tab').first().getAttribute('data-project'), 'stream');
       assert.equal(await page.locator('.engineering-note-tile').count(), 5);
       assert(await page.locator('.stack-group').first().isVisible());
@@ -169,7 +168,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
       await notePage.close();
     }
-    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, why-hire-me band, trimmed skills, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
+    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, why-hire-me band, all 47 skills, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();

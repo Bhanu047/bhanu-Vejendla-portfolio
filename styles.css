@@ -755,8 +755,6 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
 .why-grid a{margin-top:auto;color:#2f5bcc;font-size:.85rem;font-weight:700;text-decoration-thickness:1px;text-underline-offset:3px}
 .career-results strong{color:#1e2a40;font-weight:700}
 .career-stack{margin:12px 0 0!important;font:500 .75rem/1.6 var(--mono)!important;letter-spacing:.02em;color:#5c6b83!important}
-.stack-also{margin:14px 0 0;color:#9ca9bf;font-size:.85rem;line-height:1.7}
-.stack-also span{display:inline-block;margin-right:8px;font:500 .68rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#6ee7d2}
 @media(max-width:1000px){.why-inner{grid-template-columns:1fr;gap:24px}}
 @media(max-width:800px){.why-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.why{padding:56px 16px}}
