@@ -129,61 +129,16 @@
   .logo-grid{grid-template-columns:1fr}
 }
 
-/* Engineering workflow and restrained motion system */
+/* Restrained motion system */
 .scroll-progress{position:fixed;inset:0 0 auto;height:3px;background:transparent;z-index:40;pointer-events:none}
 .scroll-progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,#4e7cff,#55d6c2);box-shadow:0 0 12px #55d6c288}
 .motion-paused *,.motion-paused *:before,.motion-paused *:after{animation-play-state:paused!important}
-.workflow-section{padding:110px max(28px,calc((100vw - 1240px)/2));background:#fff;border-top:1px solid #d6dce5;border-bottom:1px solid #d6dce5}
-.workflow-console{overflow:hidden;border:1px solid #2e3b53;border-radius:9px;background:#0b1020;color:#f7f9fc;box-shadow:0 24px 60px #15233d1f}
-.workflow-console-bar{height:50px;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid #2a3650;background:#121b2e;font:400 .62rem var(--mono);color:#91a0b7}
-.workflow-console-bar>span{display:flex;gap:6px}
-.workflow-console-bar>span i{width:7px;height:7px;border-radius:50%;background:#ff6d6d}
-.workflow-console-bar>span i:nth-child(2){background:#f1c65b}
-.workflow-console-bar>span i:nth-child(3){background:#4ed18c}
-.workflow-console-bar>b{margin:auto;font-weight:400}
-.workflow-console-bar>em{display:flex;align-items:center;gap:8px;min-width:176px;justify-content:flex-end;color:#63ddbd;font-style:normal}
-.workflow-console-bar>em i{width:7px;height:7px;border-radius:50%;background:#4ce0a6;box-shadow:0 0 0 5px #4ce0a612;animation:pulse 2s infinite}
-.workflow-health{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #2a3650}
-.workflow-health span{padding:12px 16px;border-right:1px solid #2a3650;font:400 .55rem var(--mono);color:#728198}
-.workflow-health span:last-child{border-right:0}
-.workflow-health b{display:block;margin-top:3px;color:#61d9bb;font-size:.72rem;font-weight:500}
-.workflow-track-wrap{position:relative;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#425270 #0b1020}
-.workflow-track{position:relative;min-width:1110px;list-style:none;margin:0;padding:28px 18px 34px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
-.workflow-track:before{content:"";position:absolute;left:8%;right:8%;top:59px;height:1px;background:linear-gradient(90deg,#30405f,#4d73d7,#54d5c0,#30405f);background-size:220% 100%;animation:workflowLine 3s linear infinite}
-.workflow-track li{position:relative;min-height:172px;padding:22px 15px 16px;border:1px solid #2e3c55;border-radius:6px;background:#0e1728;transition:transform .35s,border-color .35s,box-shadow .35s,background .35s}
-.workflow-track li:before{content:"";position:absolute;top:26px;right:14px;width:8px;height:8px;border-radius:50%;border:2px solid #6785cb;background:#0e1728;z-index:2;transition:.35s}
-.workflow-track li.is-active{transform:translateY(-5px);border-color:#5f82dd;background:#111d32;box-shadow:0 12px 28px #0005,0 0 0 2px #5176d51a}
-.workflow-track li.is-active:before{border-color:#63ddbd;background:#63ddbd;box-shadow:0 0 0 6px #63ddbd16,0 0 15px #63ddbd}
-.workflow-track small{font:500 .58rem var(--mono);letter-spacing:.07em;color:#7296f0}
-.workflow-track h3{font-size:1rem;line-height:1.3;margin:25px 0 8px}
-.workflow-track p{margin:0;color:#92a0b5;font-size:.76rem;line-height:1.55}
-.workflow-guardrails{display:flex;flex-wrap:wrap;gap:9px 22px;padding:15px 18px;border-top:1px solid #2a3650;background:#0e1626}
-.workflow-guardrails span{font:500 .62rem var(--mono);color:#aebbd0}
-.workflow-guardrails i{font-style:normal;color:#5bd9bb;margin-right:6px}
-@keyframes workflowLine{to{background-position:-220% 0}}
 
 .reveal-ready{opacity:0;transform:translateY(18px)}
 .reveal-ready.is-visible{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
 
 @media(max-width:900px){
   header nav{gap:18px}
-  .workflow-section{padding:82px 28px}
-}
-
-@media(max-width:700px){
-  .workflow-section{padding:64px 16px}
-  .workflow-console-bar{height:auto;min-height:46px;padding:9px 10px;flex-wrap:wrap;gap:7px 10px}
-  .workflow-console-bar>b{max-width:170px;margin-left:auto;margin-right:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .workflow-console-bar>em{width:100%;min-width:0;justify-content:flex-start;padding-top:7px;border-top:1px solid #2a3650;font-size:.53rem}
-  .workflow-console-bar>em span{display:inline;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .workflow-health span{padding:10px 8px;font-size:.46rem;line-height:1.4}
-  .workflow-health b{font-size:.58rem}
-  .workflow-track{min-width:1010px;padding:24px 12px 30px;gap:9px}
-  .workflow-track li{min-height:158px;padding:18px 13px 14px}
-  .workflow-track h3{font-size:.9rem;margin-top:23px}
-  .workflow-track p{font-size:.7rem}
-  .workflow-guardrails{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 12px}
-  .workflow-guardrails span{font-size:.57rem}
 }
 
 /* Responsive platform_overview.yaml */
@@ -239,11 +194,8 @@
   .console-log{grid-template-columns:1fr}
 }
 
-
-
 /* Hide Netlify promotional badge injected on the netlify.app preview domain. */
 iframe#nl-badge-frame{display:none!important;visibility:hidden!important;pointer-events:none!important}
-
 
 /* Stronger, recruiter-friendly Experience typography */
 .career time{
@@ -275,7 +227,6 @@ iframe#nl-badge-frame{display:none!important;visibility:hidden!important;pointer
   .career p{font-size:.95rem;line-height:1.65}
 }
 
-
 /* Site-wide readable, confident typography */
 body{
   font-size:17px;
@@ -296,8 +247,6 @@ header nav a,.social a{font-size:.82rem;font-weight:700}
 .stack-group .group-heading small{font-size:.74rem;font-weight:600}
 .group-heading p{font-size:.86rem}
 .logo-grid>span{font-size:.75rem;font-weight:600}
-.workflow-track h3{font-weight:700}
-.workflow-track p{font-size:.82rem;font-weight:500;line-height:1.6}
 .flow-stage b{font-size:.88rem;font-weight:700}
 .flow-stage em{font-size:.66rem}
 .cta h2{font-weight:700}
@@ -307,7 +256,6 @@ header nav a,.social a{font-size:.82rem;font-weight:700}
   .section-title>p,.about-grid>div>p{font-size:.98rem}
   .logo-grid>span{font-size:.72rem}
 }
-
 
 /* Architecture flow: deliberate move, arrive, pause, then continue */
 .motion-enabled .architecture-flow .flow-link{
@@ -381,7 +329,7 @@ footer{background:#172033;color:#aeb9ca}
   border-color:#465775;
   box-shadow:0 28px 58px #0d14263d;
 }
-.console-bar,.workflow-console-bar{background:#26334a;border-bottom-color:#465775;color:#b4bfd0}
+.console-bar{background:#26334a;border-bottom-color:#465775;color:#b4bfd0}
 .activity{background:#202c42;border-bottom-color:#465775;color:#aeb9ca}
 .metrics,.console-log{border-color:#465775}
 .metrics span{border-color:#465775;color:#aeb9ca}
@@ -396,28 +344,12 @@ footer{background:#172033;color:#aeb9ca}
 .logo-grid>span:hover{background:#293750;border-color:#6f88ad}
 .stack-groups,.stack-grid{border-color:#465775}
 .stack-group,.stack-grid article{border-color:#465775}
-.workflow-console{
-  background:#172033;
-  border-color:#465775;
-  box-shadow:0 22px 52px #1118272b;
-}
-.workflow-health{border-bottom-color:#465775}
-.workflow-health span{border-right-color:#465775;color:#9eacc0}
-.workflow-track-wrap{scrollbar-color:#60708c #172033}
-.workflow-track:before{background:linear-gradient(90deg,#52637f,#6f91db,#68d6c1,#52637f);background-size:220% 100%}
-.workflow-track li{background:#202c42;border-color:#465775}
-.workflow-track li:before{background:#202c42}
-.workflow-track li.is-active{background:#2a3954;border-color:#7798df;box-shadow:0 12px 26px #11182738,0 0 0 2px #6f91db22}
-.workflow-track p{color:#b4bfd0}
-.workflow-guardrails{background:#202c42;border-top-color:#465775}
-.workflow-guardrails span{color:#c7d0dd}
 .lede{color:#cbd3df}
 .stack .section-title>p{color:#b2bdcc}
 .group-heading p{color:#aab6c8}
 .engineering-principles p{color:#b4bfd0}
 @media(max-width:700px){
   .console{box-shadow:0 16px 36px #11182733}
-  .workflow-console-bar>em{border-top-color:#465775}
 }
 
 /* BV identity system */
@@ -461,7 +393,6 @@ main,section[id]{scroll-margin-top:100px}
   .workflow-label{flex-wrap:wrap;gap:8px}
 }
 
-
 /* Section headings must wrap within their column at every desktop width. */
 .section-title{grid-template-columns:minmax(0,1fr) minmax(260px,380px);gap:32px}
 .section-title>div,.section-title>p{min-width:0}
@@ -470,7 +401,6 @@ main,section[id]{scroll-margin-top:100px}
 .project-fallback-links{display:flex;flex-wrap:wrap;gap:12px;padding:18px 0}
 .core-stack{margin:0 0 28px;color:#d7e5ff;font-size:1rem;line-height:1.8}
 .resume-link{display:inline-flex;align-items:center;min-height:44px;text-decoration:underline!important;text-underline-offset:4px}
-
 
 /* Personal introduction and progressive-enhancement controls. */
 [hidden]{display:none!important}
@@ -487,11 +417,6 @@ main,section[id]{scroll-margin-top:100px}
   .about-grid>aside{grid-column:auto}
 }
 
-
-
-
-
-
 /* Consistent reading scale: Manrope for copy, monospace for technical labels. */
 body{font-size:17px;line-height:1.75}
 .hero h1{font-size:clamp(2.6rem,4.6vw,4.6rem);line-height:1.08;letter-spacing:-.045em}
@@ -503,7 +428,7 @@ body{font-size:17px;line-height:1.75}
 .project-detail h3{font-size:2rem;line-height:1.2}
 .project-list span,.logo-grid>span,.tags span,.engineering-principles p{font-family:var(--sans)}
 .logo-grid>span{font-size:.875rem}
-.group-heading p,.workflow-track p{font-size:1rem;line-height:1.65}
+.group-heading p{font-size:1rem;line-height:1.65}
 .stack .section-title>p,.core-skills>p,.group-heading p{color:#c0ccdc}
 .career article{min-height:0;padding-bottom:42px}
 .career article>i:after{height:calc(100% + 42px)}
@@ -519,7 +444,6 @@ body{font-size:17px;line-height:1.75}
 .all-skills{border-top:1px solid #465775}
 .all-skills>summary{cursor:pointer;padding:20px 0;font-size:1rem;font-weight:700;color:#d9e5fa;min-height:48px}
 .all-skills[open]>summary{margin-bottom:10px}
-.illustration-note{padding:12px 18px;margin:0;color:#c0ccdc;font-size:.875rem;border-bottom:1px solid #465775}
 .project-artifacts{margin:26px 0 12px;border-top:1px solid #d3dce8;padding-top:20px}
 .project-artifacts>h4{font-size:1rem;margin:0 0 14px;color:#203552}
 .artifact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -544,7 +468,6 @@ body{font-size:17px;line-height:1.75}
 /* Keep project choices compact as the evidence panel grows. */
 .project-list button{height:auto;min-height:106px}
 
-
 /* Horizontal project selector: give the case study the full content width. */
 .project-layout{grid-template-columns:minmax(0,1fr);min-width:0}
 .project-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));min-width:0;max-width:100%;border-right:0;border-bottom:1px solid #ccd4df}
@@ -567,7 +490,6 @@ body{font-size:17px;line-height:1.75}
 .copy-email-row .contact-email{margin:0;font-size:1rem}
 .copy-confirmation{margin:0;font-size:.875rem;color:#344b68;min-height:1.5em}
 @media(max-width:580px){.copy-email-row{gap:8px 12px}.copy-email-row .contact-email{flex-basis:100%}}
-
 
 /* Experience timeline: visible markers, aligned dates and a continuous guide. */
 .career{max-width:1100px;margin-left:0}
@@ -598,9 +520,8 @@ body{font-size:17px;line-height:1.75}
 }
 @media(prefers-reduced-motion:reduce){.career article>i:before{animation:none!important;transform:none!important;opacity:1!important}}
 
-
 /* Tighter section rhythm, while preserving comfortable reading space. */
-.about,.experience,.stack,.projects,.workflow-section{padding-block:76px}
+.about,.experience,.stack,.projects{padding-block:76px}
 .hero{min-height:0}
 .hero-inner{padding-block:64px}
 .cta{padding-block:76px}
@@ -618,31 +539,22 @@ body{font-size:17px;line-height:1.75}
 .project-signals span,.project-evidence span,.tags span{font-size:.8125rem;line-height:1.6}
 .flow-stage small{font-size:.75rem}
 .flow-stage em{font-size:.8125rem;line-height:1.55}
-.workflow-track small{font-size:.6875rem}
-.workflow-health span,.workflow-console-bar,.workflow-guardrails span{font-size:.75rem}
-.workflow-health b{font-size:.875rem}
 .career time,.career small{font-size:.8125rem}
 .project-overview.is-flagship{display:grid;grid-template-columns:1.15fr 1fr;gap:28px;align-items:start}
 .project-overview.is-flagship .project-brief{grid-template-columns:1fr;margin:0;gap:16px}
 .project-showcase{margin:0;min-width:0}
 .project-showcase img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid #cad4e2;box-shadow:0 10px 26px #17203312}
 
-
-
-
-
 @media(max-width:900px){
   .project-overview.is-flagship{grid-template-columns:1fr;gap:20px}
 }
 @media(max-width:700px){
-  .about,.experience,.stack,.projects,.workflow-section,.cta{padding-block:52px}
+  .about,.experience,.stack,.projects,.cta{padding-block:52px}
   .hero-inner{padding-block:48px}
   .section-title{margin-bottom:24px}
   .about-grid{grid-template-rows:auto;row-gap:24px}
   
 }
-
-
 
 /* Use existing content to balance columns and reduce empty bands. */
 .hero-inner{gap:36px;padding-block:44px;grid-template-columns:.95fr 1.05fr}
@@ -654,7 +566,7 @@ body{font-size:17px;line-height:1.75}
 .hero-visual .proof div:nth-last-child(-n+2){border-bottom:0}
 .hero-visual .proof strong{font-size:1.6rem;color:#f2f5fa}
 .hero-visual .proof span{font-size:.8125rem;line-height:1.5;color:#c0ccdc}
-.about,.experience,.stack,.projects,.workflow-section,.cta{padding-block:52px}
+.about,.experience,.stack,.projects,.cta{padding-block:52px}
 .section-title{margin-bottom:24px;gap:24px}
 .about-grid{grid-template-columns:280px minmax(0,1fr);grid-template-rows:auto;gap:32px;align-items:center}
 .portrait{grid-row:auto;align-self:center}
@@ -688,7 +600,7 @@ body{font-size:17px;line-height:1.75}
   .logo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media(max-width:700px){
-  .about,.experience,.stack,.projects,.workflow-section,.cta{padding-block:36px}
+  .about,.experience,.stack,.projects,.cta{padding-block:36px}
   .hero-inner{padding-block:32px}
   .hero-visual .proof div{padding:12px;gap:9px}
   .hero-visual .proof strong{font-size:1.4rem}
@@ -828,3 +740,26 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
   .note-series-list{grid-template-columns:1fr}
 }
 
+
+/* Recruiter scan: employers in the hero, why-hire-me band, scannable experience */
+.hero-employers{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 0;max-width:640px}
+.hero-employers span{flex-basis:100%;font:500 .66rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#7f8ea6}
+.hero-employers b{padding:4px 9px;border:1px solid #33425d;border-radius:4px;background:#ffffff08;color:#e6ecf5;font-size:.78rem;font-weight:700}
+.why{padding:72px max(28px,calc((100vw - 1240px)/2));background:#fff;border-bottom:1px solid #d6dce5}
+.why-inner{display:grid;grid-template-columns:300px 1fr;gap:44px;align-items:start}
+.why-heading small{font:500 .7rem var(--mono);letter-spacing:.09em;color:#3868e8}
+.why-heading h2{margin:12px 0 0;font-size:clamp(1.6rem,2.4vw,2.1rem);line-height:1.15;letter-spacing:-.03em;color:#172033}
+.why-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.why-grid article{display:flex;flex-direction:column;padding:22px;border:1px solid #d3dae5;border-radius:8px;background:#f7f9fc}
+.why-grid article>span{font:500 .7rem var(--mono);color:#5275ce}
+.why-grid h3{margin:12px 0 8px;font-size:1.08rem;line-height:1.3;color:#172033}
+.why-grid p{margin:0 0 16px;color:#4d5b72;font-size:.95rem;line-height:1.6}
+.why-grid p strong{color:#172033}
+.why-grid a{margin-top:auto;color:#2f5bcc;font-size:.85rem;font-weight:700;text-decoration-thickness:1px;text-underline-offset:3px}
+.career-results strong{color:#1e2a40;font-weight:700}
+.career-stack{margin:12px 0 0!important;font:500 .75rem/1.6 var(--mono)!important;letter-spacing:.02em;color:#5c6b83!important}
+.stack-also{margin:14px 0 0;color:#9ca9bf;font-size:.85rem;line-height:1.7}
+.stack-also span{display:inline-block;margin-right:8px;font:500 .68rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#6ee7d2}
+@media(max-width:1000px){.why-inner{grid-template-columns:1fr;gap:24px}}
+@media(max-width:800px){.why-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.why{padding:56px 16px}.hero-employers b{font-size:.75rem}}
