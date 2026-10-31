@@ -320,7 +320,7 @@ assert transform.deduplicate(frame, "10 minutes").count() == 3</code></pre></det
 </article>
 </div>
 <section class="engineering-notes" id="engineering-notes" aria-labelledby="engineering-notes-title">
-<div class="engineering-notes-heading"><div><small>ENGINEERING NOTES · ONE PER PROJECT</small><h3 id="engineering-notes-title">How I keep pipelines from failing silently.</h3></div><p>Each note starts with a real failure risk in one of my projects, then shows the safeguard I chose and the test that proves it works.</p></div>
+<div class="engineering-notes-heading"><div><small>ENGINEERING NOTES · ONE PER PROJECT</small><h3 id="engineering-notes-title">How I keep pipelines from failing silently.</h3></div><p>Each note starts with a real failure risk in one of my projects, then shows the safeguard I chose and how I checked it holds.</p></div>
 <div class="engineering-notes-grid">
 <a class="engineering-note-tile" href="notes/replay-safe-streaming.html"><span>01 · WEBLOG STREAM</span><h4>Exactly-once is won in the sink</h4><p>How a count exposed silent data loss and led to replay-safe Parquet writes.</p><small>Kafka · PySpark · Parquet</small></a>
 <a class="engineering-note-tile" href="notes/retry-safe-monthly-loads.html"><span>02 · NYC TAXI LAKEHOUSE</span><h4>A batch is finished only after its output commits</h4><p>Making monthly loads safe to retry with partition replacement and a durable manifest.</p><small>PySpark · Manifests · Backfills</small></a>
