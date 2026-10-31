@@ -490,3 +490,56 @@ main,section[id]{scroll-margin-top:100px}
 
 
 
+
+
+/* Consistent reading scale: Manrope for copy, monospace for technical labels. */
+body{font-size:17px;line-height:1.75}
+.hero h1{font-size:clamp(2.6rem,4.6vw,4.6rem);line-height:1.08;letter-spacing:-.045em}
+.section-title h2{font-size:clamp(2rem,3.3vw,3.1rem);line-height:1.15;letter-spacing:-.035em}
+.cta h2{font-size:clamp(2rem,3.7vw,3.5rem);line-height:1.15}
+.section-title>p,.about-grid>div>p,.career p,.project-detail p,.project-guide,.cta .contact-intro{font-size:1.0625rem;line-height:1.8;color:#46546b}
+.about-grid>div>p{max-width:70ch}
+.lede{font-size:1.125rem;line-height:1.8;color:#d3dce8}
+.project-detail h3{font-size:2rem;line-height:1.2}
+.project-list span,.logo-grid>span,.tags span,.engineering-principles p{font-family:var(--sans)}
+.logo-grid>span{font-size:.875rem}
+.group-heading p,.workflow-track p{font-size:1rem;line-height:1.65}
+.stack .section-title>p,.core-skills>p,.group-heading p{color:#c0ccdc}
+.career article{min-height:0;padding-bottom:42px}
+.career article>i:after{height:calc(100% + 42px)}
+.career article>i{height:auto;min-height:10px;background:linear-gradient(#3e6fe8 10px,transparent 10px);box-shadow:none}
+.career article>i:after{top:12px;height:calc(100% + 30px)}
+.career .career-impact{margin:0 0 10px;color:#1e3557;font-weight:700}
+.career-results{margin:0;padding-left:20px;color:#46546b;font-size:1.0625rem;line-height:1.8}
+.career-results li+li{margin-top:6px}
+.core-skills{padding-bottom:26px}
+.core-skills h3{font-size:1.2rem;margin:0 0 16px}
+.core-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.core-skills>p{margin:16px 0 0;font-size:1rem}
+.all-skills{border-top:1px solid #465775}
+.all-skills>summary{cursor:pointer;padding:20px 0;font-size:1rem;font-weight:700;color:#d9e5fa;min-height:48px}
+.all-skills[open]>summary{margin-bottom:10px}
+.illustration-note{padding:12px 18px;margin:0;color:#c0ccdc;font-size:.875rem;border-bottom:1px solid #465775}
+.project-artifacts{margin:26px 0 12px;border-top:1px solid #d3dce8;padding-top:20px}
+.project-artifacts>h4{font-size:1rem;margin:0 0 14px;color:#203552}
+.artifact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.artifact-card{min-width:0;background:#f4f7fc;border:1px solid #d5deed;border-radius:8px;padding:16px}
+.artifact-card h5{font-size:1rem;margin:6px 0 8px;line-height:1.4}
+.artifact-kind{font:500 .65rem var(--mono);color:#315fce;letter-spacing:.06em}
+.project-detail .artifact-card p{font-size:.9375rem;line-height:1.7;margin:0 0 12px}
+.artifact-card a{display:inline-block;color:#244a9e;font-size:.875rem;font-weight:700;text-underline-offset:3px;padding-block:5px}
+.artifact-card summary{cursor:pointer;font-size:.875rem;color:#344f78;padding:10px 0}
+.artifact-card pre{max-width:100%;overflow:auto;font:400 .75rem/1.65 var(--mono);background:#e8eef8;padding:12px;border-radius:4px;margin:0}
+.copy-email-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:20px;min-height:48px}
+.copy-email{font:700 .9375rem var(--sans);color:#244a9e;background:#fff;border:1px solid #a9b7cd;border-radius:6px;padding:12px 20px;min-height:48px;cursor:pointer}
+.copy-email-row [role=status]{font-size:.875rem;color:#344b68}
+@media(max-width:900px){.core-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){
+  .hero h1{font-size:clamp(2.4rem,9.5vw,3.1rem)}
+  .section-title h2{font-size:clamp(1.9rem,7vw,2.4rem)}
+  .core-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .artifact-grid{grid-template-columns:1fr}
+  .career-results{font-size:1rem;line-height:1.75}
+}
+/* Keep project choices compact as the evidence panel grows. */
+.project-list button{height:auto;min-height:106px}
