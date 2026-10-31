@@ -6,7 +6,7 @@ const path = require('node:path');
 const { chromium } = require('playwright');
 
 const root = path.resolve(__dirname, '..');
-const types = { '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png', '.html': 'text/html', '.pdf': 'application/pdf' };
+const types = { '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.html': 'text/html', '.pdf': 'application/pdf' };
 const server = http.createServer((req, res) => {
   const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
   const filename = path.resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname));
@@ -57,6 +57,10 @@ const server = http.createServer((req, res) => {
       await portrait.scrollIntoViewIfNeeded();
       await portrait.evaluate(img => img.decode());
       assert(await portrait.evaluate(img => img.naturalWidth > 0));
+      const showcase = page.locator('.project-showcase img');
+      await showcase.scrollIntoViewIfNeeded();
+      await showcase.evaluate(img => img.decode());
+      assert(await showcase.evaluate(img => img.naturalWidth > 0));
       assert.equal(await page.locator('.stack-group').count(), 4);
       assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
@@ -69,16 +73,47 @@ const server = http.createServer((req, res) => {
         await tab.click();
         assert.equal(await tab.getAttribute('aria-selected'), 'true');
         assert(await page.locator('.project-footer > a').isVisible());
-        assert(await page.locator('.project-artifacts h4').isVisible());
-        assert(await page.locator('.artifact-card a').first().isVisible());
+        if (await tab.getAttribute('data-project') === 'kingdom') {
+          assert(await page.locator('.project-showcase img').isVisible());
+          assert.equal(await page.getByRole('link', { name: 'Open live platform ↗', exact: true }).count(), 0);
+        } else {
+          assert(await page.locator('.project-artifacts h4').isVisible());
+          assert(await page.locator('.artifact-card a').first().isVisible());
+        }
       }
       if (width === 1280) {
+        await page.getByRole('button', { name: 'Copy project link', exact: true }).click();
+        await page.getByRole('status').filter({ hasText: 'Project link copied.' }).waitFor();
+        assert.equal(await page.evaluate(() => navigator.clipboard.readText()), url + '/#project-data-platform-terraform');
         await page.getByRole('button', { name: 'Copy email', exact: true }).click();
         await page.getByRole('status').filter({ hasText: 'Copied!' }).waitFor();
         assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'bhanumanideepvejendla@gmail.com');
       }
       await page.close();
     }
+    const projects = [
+      ['kingdom846', 'Kingdom846'],
+      ['weblog-stream', 'Weblog Stream'],
+      ['nyc-taxi-lakehouse', 'NYC Taxi Lakehouse'],
+      ['retail-warehouse', 'Retail Warehouse'],
+      ['data-platform-terraform', 'Data Platform Terraform'],
+    ];
+    const linkedPage = await browser.newPage({ reducedMotion: 'reduce' });
+    for (const [slug, title] of projects) {
+      await linkedPage.goto(url + '/#project-' + slug);
+      await linkedPage.getByRole('tabpanel').getByRole('heading', { name: title, exact: true }).waitFor();
+      assert.equal(await linkedPage.getByRole('tab', { selected: true }).getAttribute('aria-controls'), 'project-detail');
+    }
+    await linkedPage.goto(url + '/#project-kingdom846');
+    await linkedPage.locator('[data-project="stream"]').click();
+    await linkedPage.locator('[data-project="taxi"]').click();
+    await linkedPage.goBack();
+    await linkedPage.getByRole('tabpanel').getByRole('heading', { name: 'Weblog Stream', exact: true }).waitFor();
+    await linkedPage.goForward();
+    await linkedPage.getByRole('tabpanel').getByRole('heading', { name: 'NYC Taxi Lakehouse', exact: true }).waitFor();
+    await linkedPage.goto(url + '/#project-unknown');
+    await linkedPage.getByRole('tabpanel').getByRole('heading', { name: 'Kingdom846', exact: true }).waitFor();
+    await linkedPage.close();
     // Both disabled JavaScript and an unavailable script must retain evidence.
     for (const disabled of [true, false]) {
       const context = await browser.newContext({ javaScriptEnabled: !disabled });
@@ -88,7 +123,7 @@ const server = http.createServer((req, res) => {
       assert.match(await page.locator('#project-detail').innerText(), /Kingdom846/);
       assert(await page.locator('.project-footer > a').isVisible());
       assert.equal(await page.locator('.project-list').isVisible(), false);
-      assert(await page.locator('.artifact-card a').first().isVisible());
+      assert(await page.locator('.project-showcase img').isVisible());
       assert(await page.locator('.stack-group').first().isVisible());
       await context.close();
     }
@@ -100,13 +135,16 @@ const server = http.createServer((req, res) => {
     await fallbackPage.getByRole('button', { name: 'Copy email', exact: true }).click();
     await fallbackPage.getByRole('status').filter({ hasText: 'copy it manually' }).waitFor();
     assert.equal(await fallbackPage.evaluate(() => window.getSelection().toString()), 'bhanumanideepvejendla@gmail.com');
+    await fallbackPage.getByRole('button', { name: 'Copy project link', exact: true }).click();
+    await fallbackPage.getByRole('status').filter({ hasText: 'Copy this URL:' }).waitFor();
     await fallbackPage.close();
-    console.log('Browser checks passed: 7 viewports, project evidence, visible skills, clipboard success/fallback and JavaScript fallback.');
+    console.log('Browser checks passed: 7 viewports, showcase loading, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
 
 
 
