@@ -490,7 +490,6 @@ main,section[id]{scroll-margin-top:100px}
 .about-grid{grid-template-columns:240px minmax(0,1fr);align-items:start}
 .portrait{margin:0;grid-row:span 2}
 .portrait img{display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:12px;background:#172033}
-.portrait figcaption{margin-top:10px;color:#536176;font-size:.8rem}
 .about-grid>aside{grid-column:2}
 @media(max-width:700px){
   .about-grid{grid-template-columns:1fr}
