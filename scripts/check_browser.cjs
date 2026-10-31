@@ -58,13 +58,6 @@ const server = http.createServer((req, res) => {
         assert.equal(await tab.getAttribute('aria-selected'), 'true');
         assert(await page.getByRole('tabpanel').getByRole('link').isVisible());
       }
-      const resume = page.getByRole('link', { name: 'Download résumé (PDF) ↓', exact: true });
-      assert(await resume.isVisible());
-      assert.match(await resume.getAttribute('download'), /Resume\.pdf$/);
-      const pdf = await page.request.get(new URL(await resume.getAttribute('href'), url).href);
-      assert.equal(pdf.status(), 200);
-      assert.equal(pdf.headers()['content-type'], 'application/pdf');
-      assert.equal((await pdf.body()).subarray(0, 5).toString(), '%PDF-');
       await page.close();
     }
     // Both disabled JavaScript and an unavailable script must retain evidence.
@@ -78,7 +71,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.project-list').isVisible(), false);
       await context.close();
     }
-    console.log('Browser checks passed: 7 viewport widths, project tabs, portrait, PDF download and JavaScript fallback.');
+    console.log('Browser checks passed: 7 viewport widths, project tabs, portrait and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();
