@@ -94,6 +94,12 @@ const server = http.createServer((req, res) => {
       }
       await page.close();
     }
+    const motionPage = await browser.newPage({ viewport: { width: 1280, height: 900 }, reducedMotion: 'no-preference' });
+    await motionPage.goto(url);
+    await motionPage.locator('.hero-visual .proof').scrollIntoViewIfNeeded();
+    await motionPage.waitForTimeout(1600);
+    assert.deepEqual(await motionPage.locator('.hero-visual .proof strong').allTextContents(), ['7+', '3', '5', '4']);
+    await motionPage.close();
     const projects = [
       ['kingdom846', 'Kingdom846'],
       ['weblog-stream', 'Weblog Stream'],
@@ -158,7 +164,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
       await notePage.close();
     }
-    console.log('Browser checks passed: 7 portfolio viewports, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
+    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();
