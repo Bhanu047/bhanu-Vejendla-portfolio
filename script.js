@@ -38,11 +38,12 @@ const projects={
       "Responsive experience"
     ],
     "evidence": [
-      "596 visitors in first 19 days",
-      "3,298 pageviews across 49 countries",
-      "4.4 pages per visit"
+      "1,719 visits",
+      "5,968 pageviews",
+      "58 countries",
+      "3.5 pages per visit"
     ],
-    "evidenceLabel": "REPORTED LAUNCH SNAPSHOT",
+    "evidenceLabel": "SITE USAGE · AUG 3–OCT 31, 2026 (UTC)",
     "tags": [
       "React",
       "Express",
@@ -529,6 +530,7 @@ if(copyEmailButton&&copyEmailStatus){
     }finally{copyEmailButton.disabled=false;}
   });
 }
+
 
 
 
