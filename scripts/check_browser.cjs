@@ -64,6 +64,7 @@ const server = http.createServer((req, res) => {
       assert(await showcase.evaluate(img => img.naturalWidth > 0));
       assert.equal(await page.locator('.stack-group').count(), 4);
       assert.equal(await page.locator('.stack-group .logo-grid > span').count(), 47);
+      assert.equal(await page.locator('.engineering-note-tile').count(), 5);
       assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
       await first.focus();
@@ -83,10 +84,8 @@ const server = http.createServer((req, res) => {
         } else {
           assert(await page.locator('.project-artifacts h4').isVisible());
           assert(await page.locator('.artifact-card a').first().isVisible());
-          if (await tab.getAttribute('data-project') === 'stream') {
-            assert(await page.getByRole('link', { name: 'Read engineering note →', exact: true }).isVisible());
-          }
         }
+        assert(await page.getByRole('link', { name: 'Read engineering note →', exact: true }).isVisible());
       }
       if (width === 1280) {
         await page.getByRole('button', { name: 'Copy email', exact: true }).click();
@@ -140,16 +139,26 @@ const server = http.createServer((req, res) => {
     await fallbackPage.getByRole('status').filter({ hasText: 'copy it manually' }).waitFor();
     assert.equal(await fallbackPage.evaluate(() => window.getSelection().toString()), 'bhanumanideepvejendla@gmail.com');
     await fallbackPage.close();
-    const notePage = await browser.newPage({ viewport: { width: 390, height: 900 }, reducedMotion: 'reduce' });
-    await notePage.goto(url + '/notes/replay-safe-streaming.html');
-    await notePage.getByRole('heading', { name: 'Exactly-once is won in the sink.', exact: true }).waitFor();
-    assert.equal(await notePage.locator('.note-section').count(), 4);
-    assert.equal(await notePage.locator('.note-source-links a').count(), 2);
-    assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
-    await notePage.setViewportSize({ width: 1280, height: 900 });
-    assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
-    await notePage.close();
-    console.log('Browser checks passed: 7 portfolio viewports, deeper case study, engineering note, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
+    const notes = [
+      ['conflict-safe-collaboration.html', 'When two teammates save at the same time.'],
+      ['replay-safe-streaming.html', 'Exactly-once is won in the sink.'],
+      ['retry-safe-monthly-loads.html', 'A batch is finished only after its output commits.'],
+      ['incremental-model-lookback.html', 'Late data is why incremental models need a lookback.'],
+      ['terraform-production-guardrails.html', 'Asking for force-destroy is not the same as receiving it.'],
+    ];
+    for (const [slug, heading] of notes) {
+      const notePage = await browser.newPage({ viewport: { width: 390, height: 900 }, reducedMotion: 'reduce' });
+      await notePage.goto(url + '/notes/' + slug);
+      await notePage.getByRole('heading', { name: heading, exact: true }).waitFor();
+      assert.equal(await notePage.locator('.note-section').count(), 4);
+      assert(await notePage.locator('.note-source-links a').count() >= 1);
+      assert.equal(await notePage.locator('.note-series-list a').count(), 5);
+      assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
+      await notePage.setViewportSize({ width: 1280, height: 900 });
+      assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
+      await notePage.close();
+    }
+    console.log('Browser checks passed: 7 portfolio viewports, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();

@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261031-story">
+<link rel="stylesheet" href="styles.css?v=20261031-notes">
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to main content</a>
@@ -427,10 +427,16 @@
 <article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">FLAGSHIP PRODUCTION PLATFORM</span></div><h3 id="project-kingdom846">Kingdom846</h3><div class="project-overview is-flagship"><div class="flagship-media"><figure class="project-showcase"><a href="https://kingdom846.com" target="_blank" rel="noreferrer"><img src="assets/kingdom846-showcase.webp" width="1280" height="699" alt="Kingdom846 public homepage showing the royal portal, alliance navigation and community features" loading="lazy" decoding="async"></a></figure><div class="project-evidence"><small>SITE USAGE</small><div><span><i>✓</i>1,719 visits</span><span><i>✓</i>5,968 pageviews</span><span><i>✓</i>58 countries</span><span><i>✓</i>3.5 pages per visit</span></div></div></div><div class="project-brief"><section><small>PROBLEM</small><p>A gaming community needed one dependable place for alliance information, live rosters, applications, rankings, voting and operational updates. I built Kingdom846 as a responsive platform used by real community members.</p></section><section><small>ENGINEERING DECISION</small><p>I separated the React interface from an Express API, persisted operational data in SQLite and enforced role boundaries for administrators, alliance leaders and War Room users. Rate-limited authentication, version-aware updates and a server-side Royal Advisor make the platform practical to operate.</p></section></div></div><section class="case-study-story" aria-labelledby="kingdom-decision-title"><div class="case-study-heading"><small>DECISION UNDER PRESSURE</small><h4 id="kingdom-decision-title">Preventing one teammate from silently overwriting another</h4></div><div class="case-study-steps"><article><span>01</span><h5>The failure mode</h5><p>Several authorised War Room users can edit one shared roster. A simple last-write-wins save could erase newer work without warning.</p></article><article><span>02</span><h5>The safeguard</h5><p>Each client saves the version it started from. The API refuses a stale version with a conflict response instead of accepting an unsafe write.</p></article><article><span>03</span><h5>The recovery path</h5><p>The interface shows who saved the current version and lets the editor load it or deliberately replace it. The conflict becomes visible and recoverable.</p></article></div></section><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · EXPERIENCE</small><b>React + Vite</b><em>Responsive portal</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · SERVICES</small><b>Express API</b><em>Role-based access</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · DATA</small><b>SQLite</b><em>Live community state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · OPERATE</small><b>Production site</b><em>Real users + updates</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Role-based access</span><span>Conflict-safe writes</span><span>Recoverable editing</span></div><div class="project-footer"><div class="tags"><span>React</span><span>Express</span><span>SQLite</span><span>REST APIs</span></div><a href="https://kingdom846.com" target="_blank" rel="noreferrer">Visit live website ↗</a></div>
 </article>
 </div>
-<aside class="engineering-note-card" aria-labelledby="engineering-note-title">
-<div><small>ENGINEERING NOTE · 5 MIN READ</small><h3 id="engineering-note-title">Exactly-once is won in the sink</h3><p>A Spark checkpoint can replay a micro-batch after failure. I explain how an early Parquet strategy quietly lost rows, how the count exposed it, and how a batch-scoped write made recovery safe.</p></div>
-<div class="note-card-actions"><span>Kafka · PySpark · Parquet · Recovery</span><a href="notes/replay-safe-streaming.html">Read the technical note →</a></div>
-</aside>
+<section class="engineering-notes" aria-labelledby="engineering-notes-title">
+<div class="engineering-notes-heading"><div><small>ENGINEERING NOTES · PROJECT DECISIONS</small><h3 id="engineering-notes-title">The reasoning behind the systems.</h3></div><p>Five short technical stories about failures, trade-offs and safeguards that are difficult to show in a project summary.</p></div>
+<div class="engineering-notes-grid">
+<a class="engineering-note-tile" href="notes/conflict-safe-collaboration.html"><span>01 · KINGDOM846</span><h4>When two teammates save at the same time</h4><p>Turning a silent last-write-wins risk into a visible, recoverable conflict.</p><small>Express · SQLite · Concurrency</small></a>
+<a class="engineering-note-tile" href="notes/replay-safe-streaming.html"><span>02 · WEBLOG STREAM</span><h4>Exactly-once is won in the sink</h4><p>How a count exposed silent data loss and led to replay-safe Parquet writes.</p><small>Kafka · PySpark · Parquet</small></a>
+<a class="engineering-note-tile" href="notes/retry-safe-monthly-loads.html"><span>03 · NYC TAXI LAKEHOUSE</span><h4>A batch is finished only after its output commits</h4><p>Making monthly loads safe to retry with partition replacement and a durable manifest.</p><small>PySpark · Manifests · Backfills</small></a>
+<a class="engineering-note-tile" href="notes/incremental-model-lookback.html"><span>04 · RETAIL WAREHOUSE</span><h4>Late data is why incremental models need a lookback</h4><p>Reprocessing a small trailing window without duplicating yesterday’s orders.</p><small>dbt · Incremental SQL · Testing</small></a>
+<a class="engineering-note-tile" href="notes/terraform-production-guardrails.html"><span>05 · DATA PLATFORM TERRAFORM</span><h4>Asking for force-destroy is not the same as receiving it</h4><p>Encoding production safety in the configuration and proving it at plan time.</p><small>Terraform · AWS · Guardrails</small></a>
+</div>
+</section>
 <noscript><nav class="project-fallback-links" aria-label="More project repositories"><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse">NYC Taxi Lakehouse</a><a href="https://kingdom846.com">Kingdom846</a><a href="https://github.com/Bhanu047/retail-warehouse">Retail Warehouse</a><a href="https://github.com/Bhanu047/data-platform-terraform">Data Platform Terraform</a></nav></noscript>
 </section>
 <section class="cta" id="contact" aria-labelledby="contact-title">
@@ -450,7 +456,7 @@
 <span>© <b id="year">2026</b> BHANU VEJENDLA</span>
 <span>Senior Data Engineer · Raleigh, NC</span>
 </footer>
-<script src="script.js?v=20261031-story">
+<script src="script.js?v=20261031-notes">
 </script>
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>

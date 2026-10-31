@@ -70,6 +70,8 @@ const projects={
     ],
     "url": "https://kingdom846.com",
     "action": "Visit live website ↗",
+    "noteUrl": "/notes/conflict-safe-collaboration.html",
+    "noteAction": "Read engineering note →",
     "artifacts": []
   },
   "stream": {
@@ -117,7 +119,7 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/weblog-stream",
     "action": "Explore repository ↗",
-    "noteUrl": "notes/replay-safe-streaming.html",
+    "noteUrl": "/notes/replay-safe-streaming.html",
     "noteAction": "Read engineering note →",
     "artifacts": [
       {
@@ -183,6 +185,8 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/nyc-taxi-lakehouse",
     "action": "Explore repository ↗",
+    "noteUrl": "/notes/retry-safe-monthly-loads.html",
+    "noteAction": "Read engineering note →",
     "artifacts": [
       {
         "kind": "BUNDLED SAMPLE DATA",
@@ -247,6 +251,8 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/retail-warehouse",
     "action": "Explore repository ↗",
+    "noteUrl": "/notes/incremental-model-lookback.html",
+    "noteAction": "Read engineering note →",
     "artifacts": [
       {
         "kind": "RECONCILIATION SQL",
@@ -312,6 +318,8 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/data-platform-terraform",
     "action": "Explore repository ↗",
+    "noteUrl": "/notes/terraform-production-guardrails.html",
+    "noteAction": "Read engineering note →",
     "artifacts": [
       {
         "kind": "ACCESS-BOUNDARY TEST",
