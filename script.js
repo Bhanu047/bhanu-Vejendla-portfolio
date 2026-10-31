@@ -21,8 +21,6 @@ if(projectList){
   projectList.setAttribute("aria-orientation","vertical");
 }
 if(detail){detail.setAttribute("role","tabpanel");detail.setAttribute("aria-live","polite");}
-const printResume=document.getElementById("print-resume");
-if(printResume){printResume.hidden=false;printResume.addEventListener("click",()=>window.print());}
 function activateProject(btn){
   projectButtons.forEach(x=>{const active=x===btn;x.classList.toggle("active",active);x.setAttribute("aria-selected",String(active));x.tabIndex=active?0:-1});
   render(btn.dataset.project);
@@ -172,4 +170,5 @@ if(!reducedMotion&&"IntersectionObserver" in window){
   }),{threshold:.12});
   revealItems.forEach(item=>{item.classList.add("reveal-ready");revealObserver.observe(item)});
 }
+
 

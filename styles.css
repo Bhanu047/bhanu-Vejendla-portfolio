@@ -470,23 +470,13 @@ main,section[id]{scroll-margin-top:100px}
 .project-fallback-links{display:flex;flex-wrap:wrap;gap:12px;padding:18px 0}
 .core-stack{margin:0 0 28px;color:#d7e5ff;font-size:1rem;line-height:1.8}
 .resume-link{display:inline-flex;align-items:center;min-height:44px;text-decoration:underline!important;text-underline-offset:4px}
-@media print{
-  header,.hero,.proof,.stack,.workflow-section,.projects,.cta,footer,.skip-link,.scroll-progress{display:none!important}
-  .about,.experience{padding:20px 0;background:#fff;color:#182034}
-  .section-title{display:block;margin-bottom:20px}
-  .section-title h2{font-size:24px}
-  .career article{break-inside:avoid;min-height:0;margin-bottom:24px}
-  .career article>i{display:none}
-  .career{max-width:none}
-  .reveal-ready{opacity:1!important;transform:none!important}
-}
+
 
 /* Personal introduction and progressive-enhancement controls. */
 [hidden]{display:none!important}
 .project-layout:has(.project-list[hidden]){grid-template-columns:1fr}
 .hero-actions{flex-wrap:wrap}
 .resume-link{background:none;border:0;padding:0;color:inherit;font:700 .82rem var(--sans);cursor:pointer}
-.print-identity{display:none}
 .about-grid{grid-template-columns:300px minmax(0,1fr);align-items:start;column-gap:48px}
 .portrait{margin:0;grid-row:span 2;align-self:stretch}
 .portrait img{display:block;width:100%;height:auto;max-height:440px;object-fit:contain;object-position:center top;border:0;border-radius:0;background:transparent;mask-image:none;-webkit-mask-image:none}
@@ -496,12 +486,7 @@ main,section[id]{scroll-margin-top:100px}
   .portrait{grid-row:auto;width:min(300px,100%);justify-self:center}
   .about-grid>aside{grid-column:auto}
 }
-@media print{
-  .print-identity{display:block;border-bottom:1px solid #ccc;padding-bottom:12px}
-  .print-identity h1{margin:0;font-size:28px}
-  .print-identity p{margin:4px 0;font-size:12px}
-  .portrait{display:none}
-  .about-grid{display:block}
-}
+
+
 
 
