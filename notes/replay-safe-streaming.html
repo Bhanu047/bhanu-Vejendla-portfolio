@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Exactly-once is won in the sink — Bhanu Vejendla</title>
-<meta name="description" content="A practical engineering note from Bhanu Vejendla on replay-safe Spark Structured Streaming writes to Parquet.">
+<meta name="description" content="Bhanu Vejendla on making Spark Structured Streaming writes to Parquet safe to replay.">
 <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=3">
 <meta name="theme-color" content="#172033">
 <link rel="canonical" href="https://bhanuvejendla.com/notes/replay-safe-streaming.html">
 <meta property="og:title" content="Exactly-once is won in the sink — Bhanu Vejendla">
-<meta property="og:description" content="How a count exposed silent data loss in a streaming sink, and the write design that made replay safe.">
+<meta property="og:description" content="How a row count caught a streaming sink losing data, and how I changed the writes so replays are safe.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bhanuvejendla.com/notes/replay-safe-streaming.html">
 <meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
@@ -40,7 +40,7 @@
 <a class="note-back" href="/#project-weblog-stream">← Weblog Stream case study</a>
 <p class="note-kicker">ENGINEERING NOTE · STREAMING RELIABILITY</p>
 <h1>Exactly-once is won in the sink.</h1>
-<p class="note-deck">A Spark checkpoint can replay the last micro-batch after a failure. I learned that recovery is safe only when writing the same batch twice produces the same stored result.</p>
+<p class="note-deck">After a failure, a Spark checkpoint can replay the last micro-batch. I found out the hard way that recovery is only safe if writing the same batch twice leaves the same data on disk.</p>
 <dl class="note-facts">
 <div><dt>System</dt><dd>Kafka → Spark → Parquet</dd></div>
 <div><dt>Signal</dt><dd>3,091 rows in · 926 on disk</dd></div>
@@ -49,23 +49,23 @@
 </div>
 
 <section class="note-section">
-<p class="note-section-number">01 · THE FAILURE</p>
-<h2>The pipeline was green while rows disappeared.</h2>
-<p>My first sink partitioned output by event date and overwrote the partition touched by each micro-batch. A one-batch unit test passed. A running stream exposed the mistake: every batch for today wrote to the same date partition, so each new write removed the earlier one.</p>
-<p>The count made the problem undeniable: 3,091 records entered the pipeline and only 926 remained on disk. This was data loss caused by a write strategy that looked reasonable in isolation.</p>
+<p class="note-section-number">01 · WHAT BROKE</p>
+<h2>The job looked healthy while rows went missing.</h2>
+<p>My first sink partitioned output by event date and overwrote whichever partition a micro-batch touched. The unit test only wrote one batch, so it passed. Once the stream was running, the problem showed up: every batch for today landed in the same date partition, and each write wiped out the one before it.</p>
+<p>A simple count settled it: 3,091 records went in and 926 were left on disk. The write strategy looked fine on its own, but it was losing data.</p>
 <figure class="write-path" aria-labelledby="write-path-caption">
 <div><small>BATCH 0</small><strong>event_date=today</strong><span>Rows A + B written</span></div>
 <i aria-hidden="true">→</i>
 <div class="write-path-danger"><small>BATCH 1</small><strong>same partition</strong><span>Rows A + B overwritten</span></div>
-<figcaption id="write-path-caption">The unsafe design: every micro-batch overwrites the same daily partition.</figcaption>
+<figcaption id="write-path-caption">The original design: each micro-batch overwrites the same daily partition.</figcaption>
 </figure>
 </section>
 
 <section class="note-section">
-<p class="note-section-number">02 · THE DECISION</p>
-<h2>Give every micro-batch an idempotent destination.</h2>
-<p>A checkpoint records which source offsets Spark has processed, but a failure can still cause the last batch to run again. The sink therefore has to make a repeated write harmless.</p>
-<p>I changed the path so each batch writes beneath its own <code>batch=&lt;id&gt;</code> prefix. Replaying batch 7 overwrites only batch 7. A later batch gets a different prefix, so it cannot erase the earlier output. Event date remains a nested partition for pruning.</p>
+<p class="note-section-number">02 · THE FIX</p>
+<h2>Give each micro-batch its own output path.</h2>
+<p>The checkpoint tracks which source offsets Spark has processed, but after a crash the last batch can still run a second time. So the sink has to cope with the same write arriving twice.</p>
+<p>I changed the path so each batch writes under its own <code>batch=&lt;id&gt;</code> prefix. If batch 7 is replayed, it overwrites batch 7 and nothing else. Later batches get their own prefix, so they can’t touch earlier output. Event date is still there as a nested partition, so queries can prune on it.</p>
 <pre class="note-code"><code>target = Path(path) / f"batch={batch_id}"
 
 (
@@ -76,31 +76,31 @@
 </section>
 
 <section class="note-section">
-<p class="note-section-number">03 · THE PROOF</p>
-<h2>Test the recovery behaviour, not the setting.</h2>
-<p>The important assertion is not that a configuration flag exists. It is that the stored data stays correct through the failures the system is designed to survive.</p>
+<p class="note-section-number">03 · HOW I TESTED IT</p>
+<h2>Testing what happens on replay</h2>
+<p>Checking that a config flag is set doesn’t tell you much. These tests check the data that actually ends up on disk after the failures this pipeline is meant to handle.</p>
 <ul class="note-checks">
-<li>Write the same batch twice and confirm the row count does not increase.</li>
-<li>Write later batches on the same event date and confirm earlier rows remain.</li>
-<li>Send valid and malformed records through the fan-out writer, replay the batch, and confirm both destinations remain idempotent.</li>
-<li>Run several successive batches and verify that all of them survive.</li>
+<li>Write the same batch twice; the row count should stay the same.</li>
+<li>Write later batches for the same event date; the earlier rows should still be there.</li>
+<li>Send good and malformed records through the fan-out writer, replay the batch, and check that neither destination gets duplicates.</li>
+<li>Run several batches in a row and check that every one of them is still there.</li>
 </ul>
 </section>
 
 <section class="note-section note-tradeoff">
-<p class="note-section-number">04 · THE TRADE-OFF</p>
-<h2>Correct recovery creates a small-file problem.</h2>
-<p>Batch-scoped output creates more files over time. For this project, that is an honest trade: safe recovery comes first. A production deployment would compact files on a schedule or move the sink to Delta Lake or Iceberg and use transactional merges.</p>
-<p>The broader lesson is simple: “exactly-once” is a property of the complete path. Source offsets, checkpoints and sink behaviour have to agree.</p>
+<p class="note-section-number">04 · WHAT IT COSTS</p>
+<h2>The catch: lots of small files.</h2>
+<p>Writing per batch means the file count keeps growing. For this project I’m fine with that, because safe recovery matters more. In production I’d either compact files on a schedule or move the sink to Delta Lake or Iceberg and use transactional merges.</p>
+<p>“Exactly-once” only holds when source offsets, checkpoints and the sink all agree. Getting the checkpoint right wasn’t enough on its own.</p>
 </section>
 
 <aside class="note-source">
-<div><small>INSPECT THE IMPLEMENTATION</small><h2>Read the code and regression tests.</h2><p>The repository includes the sink, the tests that replay batches, and the end-to-end streaming query.</p></div>
+<div><small>SOURCE CODE</small><h2>The sink and its tests are on GitHub.</h2><p>The repo has the sink, the tests that replay batches and the end-to-end streaming query.</p></div>
 <div class="note-source-links"><a href="https://github.com/Bhanu047/weblog-stream/blob/main/src/weblog/sinks.py" target="_blank" rel="noreferrer">Open the sink ↗</a><a href="https://github.com/Bhanu047/weblog-stream/blob/main/tests/test_sinks.py" target="_blank" rel="noreferrer">Read the tests ↗</a></div>
 </aside>
 
 <nav class="note-series" aria-labelledby="note-series-title">
-<h2 id="note-series-title">Continue the engineering notes</h2>
+<h2 id="note-series-title">More engineering notes</h2>
 <div class="note-series-list">
 <a href="/notes/conflict-safe-collaboration.html">01 · Conflict-safe collaboration</a>
 <a href="/notes/replay-safe-streaming.html" aria-current="page">02 · Replay-safe streaming</a>

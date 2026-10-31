@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>When two teammates save at the same time — Bhanu Vejendla</title>
-<meta name="description" content="A practical engineering note from Bhanu Vejendla on preventing silent overwrites in a shared operations portal.">
+<meta name="description" content="Bhanu Vejendla on stopping silent overwrites when several people edit the same data in a shared portal.">
 <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=3">
 <meta name="theme-color" content="#172033">
 <link rel="canonical" href="https://bhanuvejendla.com/notes/conflict-safe-collaboration.html">
 <meta property="og:title" content="When two teammates save at the same time — Bhanu Vejendla">
-<meta property="og:description" content="How Kingdom846 turns a stale save into a visible, recoverable conflict instead of silently losing work.">
+<meta property="og:description" content="How Kingdom846 catches an out-of-date save and shows a conflict the user can recover from, instead of quietly losing work.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bhanuvejendla.com/notes/conflict-safe-collaboration.html">
 <meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
@@ -40,7 +40,7 @@
 <a class="note-back" href="/#project-kingdom846">← Kingdom846 case study</a>
 <p class="note-kicker">ENGINEERING NOTE · SHARED STATE</p>
 <h1>When two teammates save at the same time.</h1>
-<p class="note-deck">A shared operations screen creates a risk that a single-user form never has: one valid save can quietly erase another. Kingdom846 refuses the stale write and gives the user a deliberate recovery choice.</p>
+<p class="note-deck">When several people edit the same screen, one person’s save can quietly wipe out someone else’s. A single-user form never has that problem. Kingdom846 rejects the out-of-date save and lets the user decide what to do next.</p>
 <dl class="note-facts">
 <div><dt>System</dt><dd>React → Express → SQLite</dd></div>
 <div><dt>Risk</dt><dd>Silent last-write-wins</dd></div>
@@ -49,10 +49,10 @@
 </div>
 
 <section class="note-section">
-<p class="note-section-number">01 · THE RISK</p>
-<h2>Valid users can still overwrite valid work.</h2>
-<p>The War Room is shared by teammates who may open the same roster at the same time. If both clients read version 12, then one user saves version 13 while the other is still editing version 12.</p>
-<p>A simple update statement would accept both requests. The later request would look successful even though it was based on stale data, and the first user’s changes would disappear without warning.</p>
+<p class="note-section-number">01 · THE PROBLEM</p>
+<h2>Two people with access can still overwrite each other.</h2>
+<p>Several teammates use the War Room and can have the same roster open at once. Say both load version 12. One saves, which creates version 13, while the other is still editing version 12.</p>
+<p>A plain update statement would accept both saves. The second one would look like it worked, even though it was built on old data, and the first person’s changes would be gone with no warning.</p>
 <figure class="write-path" aria-labelledby="conflict-path-caption">
 <div><small>EDITOR A</small><strong>Loaded version 12</strong><span>Edits while another user saves</span></div>
 <i aria-hidden="true">→</i>
@@ -62,10 +62,10 @@
 </section>
 
 <section class="note-section">
-<p class="note-section-number">02 · THE DECISION</p>
-<h2>Make the expected version part of every write.</h2>
-<p>Each read returns the current version. The client sends that version back with its update, and the server compares it with the stored value inside the write path.</p>
-<p>If the values match, the update succeeds and the version advances. If they do not match, the server returns a conflict without changing the record. This is optimistic concurrency: editing stays fast, but a stale client cannot silently win.</p>
+<p class="note-section-number">02 · THE FIX</p>
+<h2>Send the version with every save.</h2>
+<p>Every read returns the current version. The client sends it back with the update, and the server checks it against the stored version as part of the write.</p>
+<p>If they match, the update goes through and the version moves on. If they don’t, the server returns a conflict and leaves the record alone. This is optimistic concurrency. Editing stays fast, and an out-of-date client can’t quietly overwrite newer work.</p>
 <pre class="note-code"><code>client version == stored version
     → save changes and increment version
 
@@ -74,31 +74,31 @@ client version != stored version
 </section>
 
 <section class="note-section">
-<p class="note-section-number">03 · THE RECOVERY</p>
-<h2>A conflict should explain what the user can do next.</h2>
-<p>Returning 409 protects the data, but it is not enough by itself. The interface shows that a newer version exists and identifies the latest save so the stale editor can understand what happened.</p>
+<p class="note-section-number">03 · WHAT THE USER SEES</p>
+<h2>Telling the user what happened</h2>
+<p>A 409 protects the data, but on its own it just looks like an error. So the interface says a newer version exists and shows the latest save, so the person with the old copy knows what happened.</p>
 <ul class="note-checks">
-<li>Load the current server version and continue from the teammate’s changes.</li>
+<li>Load the latest version and carry on from the teammate’s changes.</li>
 <li>Review the difference before trying the edit again.</li>
-<li>Replace the current version only through an explicit user choice.</li>
-<li>Never present a refused write as a successful save.</li>
+<li>Overwrite the current version only if the user explicitly chooses to.</li>
+<li>Never show a rejected save as if it worked.</li>
 </ul>
 </section>
 
 <section class="note-section note-tradeoff">
-<p class="note-section-number">04 · THE BOUNDARY</p>
-<h2>Concurrency control complements authorization.</h2>
-<p>A version check answers whether the edit is current; it does not answer whether the user is allowed to make it. Kingdom846 also enforces roles on the server so a client cannot grant itself broader access through a modified request.</p>
-<p>The result is a clearer boundary: identity and role decide who may write, while the version decides whether that write is safe to apply.</p>
+<p class="note-section-number">04 · WHAT IT DOESN’T COVER</p>
+<h2>Version checks don’t replace permissions.</h2>
+<p>A version check tells you whether an edit is up to date. It says nothing about whether the user is allowed to make it. Kingdom846 checks roles on the server too, so a client can’t give itself more access by tampering with a request.</p>
+<p>So there are two separate checks: identity and role decide who can write, and the version decides whether a particular write is safe to apply.</p>
 </section>
 
 <aside class="note-source">
-<div><small>SEE IT IN CONTEXT</small><h2>Explore the public platform and case study.</h2><p>The application is live. Its source remains private, while the portfolio case study explains the problem, decision and outcome without exposing implementation secrets.</p></div>
+<div><small>LIVE SITE</small><h2>See the live site and the case study.</h2><p>The site is live. The source code is private, so the case study covers the problem, the decision and the outcome without exposing implementation details.</p></div>
 <div class="note-source-links"><a href="https://kingdom846.com/" target="_blank" rel="noreferrer">Visit Kingdom846 ↗</a><a href="/#project-kingdom846">Read the case study</a></div>
 </aside>
 
 <nav class="note-series" aria-labelledby="note-series-title">
-<h2 id="note-series-title">Continue the engineering notes</h2>
+<h2 id="note-series-title">More engineering notes</h2>
 <div class="note-series-list">
 <a href="/notes/conflict-safe-collaboration.html" aria-current="page">01 · Conflict-safe collaboration</a>
 <a href="/notes/replay-safe-streaming.html">02 · Replay-safe streaming</a>

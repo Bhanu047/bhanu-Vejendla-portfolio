@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Late data is why incremental models need a lookback — Bhanu Vejendla</title>
-<meta name="description" content="A practical engineering note from Bhanu Vejendla on late-arriving orders, dbt incremental models and idempotent replacement.">
+<meta name="description" content="Bhanu Vejendla on handling late-arriving orders in a dbt incremental model without creating duplicates.">
 <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=3">
 <meta name="theme-color" content="#172033">
 <link rel="canonical" href="https://bhanuvejendla.com/notes/incremental-model-lookback.html">
 <meta property="og:title" content="Late data is why incremental models need a lookback — Bhanu Vejendla">
-<meta property="og:description" content="Why a three-day trailing window and order-level replacement are safer than filtering after the latest loaded date.">
+<meta property="og:description" content="Why re-reading the last three days and replacing rows by order is safer than loading only dates after the latest one.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bhanuvejendla.com/notes/incremental-model-lookback.html">
 <meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
@@ -40,7 +40,7 @@
 <a class="note-back" href="/#project-retail-warehouse">← Retail Warehouse case study</a>
 <p class="note-kicker">ENGINEERING NOTE · INCREMENTAL SQL</p>
 <h1>Late data is why incremental models need a lookback.</h1>
-<p class="note-deck">Filtering only for dates newer than the warehouse maximum is fast, but it permanently misses an order that arrives today with yesterday’s business date. This model deliberately reopens a small trailing window.</p>
+<p class="note-deck">Loading only dates newer than the latest one in the warehouse is fast. It also means an order that shows up today with yesterday’s business date never gets loaded. So this model re-reads a short window of recent days on every run.</p>
 <dl class="note-facts">
 <div><dt>System</dt><dd>dbt Core + DuckDB</dd></div>
 <div><dt>Lookback</dt><dd>Three days</dd></div>
@@ -50,57 +50,57 @@
 
 <section class="note-section">
 <p class="note-section-number">01 · THE GAP</p>
-<h2>The latest date is not the same as complete data.</h2>
-<p>An incremental model often filters the source after the maximum date already present in its target. That works only if records arrive in perfect business-date order.</p>
-<p>Retail feeds do not always behave that way. A delayed order may arrive after the warehouse has moved on to a newer date. A strict high-water mark never reads that row, so the omission becomes permanent.</p>
+<h2>Having the latest date doesn’t mean having all the data.</h2>
+<p>A common incremental pattern reads only source rows dated after the latest date already in the target. That only works if records arrive in business-date order.</p>
+<p>Retail feeds don’t always do that. An order can turn up late, after the warehouse has already moved on to a newer date. With a strict high-water mark, that row is never read, and it stays missing for good.</p>
 <figure class="write-path" aria-labelledby="lookback-path-caption">
 <div class="write-path-danger"><small>STRICT HIGH-WATER MARK</small><strong>Read only newer dates</strong><span>Yesterday’s late order is missed</span></div>
 <i aria-hidden="true">→</i>
 <div><small>TRAILING WINDOW</small><strong>Re-read the last three days</strong><span>Late orders enter the model</span></div>
-<figcaption id="lookback-path-caption">A bounded lookback trades a small amount of repeated work for completeness.</figcaption>
+<figcaption id="lookback-path-caption">Re-reading a few days costs a little extra work, and late orders stop going missing.</figcaption>
 </figure>
 </section>
 
 <section class="note-section">
 <p class="note-section-number">02 · THE WINDOW</p>
-<h2>Reprocess the recent past on every run.</h2>
-<p>When the model is incremental, it reads source orders whose business date falls within three days of the latest date in the target. New dates still flow through, while recently delayed records get another chance to appear.</p>
+<h2>Re-read the last three days on every run</h2>
+<p>On incremental runs, the model reads source orders dated within three days of the latest date in the target. New dates still come through, and orders that arrived a bit late get picked up.</p>
 <pre class="note-code"><code>{% if is_incremental() %}
 where ordered_date >= (
   select max(ordered_date) - interval '3 days'
   from {{ this }}
 )
 {% endif %}</code></pre>
-<p>The window is explicit and adjustable. It should reflect the real arrival pattern: wide enough to cover expected delays, but bounded so the model does not rebuild all history.</p>
+<p>The window is a setting you can change. It should match how late data really arrives: wide enough to catch the usual delays, but small enough that the model isn’t rebuilding all of history.</p>
 </section>
 
 <section class="note-section">
-<p class="note-section-number">03 · THE REPLACEMENT</p>
-<h2>A lookback is safe only when repeated rows do not duplicate.</h2>
-<p>Reading the same recent orders again would be dangerous with append-only output. The model instead uses <code>order_id</code> as its unique key and dbt’s delete-and-insert incremental strategy.</p>
-<p>For every order in the trailing window, the existing target row is replaced by the newly transformed row. The model can capture a correction or late record while keeping one current fact per order.</p>
+<p class="note-section-number">03 · AVOIDING DUPLICATES</p>
+<h2>Re-reading rows mustn’t create duplicates</h2>
+<p>If the model just appended, re-reading recent orders would duplicate them. Instead it uses <code>order_id</code> as the unique key with dbt’s delete-and-insert incremental strategy.</p>
+<p>Each order in the window replaces its existing row in the target. Corrections and late orders get in, and each order still has exactly one row.</p>
 <ul class="note-checks">
-<li>Keep monetary values as integer cents through transformation.</li>
-<li>Retain cancelled and returned orders instead of hiding business history.</li>
-<li>Use a snapshot where slowly changing customer attributes need history.</li>
-<li>Reconcile order facts back to their staged inputs.</li>
+<li>Keep money as integer cents all the way through.</li>
+<li>Keep cancelled and returned orders rather than dropping them.</li>
+<li>Use a snapshot for customer attributes that change over time and need history.</li>
+<li>Reconcile order facts against the staged inputs.</li>
 </ul>
 </section>
 
 <section class="note-section note-tradeoff">
-<p class="note-section-number">04 · THE PROOF</p>
-<h2>CI has to exercise the incremental branch.</h2>
-<p>A single clean build proves only the full-refresh path. The project’s CI builds the warehouse twice so the second execution actually enters the incremental logic.</p>
-<p>The 57-test suite then checks contracts, relationships, accepted values and business reconciliation. That turns “this model is incremental” from a configuration claim into behaviour the repository repeatedly verifies.</p>
+<p class="note-section-number">04 · HOW I TESTED IT</p>
+<h2>CI runs the build twice</h2>
+<p>One clean build only tests the full-refresh path. CI builds the warehouse twice so the second run actually goes through the incremental logic.</p>
+<p>Then the 57 tests check contracts, relationships, accepted values and business reconciliation. So the incremental path gets tested on every CI run.</p>
 </section>
 
 <aside class="note-source">
-<div><small>INSPECT THE IMPLEMENTATION</small><h2>Read the fact model and warehouse tests.</h2><p>The public repository includes the incremental configuration, trailing-window filter, snapshot and validation suite.</p></div>
+<div><small>SOURCE CODE</small><h2>The model and tests are on GitHub.</h2><p>The repo has the incremental config, the trailing-window filter, the snapshot and the test suite.</p></div>
 <div class="note-source-links"><a href="https://github.com/Bhanu047/retail-warehouse/blob/main/models/marts/fct_orders.sql" target="_blank" rel="noreferrer">Open the model ↗</a><a href="https://github.com/Bhanu047/retail-warehouse" target="_blank" rel="noreferrer">View the repository ↗</a></div>
 </aside>
 
 <nav class="note-series" aria-labelledby="note-series-title">
-<h2 id="note-series-title">Continue the engineering notes</h2>
+<h2 id="note-series-title">More engineering notes</h2>
 <div class="note-series-list">
 <a href="/notes/conflict-safe-collaboration.html">01 · Conflict-safe collaboration</a>
 <a href="/notes/replay-safe-streaming.html">02 · Replay-safe streaming</a>
