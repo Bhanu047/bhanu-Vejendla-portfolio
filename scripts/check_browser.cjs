@@ -57,10 +57,7 @@ const server = http.createServer((req, res) => {
       await portrait.scrollIntoViewIfNeeded();
       await portrait.evaluate(img => img.decode());
       assert(await portrait.evaluate(img => img.naturalWidth > 0));
-      const allSkills = page.locator('.all-skills');
-      assert.equal(await page.locator('.stack-group').first().isVisible(), false);
-      await allSkills.locator('summary').first().click();
-      assert.equal(await allSkills.getAttribute('open'), '');
+      assert.equal(await page.locator('.stack-group').count(), 4);
       assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
       await first.focus();
@@ -92,7 +89,6 @@ const server = http.createServer((req, res) => {
       assert(await page.locator('.project-footer > a').isVisible());
       assert.equal(await page.locator('.project-list').isVisible(), false);
       assert(await page.locator('.artifact-card a').first().isVisible());
-      await page.locator('.all-skills > summary').click();
       assert(await page.locator('.stack-group').first().isVisible());
       await context.close();
     }
@@ -105,7 +101,7 @@ const server = http.createServer((req, res) => {
     await fallbackPage.getByRole('status').filter({ hasText: 'copy it manually' }).waitFor();
     assert.equal(await fallbackPage.evaluate(() => window.getSelection().toString()), 'bhanumanideepvejendla@gmail.com');
     await fallbackPage.close();
-    console.log('Browser checks passed: 7 viewports, project evidence, skill disclosure, clipboard success/fallback and JavaScript fallback.');
+    console.log('Browser checks passed: 7 viewports, project evidence, visible skills, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();

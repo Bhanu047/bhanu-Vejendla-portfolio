@@ -45,8 +45,8 @@ For local preview, run `python -m http.server 8000` and open
 
 ## Recruiter experience
 
-The core stack is shown first; a native details disclosure keeps the complete
-skills list available without JavaScript. Experience entries separate outcomes
+The core stack is shown first, followed by the complete skills list. All skills
+are visible immediately, including without JavaScript. Experience entries separate outcomes
 from supporting contributions and reuse only previously supplied claims.
 
 Each project includes inspectable evidence with links pinned to reviewed
@@ -57,7 +57,7 @@ illustrations rather than live telemetry.
 
 The Copy email button uses the Clipboard API after an explicit click. If access
 is unavailable, it selects the visible address and provides manual-copy guidance.
-Browser checks cover both paths, skill disclosure and project evidence as well
+Browser checks cover both paths, visible skills and project evidence as well
 as responsive layouts and no-JavaScript content.
 
 
