@@ -543,3 +543,22 @@ body{font-size:17px;line-height:1.75}
 }
 /* Keep project choices compact as the evidence panel grows. */
 .project-list button{height:auto;min-height:106px}
+
+
+/* Horizontal project selector: give the case study the full content width. */
+.project-layout{grid-template-columns:minmax(0,1fr);min-width:0}
+.project-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));min-width:0;max-width:100%;border-right:0;border-bottom:1px solid #ccd4df}
+.project-list button{display:flex;align-items:flex-start;gap:10px;min-width:0;min-height:100px;height:auto;padding:18px 14px;border-bottom:0;border-right:1px solid #dce2ea}
+.project-list button:last-child{border-right:0}
+.project-list button>b{padding-top:4px;flex:0 0 auto}
+.project-list button>span{min-width:0;font-size:.95rem;line-height:1.45}
+.project-list button>em{display:none}
+.project-list small{font-size:.75rem;line-height:1.5}
+.project-detail{min-width:0}
+@media(max-width:1000px){
+  .project-list{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+  .project-list button{flex:0 0 190px;min-height:96px}
+}
+@media(max-width:580px){
+  .project-list button{flex-basis:175px;padding:16px 12px;min-height:92px}
+}
