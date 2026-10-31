@@ -2,38 +2,43 @@
 
 Senior Data Engineer portfolio built with plain HTML, CSS and JavaScript.
 
-**Live at [bhanu047.github.io/bhanu-Vejendla-portfolio](https://bhanu047.github.io/bhanu-Vejendla-portfolio/)**
+Live at [bhanuvejendla.com](https://bhanuvejendla.com/).
 
-## Why there is no framework
+## Content and progressive enhancement
 
-The page is one document with no state, no routing and no data fetching. A build step would add a `node_modules`, a lockfile, a deploy pipeline and a class of failure that does not currently exist, in exchange for nothing this page needs.
+The HTML contains a complete Weblog Stream case study. If JavaScript is disabled
+or blocked, the case study remains readable and its repository link works. With
+JavaScript enabled, the selector becomes an accessible vertical tab list with
+arrow-key, Home and End navigation. A noscript navigation links to the other
+four projects.
 
-It loads two font families and one small script. That is the whole dependency list.
+The About section includes a lazy-loaded portrait with explicit dimensions.
+The Print résumé / Save PDF button opens the browser print dialog. Print CSS
+includes contact details, introduction, education and experience, using the
+existing website content rather than a separate CV file.
 
-## Animation behavior
+## Motion and layout
 
-The reveal-on-scroll starts elements at `opacity: 0`. If that were the default, a blocked script or JavaScript switched off would leave a visitor looking at empty sections.
+Motion respects reduced-motion preferences. Animation cycles pause when the tab
+is hidden. Section headings use constrained grid columns and stack at smaller
+widths to prevent collisions. Theme variables and isolated typography overrides
+are consolidated while responsive rules retain their cascade ordering.
 
-Content remains visible unless an inline script in `<head>` sets `.js` on the root element before first paint. The project architecture workflows run continuously, while a fallback reveals any section that remains hidden.
+## Checks
 
-## Layout
+`python scripts/check_site.py` runs standard-library checks. CI installs pinned
+Playwright tooling and runs `node scripts/check_browser.cjs` in Chromium.
+Browser checks cover seven widths (360–1692px), heading collisions, horizontal
+overflow, project selection and keyboard navigation, portrait loading, print
+visibility, and fallback content with JavaScript disabled or blocked.
 
-```
-index.html            The page
-styles.css            One stylesheet, custom properties at the top
-script.js             Reveal-on-scroll, guarded
-assets/favicon.svg    Favicon
-scripts/check_site.py Pre-flight checks, standard library only
-```
-
-## The checks
-
-`python scripts/check_site.py` catches the three things that would actually embarrass me on a page recruiters read: a broken in-page anchor, a placeholder left in the copy, and a link that has lost its `href`. CI runs it on every push.
-
-## Local preview
+Run browser checks locally with:
 
 ```bash
-python -m http.server 8000
+npm install --no-save --ignore-scripts playwright@1.56.1
+npx playwright install chromium
+node scripts/check_browser.cjs
 ```
 
-Then open `http://localhost:8000`. Opening `index.html` directly works too.
+For local preview, run `python -m http.server 8000` and open
+`http://localhost:8000`.

@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0b1020">
 <link rel="canonical" href="https://bhanuvejendla.com/">
 <meta property="og:title" content="Bhanu Vejendla — Senior Data Engineer">
-<meta property="og:description" content="Production-minded data engineering across Azure, AWS and GCP, with four public projects covering streaming, lakehouse, analytics and infrastructure.">
+<meta property="og:description" content="Production-minded data engineering across Azure, AWS and GCP, with four public data engineering projects covering streaming, lakehouse, analytics and infrastructure.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://bhanuvejendla.com/">
 <meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261027b">
+<link rel="stylesheet" href="styles.css?v=20261031">
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to main content</a>
@@ -48,6 +48,7 @@
 </div>
 </header>
 <main id="top" tabindex="-1">
+<div class="print-identity"><h1>Bhanu Vejendla</h1><p>Senior Data Engineer · Raleigh, NC</p><p>bhanumanideepvejendla@gmail.com · bhanuvejendla.com<br>github.com/Bhanu047 · linkedin.com/in/vejendlabhanu</p></div>
 <section class="hero dark">
 <div class="orb one">
 </div>
@@ -65,6 +66,7 @@
 <a class="button" href="#work">Explore my projects <b>↓</b>
 </a>
 <a href="#contact">Discuss a role ↗</a>
+<button class="resume-link" id="print-resume" type="button" hidden>Print résumé / Save PDF ↓</button>
 </div>
 <p class="recruiter-context">Raleigh, NC · Azure, AWS &amp; GCP<br><a href="#experience">Review my professional experience ↓</a></p>
 </div>
@@ -192,6 +194,7 @@
 <p>A good data platform should be reliable today and understandable six months from now.</p>
 </div>
 <div class="about-grid">
+<figure class="portrait"><img src="assets/bhanu-vejendla.png" alt="Bhanu Vejendla" width="570" height="855" loading="lazy" decoding="async"></figure>
 <div>
 <p>My work has taken me across insurance, gaming, financial services and healthcare. I’ve built pipelines that ingest, process and organize data for analytics, reporting and downstream applications.</p>
 <p>I focus on the work that keeps a platform useful after launch: data quality, failure recovery, monitoring, security, performance and cost. I also build reusable patterns so other engineers can deliver and support pipelines more consistently.</p>
@@ -265,6 +268,7 @@
 </div>
 <p>Grouped by where they fit in the work, from ingestion through production delivery.</p>
 </div>
+<p class="core-stack"><strong>Core stack:</strong> Python · SQL · PySpark · Databricks · Azure Data Factory · Kafka · Snowflake</p>
 <div class="stack-groups">
 <article class="stack-group">
 <div class="group-heading"><span>01</span><div><small>INGESTION & ORCHESTRATION</small><p>Reliable movement from source to platform.</p></div></div>
@@ -384,22 +388,22 @@
 </div>
 <p class="project-guide">Choose a project to review the problem, engineering decisions and supporting evidence. Each case study links to the live site or source repository.</p>
 <div class="project-layout">
-<div class="project-list" role="tablist" aria-label="Featured projects" aria-orientation="vertical">
-<button class="active" data-project="kingdom">
+<div class="project-list" aria-label="Featured projects" hidden>
+<button class="active" data-project="stream">
 <b>01</b>
-<span>Kingdom846<small>Live community platform</small>
-</span>
-<em>→</em>
-</button>
-<button data-project="stream">
-<b>02</b>
 <span>Weblog Stream<small>Real-time data platform</small>
 </span>
 <em>→</em>
 </button>
 <button data-project="taxi">
-<b>03</b>
+<b>02</b>
 <span>NYC Taxi Lakehouse<small>Batch analytics architecture</small>
+</span>
+<em>→</em>
+</button>
+<button data-project="kingdom">
+<b>03</b>
+<span>Kingdom846<small>Live community platform</small>
 </span>
 <em>→</em>
 </button>
@@ -416,9 +420,10 @@
 <em>→</em>
 </button>
 </div>
-<article class="project-detail" id="project-detail" role="tabpanel" tabindex="0" aria-live="polite">
+<article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">STREAMING DATA PLATFORM</span></div><h3>Weblog Stream</h3><div class="project-brief"><section><small>PROBLEM</small><p>Web events can arrive late, duplicated or malformed. This project shows how I keep a real-time pipeline useful when the input is imperfect and the job has to recover from interruption.</p></section><section><small>ENGINEERING DECISION</small><p>I separated invalid events into a dead-letter path, used event-time watermarks for bounded state and checkpointed the stream so restart and replay behavior stay explicit.</p></section></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · SOURCE</small><b>Web events</b><em>JSON events</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · INGEST</small><b>Kafka</b><em>Durable stream</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · PROCESS</small><b>Spark</b><em>Watermarks + state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · STORE</small><b>Delta Lake</b><em>Idempotent writes</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Schema validation</span><span>Checkpoint recovery</span><span>Late-event handling</span></div><div class="project-evidence"><small>REPOSITORY EVIDENCE</small><div><span><i>✓</i>Automated Python tests</span><span><i>✓</i>GitHub Actions CI</span><span><i>✓</i>Docker Compose environment</span></div></div><div class="project-footer"><div class="tags"><span>Kafka</span><span>PySpark</span><span>Delta Lake</span><span>Docker</span></div><a href="https://github.com/Bhanu047/weblog-stream" target="_blank" rel="noreferrer">Explore repository ↗</a></div>
 </article>
 </div>
+<noscript><nav class="project-fallback-links" aria-label="More project repositories"><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse">NYC Taxi Lakehouse</a><a href="https://kingdom846.com">Kingdom846</a><a href="https://github.com/Bhanu047/retail-warehouse">Retail Warehouse</a><a href="https://github.com/Bhanu047/data-platform-terraform">Data Platform Terraform</a></nav></noscript>
 </section>
 <section class="cta" id="contact" aria-labelledby="contact-title">
 <small>LET’S TALK · SENIOR DATA ENGINEERING</small>
@@ -432,14 +437,14 @@
 </section>
 </main>
 <footer>
-<span>© <b id="year">
-</b> BHANU VEJENDLA</span>
+<span>© <b id="year">2026</b> BHANU VEJENDLA</span>
 <span>Senior Data Engineer · Raleigh, NC</span>
 </footer>
-<script src="script.js?v=20261027b">
+<script src="script.js?v=20261031">
 </script>
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>
 <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
+
