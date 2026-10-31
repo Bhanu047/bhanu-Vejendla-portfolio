@@ -26,8 +26,7 @@ are consolidated while responsive rules retain their cascade ordering.
 
 `python scripts/check_site.py` runs standard-library checks. CI installs pinned
 Playwright tooling and runs `node scripts/check_browser.cjs` in Chromium.
-Browser checks cover seven portfolio widths (360–1692px), the hero employer list,
-the why-hire-me band, the trimmed skills grid, all five engineering notes at
+Browser checks cover seven portfolio widths (360–1692px), the why-hire-me band, the trimmed skills grid, all five engineering notes at
 mobile and desktop widths, heading collisions, horizontal
 overflow, project selection and keyboard navigation, portrait loading, JavaScript
 fallback, and fallback content with JavaScript disabled or blocked.
@@ -47,7 +46,6 @@ For local preview, run `python -m http.server 8000` and open
 
 ## Recruiter experience
 
-The hero names the four employers so a recruiter sees them in the first screen.
 A "Why hire me" band follows the hero with three checkable points: production work on
 all three clouds, 158 automated tests across the three public data pipelines
 (52 + 49 + 57, as stated in the engineering notes), and the engineering notes themselves.

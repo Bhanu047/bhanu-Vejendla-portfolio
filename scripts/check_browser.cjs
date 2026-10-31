@@ -58,7 +58,6 @@ const server = http.createServer((req, res) => {
       await portrait.scrollIntoViewIfNeeded();
       await portrait.evaluate(img => img.decode());
       assert(await portrait.evaluate(img => img.naturalWidth > 0));
-      assert.deepEqual(await page.locator('.hero-employers b').allTextContents(), ['MetLife', 'Epic Games', 'InCred Financial Services', 'Siemens Healthineers']);
       assert.equal(await page.locator('.why-grid article').count(), 3);
       assert.equal(await page.locator('header nav a[href="#workflow"]').count(), 0);
       assert.equal(await page.locator('.stack-group').count(), 4);

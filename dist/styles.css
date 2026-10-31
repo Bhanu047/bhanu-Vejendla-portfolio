@@ -741,10 +741,7 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
 }
 
 
-/* Recruiter scan: employers in the hero, why-hire-me band, scannable experience */
-.hero-employers{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 0;max-width:640px}
-.hero-employers span{flex-basis:100%;font:500 .66rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#7f8ea6}
-.hero-employers b{padding:4px 9px;border:1px solid #33425d;border-radius:4px;background:#ffffff08;color:#e6ecf5;font-size:.78rem;font-weight:700}
+/* Recruiter scan: why-hire-me band, scannable experience */
 .why{padding:72px max(28px,calc((100vw - 1240px)/2));background:#fff;border-bottom:1px solid #d6dce5}
 .why-inner{display:grid;grid-template-columns:300px 1fr;gap:44px;align-items:start}
 .why-heading small{font:500 .7rem var(--mono);letter-spacing:.09em;color:#3868e8}
@@ -762,4 +759,4 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
 .stack-also span{display:inline-block;margin-right:8px;font:500 .68rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#6ee7d2}
 @media(max-width:1000px){.why-inner{grid-template-columns:1fr;gap:24px}}
 @media(max-width:800px){.why-grid{grid-template-columns:1fr}}
-@media(max-width:700px){.why{padding:56px 16px}.hero-employers b{font-size:.75rem}}
+@media(max-width:700px){.why{padding:56px 16px}}
