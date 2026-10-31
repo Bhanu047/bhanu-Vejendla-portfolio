@@ -562,3 +562,9 @@ body{font-size:17px;line-height:1.75}
 @media(max-width:580px){
   .project-list button{flex-basis:175px;padding:16px 12px;min-height:92px}
 }
+
+/* Keep the address and its copy action together. */
+.copy-email-row .contact-email{margin:0;font-size:1rem}
+.copy-confirmation{margin:0;font-size:.875rem;color:#344b68;min-height:1.5em}
+@media(max-width:580px){.copy-email-row{gap:8px 12px}.copy-email-row .contact-email{flex-basis:100%}}
+
