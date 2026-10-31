@@ -53,6 +53,7 @@ const server = http.createServer((req, res) => {
       assert(Math.abs(projectLayout.tabsWidth - projectLayout.detailWidth) < 2, `project uses full width at ${width}px`);
       assert.deepEqual(issues, [], `layout at ${width}px`);
       assert.deepEqual(errors, [], `JavaScript errors at ${width}px`);
+      assert.deepEqual(await page.locator('.hero-visual .proof strong').allTextContents(), ['7+', '3', '5', '4']);
       const portrait = page.locator('.portrait img');
       await portrait.scrollIntoViewIfNeeded();
       await portrait.evaluate(img => img.decode());
@@ -62,6 +63,7 @@ const server = http.createServer((req, res) => {
       await showcase.evaluate(img => img.decode());
       assert(await showcase.evaluate(img => img.naturalWidth > 0));
       assert.equal(await page.locator('.stack-group').count(), 4);
+      assert.equal(await page.locator('.stack-group .logo-grid > span').count(), 47);
       assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
       await first.focus();
@@ -139,6 +141,7 @@ const server = http.createServer((req, res) => {
     server.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
 
 
 

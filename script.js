@@ -326,10 +326,11 @@ function renderArtifacts(project){
     '<a href="'+escapeHTML(item.url)+'" target="_blank" rel="noreferrer">'+escapeHTML(item.action)+' ↗</a></article>'
   ).join('')+'</div></section>';
 }
+function renderEvidence(p){return `<div class="project-evidence"><small>${p.evidenceLabel||'REPOSITORY EVIDENCE'}</small><div>${p.evidence.map(x=>'<span><i>✓</i>'+x+'</span>').join('')}</div></div>`;}
 function render(key){
   const p=projects[key];
   const workflow=p.flow.map((stage,index)=>`${index?'<div class="flow-link"><i></i></div>':''}<div class="flow-stage"><small>${String(index+1).padStart(2,'0')} · ${stage.step}</small><b>${stage.name}</b><em>${stage.detail}</em></div>`).join('');
-  detail.innerHTML=`<div class="project-meta"><span class="label">${p.label}</span></div><h3 id="${projectHash(key).slice(1)}">${p.title}</h3><div class="project-overview ${key==='kingdom'?'is-flagship':''}">${key==='kingdom'?renderFlagship():''}<div class="project-brief"><section><small>PROBLEM</small><p>${p.text}</p></section><section><small>ENGINEERING DECISION</small><p>${p.decision}</p></section></div></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow">${workflow}</div><div class="project-signals" aria-label="Engineering focus">${p.signals.map(x=>'<span>'+x+'</span>').join('')}</div><div class="project-evidence"><small>${p.evidenceLabel||'REPOSITORY EVIDENCE'}</small><div>${p.evidence.map(x=>'<span><i>✓</i>'+x+'</span>').join('')}</div></div>${renderArtifacts(p)}<div class="project-footer"><div class="tags">${p.tags.map(x=>'<span>'+x+'</span>').join('')}</div><a href="${p.url}" target="_blank" rel="noreferrer">${p.action||'Explore project ↗'}</a></div>`;
+  detail.innerHTML=`<div class="project-meta"><span class="label">${p.label}</span></div><h3 id="${projectHash(key).slice(1)}">${p.title}</h3><div class="project-overview ${key==='kingdom'?'is-flagship':''}">${key==='kingdom'?'<div class="flagship-media">'+renderFlagship()+renderEvidence(p)+'</div>':''}<div class="project-brief"><section><small>PROBLEM</small><p>${p.text}</p></section><section><small>ENGINEERING DECISION</small><p>${p.decision}</p></section></div></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow">${workflow}</div><div class="project-signals" aria-label="Engineering focus">${p.signals.map(x=>'<span>'+x+'</span>').join('')}</div>${key==='kingdom'?'':renderEvidence(p)}${renderArtifacts(p)}<div class="project-footer"><div class="tags">${p.tags.map(x=>'<span>'+x+'</span>').join('')}</div><a href="${p.url}" target="_blank" rel="noreferrer">${p.action||'Explore project ↗'}</a></div>`;
 }
 const projectList=document.querySelector(".project-list");
 const projectButtons=[...document.querySelectorAll(".project-list button")];
@@ -530,6 +531,7 @@ if(copyEmailButton&&copyEmailStatus){
     }finally{copyEmailButton.disabled=false;}
   });
 }
+
 
 
 

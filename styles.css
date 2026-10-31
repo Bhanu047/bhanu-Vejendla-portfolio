@@ -642,3 +642,66 @@ body{font-size:17px;line-height:1.75}
   
 }
 
+
+
+/* Use existing content to balance columns and reduce empty bands. */
+.hero-inner{gap:36px;padding-block:44px;grid-template-columns:.95fr 1.05fr}
+.hero-visual{display:grid;gap:16px;min-width:0}
+.hero-visual .console{width:100%;margin:0}
+.hero-visual .proof{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:0;border:1px solid #465775;border-radius:8px;overflow:hidden;background:#202c42}
+.hero-visual .proof div{min-width:0;padding:14px 16px;gap:12px;border-right:1px solid #465775;border-bottom:1px solid #465775}
+.hero-visual .proof div:nth-child(2n){border-right:0}
+.hero-visual .proof div:nth-last-child(-n+2){border-bottom:0}
+.hero-visual .proof strong{font-size:1.6rem;color:#f2f5fa}
+.hero-visual .proof span{font-size:.8125rem;line-height:1.5;color:#c0ccdc}
+.about,.experience,.stack,.projects,.workflow-section,.cta{padding-block:52px}
+.section-title{margin-bottom:24px;gap:24px}
+.about-grid{grid-template-columns:280px minmax(0,1fr);grid-template-rows:auto;gap:32px;align-items:center}
+.portrait{grid-row:auto;align-self:center}
+.portrait img{max-height:420px}
+.about-grid>div>aside{margin-top:20px;padding:18px 20px;gap:18px}
+.about-grid>div>aside img{width:54px;height:54px;object-fit:contain}
+.about-grid>div>aside h3{margin:4px 0;font-size:1.15rem}
+.about-grid>div>aside p{margin:0;line-height:1.6}
+.stack-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;border:0}
+.stack-group{display:block;padding:22px;border:1px solid #465775;border-radius:8px;background:#1b273c}
+.group-heading{grid-template-columns:24px 1fr;gap:10px;margin-bottom:18px}
+.group-heading p{margin-top:6px}
+.logo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.logo-grid>span{min-width:0;padding:9px 10px;min-height:52px;gap:8px;font-size:.8125rem;line-height:1.4}
+.engineering-principles{grid-column:1/-1;grid-template-columns:220px minmax(0,1fr);padding:12px 0 0;gap:20px}
+.flagship-media{min-width:0}
+.flagship-media .project-evidence{margin-top:16px;background:#f4f7fc;padding:16px}
+.flagship-media .project-evidence>div{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.flagship-media .project-evidence span{margin:0;font:600 .9375rem/1.6 var(--sans);color:#244a9e}
+.project-detail{padding:28px}
+.project-overview.is-flagship{gap:24px}
+.workflow-label{margin-top:20px}
+.career article{padding-bottom:28px}
+.career article>i:after{bottom:-38px}
+@media(max-width:1000px){
+  .hero-inner{grid-template-columns:1fr;gap:28px}
+  .hero-visual{width:100%;max-width:760px;margin-inline:auto}
+}
+@media(max-width:800px){
+  .stack-groups{grid-template-columns:1fr}
+  .logo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .about,.experience,.stack,.projects,.workflow-section,.cta{padding-block:36px}
+  .hero-inner{padding-block:32px}
+  .hero-visual .proof div{padding:12px;gap:9px}
+  .hero-visual .proof strong{font-size:1.4rem}
+  .hero-visual .proof span{font-size:.75rem}
+  .about-grid{grid-template-columns:1fr;gap:20px}
+  .portrait{grid-row:auto}
+  .section-title{gap:12px;margin-bottom:20px}
+  .stack-group{padding:18px}
+  .logo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .engineering-principles{grid-template-columns:1fr;gap:8px}
+  .project-detail{padding:20px 16px}
+  .project-overview.is-flagship{gap:16px}
+  .flagship-media .project-evidence>div{gap:8px}
+  .career article{padding-bottom:24px}
+  .career article>i:after{bottom:-34px}
+}
