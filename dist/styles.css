@@ -843,6 +843,6 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
   .portrait img{max-height:none}
 }
 
-/* Education: larger university logo */
-.about-grid>div>aside img,.about-grid aside img{width:70px;height:auto;max-height:81px;object-fit:contain;flex:0 0 auto}
-@media(max-width:700px){.about-grid>div>aside img,.about-grid aside img{width:60px;max-height:70px}}
+/* Education: logo matches the height of the degree, field and university lines */
+.about-grid>div>aside img,.about-grid aside img{width:auto;height:76px;max-height:none;object-fit:contain;flex:0 0 auto;align-self:flex-end}
+@media(max-width:700px){.about-grid>div>aside,.about-grid aside{padding:16px 14px;gap:12px}}
