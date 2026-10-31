@@ -6,8 +6,8 @@ Live at [bhanuvejendla.com](https://bhanuvejendla.com/).
 
 ## Content and progressive enhancement
 
-The HTML contains a complete Weblog Stream case study. If JavaScript is disabled
-or blocked, the case study remains readable and its repository link works. With
+The HTML contains a complete Kingdom846 case study. If JavaScript is disabled
+or blocked, the flagship case study remains readable and its live link works. With
 JavaScript enabled, the selector becomes an accessible horizontal tab list with
 arrow-key, Home and End navigation. A noscript navigation links to the other
 four projects.
@@ -26,7 +26,8 @@ are consolidated while responsive rules retain their cascade ordering.
 
 `python scripts/check_site.py` runs standard-library checks. CI installs pinned
 Playwright tooling and runs `node scripts/check_browser.cjs` in Chromium.
-Browser checks cover seven widths (360–1692px), heading collisions, horizontal
+Browser checks cover seven portfolio widths (360–1692px), the engineering note at
+mobile and desktop widths, heading collisions, horizontal
 overflow, project selection and keyboard navigation, portrait loading, JavaScript
 fallback, and fallback content with JavaScript disabled or blocked.
 
@@ -67,9 +68,9 @@ screens the selector scrolls horizontally within its own container.
 
 ## Project sharing and flagship showcase
 
-Kingdom846 includes an optimised screenshot captured from its public homepage.
-The asset is a real page capture; the historical launch figures remain labelled
-as reported figures. Experience copy also uses the terabyte-scale processing
+Kingdom846 includes an optimised screenshot captured from its public homepage,
+a version-conflict case study grounded in the portal's implementation, and site-usage
+figures from the supplied analytics export. Experience copy also uses the terabyte-scale processing
 claim from the owner's existing CV, without adding throughput benchmarks.
 
 Each case study supports direct fragment URLs:
@@ -84,3 +85,12 @@ fragments fall back to the flagship, without adding visible sharing controls.
 The project-sharing controls and screenshot caption are intentionally omitted
 from the page to keep the case studies focused. Existing project URLs continue
 to work.
+
+## Personal story and engineering note
+
+The About copy now connects Bhanu's India-to-North-Carolina career path to his
+focus on dependable data systems. `notes/replay-safe-streaming.html` is a
+standalone technical write-up based on the Weblog Stream sink implementation and
+its regression tests. It documents the observed multi-batch failure, the
+batch-scoped Parquet write, its validation and the small-file trade-off. The
+home-page project card and the Weblog Stream tab both link to the note.

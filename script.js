@@ -34,9 +34,27 @@ const projects={
     ],
     "signals": [
       "Role-based access",
-      "Version-aware writes",
-      "Responsive experience"
+      "Conflict-safe writes",
+      "Recoverable editing"
     ],
+    "caseStudy": {
+      "eyebrow": "DECISION UNDER PRESSURE",
+      "title": "Preventing one teammate from silently overwriting another",
+      "steps": [
+        {
+          "title": "The failure mode",
+          "text": "Several authorised War Room users can edit one shared roster. A simple last-write-wins save could erase newer work without warning."
+        },
+        {
+          "title": "The safeguard",
+          "text": "Each client saves the version it started from. The API refuses a stale version with a conflict response instead of accepting an unsafe write."
+        },
+        {
+          "title": "The recovery path",
+          "text": "The interface shows who saved the current version and lets the editor load it or deliberately replace it. The conflict becomes visible and recoverable."
+        }
+      ]
+    },
     "evidence": [
       "1,719 visits",
       "5,968 pageviews",
@@ -99,6 +117,8 @@ const projects={
     ],
     "url": "https://github.com/Bhanu047/weblog-stream",
     "action": "Explore repository ↗",
+    "noteUrl": "notes/replay-safe-streaming.html",
+    "noteAction": "Read engineering note →",
     "artifacts": [
       {
         "kind": "REGRESSION TEST",
@@ -327,10 +347,22 @@ function renderArtifacts(project){
   ).join('')+'</div></section>';
 }
 function renderEvidence(p){return `<div class="project-evidence"><small>${p.evidenceLabel||'REPOSITORY EVIDENCE'}</small><div>${p.evidence.map(x=>'<span><i>✓</i>'+x+'</span>').join('')}</div></div>`;}
+function renderCaseStudy(project){
+  if(!project.caseStudy)return "";
+  const story=project.caseStudy;
+  return '<section class="case-study-story" aria-label="Engineering decision"><div class="case-study-heading"><small>'+escapeHTML(story.eyebrow)+'</small><h4>'+escapeHTML(story.title)+'</h4></div><div class="case-study-steps">'+story.steps.map((step,index)=>
+    '<article><span>'+String(index+1).padStart(2,'0')+'</span><h5>'+escapeHTML(step.title)+'</h5><p>'+escapeHTML(step.text)+'</p></article>'
+  ).join('')+'</div></section>';
+}
+function renderProjectActions(project){
+  return '<div class="project-actions">'+
+    (project.noteUrl?'<a href="'+escapeHTML(project.noteUrl)+'">'+escapeHTML(project.noteAction||'Read engineering note →')+'</a>':'')+
+    '<a href="'+escapeHTML(project.url)+'" target="_blank" rel="noreferrer">'+escapeHTML(project.action||'Explore project ↗')+'</a></div>';
+}
 function render(key){
   const p=projects[key];
   const workflow=p.flow.map((stage,index)=>`${index?'<div class="flow-link"><i></i></div>':''}<div class="flow-stage"><small>${String(index+1).padStart(2,'0')} · ${stage.step}</small><b>${stage.name}</b><em>${stage.detail}</em></div>`).join('');
-  detail.innerHTML=`<div class="project-meta"><span class="label">${p.label}</span></div><h3 id="${projectHash(key).slice(1)}">${p.title}</h3><div class="project-overview ${key==='kingdom'?'is-flagship':''}">${key==='kingdom'?'<div class="flagship-media">'+renderFlagship()+renderEvidence(p)+'</div>':''}<div class="project-brief"><section><small>PROBLEM</small><p>${p.text}</p></section><section><small>ENGINEERING DECISION</small><p>${p.decision}</p></section></div></div><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow">${workflow}</div><div class="project-signals" aria-label="Engineering focus">${p.signals.map(x=>'<span>'+x+'</span>').join('')}</div>${key==='kingdom'?'':renderEvidence(p)}${renderArtifacts(p)}<div class="project-footer"><div class="tags">${p.tags.map(x=>'<span>'+x+'</span>').join('')}</div><a href="${p.url}" target="_blank" rel="noreferrer">${p.action||'Explore project ↗'}</a></div>`;
+  detail.innerHTML=`<div class="project-meta"><span class="label">${p.label}</span></div><h3 id="${projectHash(key).slice(1)}">${p.title}</h3><div class="project-overview ${key==='kingdom'?'is-flagship':''}">${key==='kingdom'?'<div class="flagship-media">'+renderFlagship()+renderEvidence(p)+'</div>':''}<div class="project-brief"><section><small>PROBLEM</small><p>${p.text}</p></section><section><small>ENGINEERING DECISION</small><p>${p.decision}</p></section></div></div>${renderCaseStudy(p)}<div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow">${workflow}</div><div class="project-signals" aria-label="Engineering focus">${p.signals.map(x=>'<span>'+x+'</span>').join('')}</div>${key==='kingdom'?'':renderEvidence(p)}${renderArtifacts(p)}<div class="project-footer"><div class="tags">${p.tags.map(x=>'<span>'+x+'</span>').join('')}</div>${renderProjectActions(p)}</div>`;
 }
 const projectList=document.querySelector(".project-list");
 const projectButtons=[...document.querySelectorAll(".project-list button")];

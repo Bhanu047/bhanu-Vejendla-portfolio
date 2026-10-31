@@ -74,13 +74,18 @@ const server = http.createServer((req, res) => {
       for (const tab of await page.getByRole('tab').all()) {
         await tab.click();
         assert.equal(await tab.getAttribute('aria-selected'), 'true');
-        assert(await page.locator('.project-footer > a').isVisible());
+        assert(await page.locator('.project-footer a').last().isVisible());
         if (await tab.getAttribute('data-project') === 'kingdom') {
           assert(await page.locator('.project-showcase img').isVisible());
+          assert(await page.locator('.case-study-story').isVisible());
+          assert.match(await page.locator('.case-study-story').innerText(), /silently overwriting another/);
           assert.equal(await page.getByRole('link', { name: 'Open live platform ↗', exact: true }).count(), 0);
         } else {
           assert(await page.locator('.project-artifacts h4').isVisible());
           assert(await page.locator('.artifact-card a').first().isVisible());
+          if (await tab.getAttribute('data-project') === 'stream') {
+            assert(await page.getByRole('link', { name: 'Read engineering note →', exact: true }).isVisible());
+          }
         }
       }
       if (width === 1280) {
@@ -120,7 +125,7 @@ const server = http.createServer((req, res) => {
       if (!disabled) await page.route('**/script.js*', route => route.abort());
       await page.goto(url);
       assert.match(await page.locator('#project-detail').innerText(), /Kingdom846/);
-      assert(await page.locator('.project-footer > a').isVisible());
+      assert(await page.locator('.project-footer a').last().isVisible());
       assert.equal(await page.locator('.project-list').isVisible(), false);
       assert(await page.locator('.project-showcase img').isVisible());
       assert(await page.locator('.stack-group').first().isVisible());
@@ -135,7 +140,16 @@ const server = http.createServer((req, res) => {
     await fallbackPage.getByRole('status').filter({ hasText: 'copy it manually' }).waitFor();
     assert.equal(await fallbackPage.evaluate(() => window.getSelection().toString()), 'bhanumanideepvejendla@gmail.com');
     await fallbackPage.close();
-    console.log('Browser checks passed: 7 viewports, showcase loading, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
+    const notePage = await browser.newPage({ viewport: { width: 390, height: 900 }, reducedMotion: 'reduce' });
+    await notePage.goto(url + '/notes/replay-safe-streaming.html');
+    await notePage.getByRole('heading', { name: 'Exactly-once is won in the sink.', exact: true }).waitFor();
+    assert.equal(await notePage.locator('.note-section').count(), 4);
+    assert.equal(await notePage.locator('.note-source-links a').count(), 2);
+    assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
+    await notePage.setViewportSize({ width: 1280, height: 900 });
+    assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
+    await notePage.close();
+    console.log('Browser checks passed: 7 portfolio viewports, deeper case study, engineering note, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();

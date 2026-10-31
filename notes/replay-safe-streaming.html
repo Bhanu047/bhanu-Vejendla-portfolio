@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exactly-once is won in the sink — Bhanu Vejendla</title>
+<meta name="description" content="A practical engineering note from Bhanu Vejendla on replay-safe Spark Structured Streaming writes to Parquet.">
+<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=3">
+<meta name="theme-color" content="#172033">
+<link rel="canonical" href="https://bhanuvejendla.com/notes/replay-safe-streaming.html">
+<meta property="og:title" content="Exactly-once is won in the sink — Bhanu Vejendla">
+<meta property="og:description" content="How a count exposed silent data loss in a streaming sink, and the write design that made replay safe.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bhanuvejendla.com/notes/replay-safe-streaming.html">
+<meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=20261031-story">
+</head>
+<body class="note-page">
+<a class="skip-link" href="#article">Skip to article</a>
+<header>
+<a class="logo" href="/">
+<img class="logo-mark" src="/assets/bv-mark.svg" alt="" aria-hidden="true">
+<span>BHANU VEJENDLA</span>
+</a>
+<nav aria-label="Article navigation">
+<a href="/#work">Projects</a>
+<a href="/#about">About</a>
+</nav>
+<div class="social">
+<a href="https://github.com/Bhanu047/weblog-stream" target="_blank" rel="noreferrer">Source ↗</a>
+<a class="contact" href="/#contact">Contact me</a>
+</div>
+</header>
+<main class="note-main" id="article" tabindex="-1">
+<article>
+<div class="note-hero">
+<a class="note-back" href="/#project-weblog-stream">← Weblog Stream case study</a>
+<p class="note-kicker">ENGINEERING NOTE · STREAMING RELIABILITY</p>
+<h1>Exactly-once is won in the sink.</h1>
+<p class="note-deck">A Spark checkpoint can replay the last micro-batch after a failure. I learned that recovery is safe only when writing the same batch twice produces the same stored result.</p>
+<dl class="note-facts">
+<div><dt>System</dt><dd>Kafka → Spark → Parquet</dd></div>
+<div><dt>Signal</dt><dd>3,091 rows in · 926 on disk</dd></div>
+<div><dt>Validation</dt><dd>52 automated tests</dd></div>
+</dl>
+</div>
+
+<section class="note-section">
+<p class="note-section-number">01 · THE FAILURE</p>
+<h2>The pipeline was green while rows disappeared.</h2>
+<p>My first sink partitioned output by event date and overwrote the partition touched by each micro-batch. A one-batch unit test passed. A running stream exposed the mistake: every batch for today wrote to the same date partition, so each new write removed the earlier one.</p>
+<p>The count made the problem undeniable: 3,091 records entered the pipeline and only 926 remained on disk. This was data loss caused by a write strategy that looked reasonable in isolation.</p>
+<figure class="write-path" aria-labelledby="write-path-caption">
+<div><small>BATCH 0</small><strong>event_date=today</strong><span>Rows A + B written</span></div>
+<i aria-hidden="true">→</i>
+<div class="write-path-danger"><small>BATCH 1</small><strong>same partition</strong><span>Rows A + B overwritten</span></div>
+<figcaption id="write-path-caption">The unsafe design: every micro-batch overwrites the same daily partition.</figcaption>
+</figure>
+</section>
+
+<section class="note-section">
+<p class="note-section-number">02 · THE DECISION</p>
+<h2>Give every micro-batch an idempotent destination.</h2>
+<p>A checkpoint records which source offsets Spark has processed, but a failure can still cause the last batch to run again. The sink therefore has to make a repeated write harmless.</p>
+<p>I changed the path so each batch writes beneath its own <code>batch=&lt;id&gt;</code> prefix. Replaying batch 7 overwrites only batch 7. A later batch gets a different prefix, so it cannot erase the earlier output. Event date remains a nested partition for pruning.</p>
+<pre class="note-code"><code>target = Path(path) / f"batch={batch_id}"
+
+(
+    frame.write.mode("overwrite")
+    .partitionBy("event_date")
+    .parquet(str(target))
+)</code></pre>
+</section>
+
+<section class="note-section">
+<p class="note-section-number">03 · THE PROOF</p>
+<h2>Test the recovery behaviour, not the setting.</h2>
+<p>The important assertion is not that a configuration flag exists. It is that the stored data stays correct through the failures the system is designed to survive.</p>
+<ul class="note-checks">
+<li>Write the same batch twice and confirm the row count does not increase.</li>
+<li>Write later batches on the same event date and confirm earlier rows remain.</li>
+<li>Send valid and malformed records through the fan-out writer, replay the batch, and confirm both destinations remain idempotent.</li>
+<li>Run several successive batches and verify that all of them survive.</li>
+</ul>
+</section>
+
+<section class="note-section note-tradeoff">
+<p class="note-section-number">04 · THE TRADE-OFF</p>
+<h2>Correct recovery creates a small-file problem.</h2>
+<p>Batch-scoped output creates more files over time. For this project, that is an honest trade: safe recovery comes first. A production deployment would compact files on a schedule or move the sink to Delta Lake or Iceberg and use transactional merges.</p>
+<p>The broader lesson is simple: “exactly-once” is a property of the complete path. Source offsets, checkpoints and sink behaviour have to agree.</p>
+</section>
+
+<aside class="note-source">
+<div><small>INSPECT THE IMPLEMENTATION</small><h2>Read the code and regression tests.</h2><p>The repository includes the sink, the tests that replay batches, and the end-to-end streaming query.</p></div>
+<div class="note-source-links"><a href="https://github.com/Bhanu047/weblog-stream/blob/main/src/weblog/sinks.py" target="_blank" rel="noreferrer">Open the sink ↗</a><a href="https://github.com/Bhanu047/weblog-stream/blob/main/tests/test_sinks.py" target="_blank" rel="noreferrer">Read the tests ↗</a></div>
+</aside>
+</article>
+</main>
+<footer>
+<span>© 2026 BHANU VEJENDLA</span>
+<a href="/#work">Back to projects ↑</a>
+</footer>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>
+</body>
+</html>
