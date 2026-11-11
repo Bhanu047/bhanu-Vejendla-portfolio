@@ -547,7 +547,7 @@ body{font-size:17px;line-height:1.75}
 
 /* Horizontal project selector: give the case study the full content width. */
 .project-layout{grid-template-columns:minmax(0,1fr);min-width:0}
-.project-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));min-width:0;max-width:100%;border-right:0;border-bottom:1px solid #ccd4df}
+.project-list{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-width:0;max-width:100%;border-right:0;border-bottom:1px solid #ccd4df}
 .project-list button{display:flex;align-items:flex-start;gap:10px;min-width:0;min-height:100px;height:auto;padding:18px 14px;border-bottom:0;border-right:1px solid #dce2ea}
 .project-list button:last-child{border-right:0}
 .project-list button>b{padding-top:4px;flex:0 0 auto}
@@ -744,7 +744,7 @@ header nav a:hover:after,header nav a:focus-visible:after{transform:scaleX(1)}
 .engineering-notes-heading>p{margin:0;color:#bec9d9;font-size:1rem;line-height:1.75}
 .engineering-notes-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
 .engineering-note-tile{display:flex;grid-column:span 2;min-width:0;min-height:218px;flex-direction:column;padding:18px;border:1px solid #465a79;border-radius:7px;background:#1d2a40;color:#f2f5fa;text-decoration:none;transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
-.engineering-note-tile:nth-child(n+4){grid-column:span 3}
+.engineering-note-tile:nth-child(n+4){grid-column:span 3;min-height:160px}
 .engineering-note-tile>span{font:600 .7rem/1.5 var(--mono);letter-spacing:.06em;color:#78a0ff}
 .engineering-note-tile h4{margin:12px 0 8px;font-size:1.05rem;line-height:1.45}
 .engineering-note-tile p{margin:0;color:#b9c5d5;font-size:.9rem;line-height:1.7}

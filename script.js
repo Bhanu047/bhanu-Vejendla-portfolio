@@ -71,6 +71,7 @@ const projects={
     "url": "https://kingdom846.com",
     "action": "Visit live website ↗",
     "noteUrl": "/notes/conflict-safe-collaboration.html",
+    "showcase": {"src": "assets/kingdom846-showcase.webp", "width": 1280, "height": 699, "alt": "Kingdom846 public homepage showing the royal portal, alliance navigation and community features", "url": "https://kingdom846.com"},
     "noteAction": "Read engineering note →",
     "artifacts": []
   },
@@ -338,12 +339,158 @@ const projects={
         "snippet": "environment = \"prod\"\nforce_destroy_buckets = true\n\ncondition = output.force_destroy_effective == false"
       }
     ]
+  },
+  "glucose": {
+    "label": "WEARABLE APP · EVEN G2",
+    "title": "Glucose HUD",
+    "text": "People who wear a glucose sensor, or look after someone who does, check their numbers many times a day. Glucose HUD puts the current reading, the trend and a 3-hour chart on Even Realities G2 glasses, using data from FreeStyle Libre, Dexcom or Nightscout.",
+    "decision": "Each service sends data in its own format, so a small Cloudflare Worker relay turns all three into one list of readings, drops invalid values and removes duplicates. The relay stores nothing, and passwords are only sent when a fresh login is needed. On the phone, the app projects the last 20 minutes forward to warn about a low before it happens.",
+    "flow": [
+      {
+        "step": "SOURCE",
+        "name": "Libre · Dexcom · Nightscout",
+        "detail": "Three CGM services"
+      },
+      {
+        "step": "RELAY",
+        "name": "Cloudflare Worker",
+        "detail": "One shared format"
+      },
+      {
+        "step": "PHONE",
+        "name": "Even app plugin",
+        "detail": "Stats + prediction"
+      },
+      {
+        "step": "GLASSES",
+        "name": "G2 display",
+        "detail": "576 × 288 HUD"
+      }
+    ],
+    "signals": [
+      "Stateless relay",
+      "Predicted lows",
+      "Stale-data detection"
+    ],
+    "evidence": [
+      "28 automated tests",
+      "Relay tested against fake servers",
+      "Demo mode without a sensor"
+    ],
+    "tags": [
+      "TypeScript",
+      "Cloudflare Workers",
+      "Canvas",
+      "Node test runner"
+    ],
+    "url": "https://github.com/Bhanu047/glucose-hud-g2",
+    "action": "Explore repository ↗",
+    "noteUrl": "/notes/fresh-data-predictions.html",
+    "noteAction": "Read engineering note →",
+    "showcase": {
+      "src": "assets/glucose-hud-showcase.webp",
+      "width": 1182,
+      "height": 600,
+      "alt": "Glucose HUD on G2 glasses: readings with trend arrows, 3-hour charts, time in range and a predicted low warning",
+      "url": "https://github.com/Bhanu047/glucose-hud-g2"
+    },
+    "artifacts": [
+      {
+        "kind": "REGRESSION TEST",
+        "title": "Count the minutes since the last reading",
+        "text": "With the same falling readings, the warning drops from 20 to 16 minutes when the newest reading is already 4 minutes old.",
+        "url": "https://github.com/Bhanu047/glucose-hud-g2/blob/423c8a15d6f196fac6c6a7d8bc75b10734436b34/test/glucose.test.mjs",
+        "action": "Read prediction tests",
+        "snippet": "const p = predict(series([150, 140, 130, 120, 110], 5, 4), T, now) // last reading 4 min old\nassert.equal(p.minutes, 16)"
+      },
+      {
+        "kind": "RELAY TEST",
+        "title": "Never send the password back",
+        "text": "The relay logs in to a fake LibreLinkUp server and returns readings and a session token. The response must not contain the password.",
+        "url": "https://github.com/Bhanu047/glucose-hud-g2/blob/423c8a15d6f196fac6c6a7d8bc75b10734436b34/test/relay.test.mjs",
+        "action": "Read relay tests",
+        "snippet": "const res = await post('/libre', { email: 'a@b.c', password: 'pw' })\nconst body = await res.json()\nassert.equal(body.session.token, 'tok-new')\nassert.equal(JSON.stringify(body).includes('pw'), false)"
+      }
+    ]
+  },
+  "whoswho": {
+    "label": "WEARABLE APP · EVEN G2",
+    "title": "Who’s Who",
+    "text": "Before a dinner, a meeting or a family event, it helps to remember who you’ll see and what to ask them. Who’s Who shows one card per person on G2 glasses: name, role, where you met and a few notes. You swipe through them and tap to mark who you’ve talked to.",
+    "decision": "The glasses can’t read your contacts or calendar, so the app imports files you export: iPhone and Android contact cards, Google Contacts or LinkedIn CSVs, and meeting invites. Every format becomes the same small record, and phone numbers, emails and addresses are dropped. There’s no account, no server and no internet access. Everything stays on your phone.",
+    "flow": [
+      {
+        "step": "IMPORT",
+        "name": "vCard · CSV · .ics",
+        "detail": "Files you export"
+      },
+      {
+        "step": "PARSE",
+        "name": "people.ts",
+        "detail": "One person record"
+      },
+      {
+        "step": "STORE",
+        "name": "Even app",
+        "detail": "Phone only"
+      },
+      {
+        "step": "SHOW",
+        "name": "G2 display",
+        "detail": "One card per person"
+      }
+    ],
+    "signals": [
+      "No permissions",
+      "Five import formats",
+      "Data stays on the phone"
+    ],
+    "evidence": [
+      "14 automated tests",
+      "Manifest asks for no permissions",
+      "No URLs in the bundle"
+    ],
+    "tags": [
+      "TypeScript",
+      "vCard",
+      "iCalendar",
+      "Node test runner"
+    ],
+    "url": "https://github.com/Bhanu047/whos-who-g2",
+    "action": "Explore repository ↗",
+    "noteUrl": "/notes/messy-contact-imports.html",
+    "noteAction": "Read engineering note →",
+    "showcase": {
+      "src": "assets/whos-who-showcase.webp",
+      "width": 1182,
+      "height": 600,
+      "alt": "Who’s Who person cards on G2 glasses showing name, role, where you met and what to ask about",
+      "url": "https://github.com/Bhanu047/whos-who-g2"
+    },
+    "artifacts": [
+      {
+        "kind": "PARSER TEST",
+        "title": "Phone numbers never get imported",
+        "text": "An iPhone contact export with folded lines and escaped commas becomes names, companies and notes. The test checks that the phone number isn’t in the result.",
+        "url": "https://github.com/Bhanu047/whos-who-g2/blob/326aeb762e46db2ea2c5af66d0a8ab57cb1e1375/test/people.test.mjs",
+        "action": "Read vCard tests",
+        "snippet": "assert.equal(p[0].notes, 'Kids: Leo (7)\\nRan Chicago marathon 2025')\nassert.equal(p[1].name, 'Tom Becker') // built from N when FN missing\nassert.equal(JSON.stringify(p).includes('555'), false) // phone numbers ignored"
+      },
+      {
+        "kind": "PARSER TEST",
+        "title": "A meeting invite becomes a group",
+        "text": "One invite gives one group. The organizer is tagged, the meeting room is skipped and a missing name is worked out from the email address.",
+        "url": "https://github.com/Bhanu047/whos-who-g2/blob/326aeb762e46db2ea2c5af66d0a8ab57cb1e1375/test/people.test.mjs",
+        "action": "Read invite tests",
+        "snippet": "assert.deepEqual(g[0].people.map(p => p.name), ['Maria Chen', 'Tom Becker', 'Priya Nair'])\nassert.equal(g[0].people[0].role, 'Organizer')\nassert.equal(g[0].people[2].org, '') // gmail → no company"
+      }
+    ]
   }
 };
-const projectSlugs={kingdom:'kingdom846',stream:'weblog-stream',taxi:'nyc-taxi-lakehouse',retail:'retail-warehouse',infra:'data-platform-terraform'};
+const projectSlugs={kingdom:'kingdom846',stream:'weblog-stream',taxi:'nyc-taxi-lakehouse',retail:'retail-warehouse',infra:'data-platform-terraform',glucose:'glucose-hud',whoswho:'whos-who'};
 function projectHash(key){return '#project-'+projectSlugs[key];}
 function projectKeyFromHash(){return Object.keys(projectSlugs).find(key=>projectHash(key)===location.hash);}
-function renderFlagship(){return '<figure class="project-showcase"><a href="https://kingdom846.com" target="_blank" rel="noreferrer"><img src="assets/kingdom846-showcase.webp" width="1280" height="699" alt="Kingdom846 public homepage showing the royal portal, alliance navigation and community features" loading="lazy" decoding="async"></a></figure>';}
+function renderShowcase(s){return '<figure class="project-showcase"><a href="'+escapeHTML(s.url)+'" target="_blank" rel="noreferrer"><img src="'+escapeHTML(s.src)+'" width="'+s.width+'" height="'+s.height+'" alt="'+escapeHTML(s.alt)+'" loading="lazy" decoding="async"></a></figure>';}
 const detail=document.getElementById("project-detail");
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
 function renderArtifacts(project){
@@ -370,7 +517,7 @@ function renderProjectActions(project){
 function render(key){
   const p=projects[key];
   const workflow=p.flow.map((stage,index)=>`${index?'<div class="flow-link"><i></i></div>':''}<div class="flow-stage"><small>${String(index+1).padStart(2,'0')} · ${stage.step}</small><b>${stage.name}</b><em>${stage.detail}</em></div>`).join('');
-  detail.innerHTML=`<div class="project-meta"><span class="label">${p.label}</span></div><h3 id="${projectHash(key).slice(1)}">${p.title}</h3><div class="project-overview ${key==='kingdom'?'is-flagship':''}">${key==='kingdom'?'<div class="flagship-media">'+renderFlagship()+renderEvidence(p)+'</div>':''}<div class="project-brief"><section><small>PROBLEM</small><p>${p.text}</p></section><section><small>ENGINEERING DECISION</small><p>${p.decision}</p></section></div></div>${renderCaseStudy(p)}<div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow">${workflow}</div><div class="project-signals" aria-label="Engineering focus">${p.signals.map(x=>'<span>'+x+'</span>').join('')}</div>${key==='kingdom'?'':renderEvidence(p)}${renderArtifacts(p)}<div class="project-footer"><div class="tags">${p.tags.map(x=>'<span>'+x+'</span>').join('')}</div>${renderProjectActions(p)}</div>`;
+  detail.innerHTML=`<div class="project-meta"><span class="label">${p.label}</span></div><h3 id="${projectHash(key).slice(1)}">${p.title}</h3><div class="project-overview ${p.showcase?'is-flagship':''}">${p.showcase?'<div class="flagship-media">'+renderShowcase(p.showcase)+renderEvidence(p)+'</div>':''}<div class="project-brief"><section><small>PROBLEM</small><p>${p.text}</p></section><section><small>ENGINEERING DECISION</small><p>${p.decision}</p></section></div></div>${renderCaseStudy(p)}<div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow">${workflow}</div><div class="project-signals" aria-label="Engineering focus">${p.signals.map(x=>'<span>'+x+'</span>').join('')}</div>${p.showcase?'':renderEvidence(p)}${renderArtifacts(p)}<div class="project-footer"><div class="tags">${p.tags.map(x=>'<span>'+x+'</span>').join('')}</div>${renderProjectActions(p)}</div>`;
 }
 const projectList=document.querySelector(".project-list");
 const projectButtons=[...document.querySelectorAll(".project-list button")];

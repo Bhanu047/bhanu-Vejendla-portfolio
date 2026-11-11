@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A prediction is only as good as its last reading — Bhanu Vejendla</title>
+<meta name="description" content="Bhanu Vejendla on predicting low glucose on Even G2 glasses without trusting stale data.">
+<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=3">
+<meta name="theme-color" content="#172033">
+<link rel="canonical" href="https://bhanuvejendla.com/notes/fresh-data-predictions.html">
+<meta property="og:title" content="A prediction is only as good as its last reading — Bhanu Vejendla">
+<meta property="og:description" content="How Glucose HUD projects recent readings forward, and why it stays quiet when the data is old.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bhanuvejendla.com/notes/fresh-data-predictions.html">
+<meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=20261111-g2">
+</head>
+<body class="note-page">
+<a class="skip-link" href="#article">Skip to article</a>
+<header>
+<a class="logo" href="/">
+<img class="logo-mark" src="/assets/bv-mark.svg" alt="" aria-hidden="true">
+<span>BHANU VEJENDLA</span>
+</a>
+<nav aria-label="Article navigation">
+<a href="/#work">Projects</a>
+<a href="/#about">About</a>
+</nav>
+<div class="social">
+<a href="https://github.com/Bhanu047/glucose-hud-g2" target="_blank" rel="noreferrer">Source ↗</a>
+<a class="contact" href="/#contact">Contact me</a>
+</div>
+</header>
+<main class="note-main" id="article" tabindex="-1">
+<article>
+<div class="note-hero">
+<a class="note-back" href="/#project-glucose-hud">← Glucose HUD case study</a>
+<p class="note-kicker">ENGINEERING NOTE · DATA FRESHNESS</p>
+<h1>A prediction is only as good as its last reading.</h1>
+<p class="note-deck">Glucose HUD warns about a low before it happens by projecting the last 20 minutes forward. Getting the maths right was the easy part. The harder part was deciding when not to show a warning.</p>
+<dl class="note-facts">
+<div><dt>System</dt><dd>CGM → relay → phone → G2</dd></div>
+<div><dt>Horizon</dt><dd>30 minutes ahead</dd></div>
+<div><dt>Validation</dt><dd>28 automated tests</dd></div>
+</dl>
+</div>
+
+<section class="note-section">
+<p class="note-section-number">01 · THE PROBLEM</p>
+<h2>By the time you look, the reading is already old.</h2>
+<p>A glucose sensor doesn’t stream. Dexcom and Nightscout give a reading every few minutes, and LibreLinkUp’s history only has a point every 15 minutes. So when you glance at the glasses, the newest number might be from a few minutes ago.</p>
+<p>The obvious approach is to project the trend forward from the time of that reading. But then, if the last reading is four minutes old, the warning is four minutes late. And if the sensor stops sending for a while, the old trend keeps predicting from data that no longer says anything about the person.</p>
+<figure class="write-path" aria-labelledby="predict-caption">
+<div class="write-path-danger"><small>FROM THE READING TIME</small><strong>110 mg/dL, 4 min ago</strong><span>Shows LOW in ~20 min</span></div>
+<i aria-hidden="true">→</i>
+<div><small>FROM NOW</small><strong>Same readings</strong><span>Shows LOW in ~16 min</span></div>
+<figcaption id="predict-caption">Falling 2 mg/dL a minute. Projecting from the reading time hides the four minutes that have already passed.</figcaption>
+</figure>
+</section>
+
+<section class="note-section">
+<p class="note-section-number">02 · THE FIX</p>
+<h2>Project from now, and only from fresh data.</h2>
+<p>The rate comes from a least-squares line through the last 20 minutes of readings. When there are only two sparse points, as with LibreLinkUp, it falls back to the change per 5 minutes. Anything slower than 0.5 mg/dL a minute counts as steady, so it doesn’t warn.</p>
+<p>The projection starts from the current time, not the reading time. It only warns if the line crosses your low or high threshold within 30 minutes; past that, a straight line is mostly noise. It also says nothing when the newest reading is 15 minutes old or more, or when you’re already low, because the status line already shows that.</p>
+<pre class="note-code"><code>const cur = currentReading(pts)
+if (!cur || isStale(cur.at, now)) return null
+let rate = slopePerMin(pts, 20)
+if (rate == null &amp;&amp; cur.deltaMgdl != null) rate = cur.deltaMgdl / 5
+if (rate == null || Math.abs(rate) &lt; 0.5) return null
+// Project from "now", not from the reading time.
+const elapsed = (now - cur.at) / 60_000
+const projected = cur.mgdl + rate * elapsed</code></pre>
+</section>
+
+<section class="note-section">
+<p class="note-section-number">03 · HOW I TESTED IT</p>
+<h2>Testing when it warns, and when it doesn’t</h2>
+<p>The prediction code is plain functions with no screen or network involved, so the tests feed in made-up readings and check the exact number of minutes.</p>
+<ul class="note-checks">
+<li>Falling 2 mg/dL a minute from 110 shows “LOW in ~20 min”.</li>
+<li>The same readings with the newest one 4 minutes old show 16 minutes instead.</li>
+<li>Rising readings warn about a high instead.</li>
+<li>No warning when the numbers are steady, the low is far away, the data is stale, or you’re already low.</li>
+<li>Two LibreLinkUp points 15 minutes apart still give a warning, at about 23 minutes.</li>
+<li>In demo mode, the falling person triggers a predicted low and the steady one doesn’t.</li>
+</ul>
+</section>
+
+<section class="note-section note-tradeoff">
+<p class="note-section-number">04 · WHAT IT DOESN’T COVER</p>
+<h2>It’s something to glance at, not an alarm.</h2>
+<p>Even Hub has no background or push API, so nothing can warn you while the plugin is closed. A straight line also can’t know about a meal or a correction dose, which is why it only looks 30 minutes ahead. The app says clearly that it isn’t a medical device: check your meter or CGM app before making treatment decisions.</p>
+<p>The same rule applies to any pipeline that makes a call from recent data. Check how old the data is before you use it, and show nothing rather than a confident answer built on stale numbers.</p>
+</section>
+
+<aside class="note-source">
+<div><small>SOURCE CODE</small><h2>The prediction code and tests are on GitHub.</h2><p>The repo has the glucose logic, the relay and both test files. Everything runs offline with fake data.</p></div>
+<div class="note-source-links"><a href="https://github.com/Bhanu047/glucose-hud-g2/blob/main/src/glucose.ts" target="_blank" rel="noreferrer">Open the prediction code ↗</a><a href="https://github.com/Bhanu047/glucose-hud-g2/blob/main/test/glucose.test.mjs" target="_blank" rel="noreferrer">Read the tests ↗</a></div>
+</aside>
+
+<nav class="note-series" aria-labelledby="note-series-title">
+<h2 id="note-series-title">More engineering notes</h2>
+<div class="note-series-list">
+<a href="/notes/conflict-safe-collaboration.html">01 · Conflict-safe collaboration</a>
+<a href="/notes/replay-safe-streaming.html">02 · Replay-safe streaming</a>
+<a href="/notes/retry-safe-monthly-loads.html">03 · Retry-safe monthly loads</a>
+<a href="/notes/incremental-model-lookback.html">04 · Incremental model lookbacks</a>
+<a href="/notes/terraform-production-guardrails.html">05 · Terraform production guardrails</a>
+<a href="/notes/fresh-data-predictions.html" aria-current="page">06 · Fresh-data predictions</a>
+<a href="/notes/messy-contact-imports.html">07 · Messy contact imports</a>
+</div>
+</nav>
+</article>
+</main>
+<footer>
+<span>© 2026 BHANU VEJENDLA</span>
+<a href="/#work">Back to projects ↑</a>
+</footer>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>
+</body>
+</html>

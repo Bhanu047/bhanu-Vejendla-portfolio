@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0b1020">
 <link rel="canonical" href="https://bhanuvejendla.com/">
 <meta property="og:title" content="Bhanu Vejendla — Senior Data Engineer">
-<meta property="og:description" content="Senior Data Engineer who has worked on Azure, AWS and GCP at MetLife, Epic Games, InCred and Siemens Healthineers. Projects include a live community site, streaming, a lakehouse, a dbt warehouse and Terraform.">
+<meta property="og:description" content="Senior Data Engineer who has worked on Azure, AWS and GCP at MetLife, Epic Games, InCred and Siemens Healthineers. Projects include a live community site, streaming, a lakehouse, a dbt warehouse, Terraform and two smart-glasses apps.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://bhanuvejendla.com/">
 <meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261031-recruiter9">
+<link rel="stylesheet" href="styles.css?v=20261111-g2">
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to main content</a>
@@ -174,7 +174,7 @@
 <span>cloud ecosystems<br>Azure · AWS · GCP</span>
 </div>
 <div>
-<strong>5</strong>
+<strong>7</strong>
 <span>featured engineering<br>projects</span>
 </div>
 <div>
@@ -307,7 +307,7 @@
 <small>04 · SELECTED ENGINEERING WORK</small>
 <h2>Projects that show how I work.</h2>
 </div>
-<p>One live site with real users, and four data engineering projects with tests.</p>
+<p>One live site with real users, four data engineering projects and two apps for Even Realities G2 smart glasses.</p>
 </div>
 <p class="project-guide">Pick a project to see the problem, what I decided and why, and links to the code or the live site.</p>
 <div class="project-layout">
@@ -342,6 +342,18 @@
 </span>
 <em>→</em>
 </button>
+<button data-project="glucose">
+<b>06</b>
+<span>Glucose HUD<small>Smart-glasses glucose display</small>
+</span>
+<em>→</em>
+</button>
+<button data-project="whoswho">
+<b>07</b>
+<span>Who’s Who<small>Smart-glasses name cards</small>
+</span>
+<em>→</em>
+</button>
 </div>
 <article class="project-detail" id="project-detail" tabindex="0"><div class="project-meta"><span class="label">FLAGSHIP PRODUCTION PLATFORM</span></div><h3 id="project-kingdom846">Kingdom846</h3><div class="project-overview is-flagship"><div class="flagship-media"><figure class="project-showcase"><a href="https://kingdom846.com" target="_blank" rel="noreferrer"><img src="assets/kingdom846-showcase.webp" width="1280" height="699" alt="Kingdom846 public homepage showing the royal portal, alliance navigation and community features" loading="lazy" decoding="async"></a></figure><div class="project-evidence"><small>SITE USAGE</small><div><span><i>✓</i>1,719 visits</span><span><i>✓</i>5,968 pageviews</span><span><i>✓</i>58 countries</span><span><i>✓</i>3.5 pages per visit</span></div></div></div><div class="project-brief"><section><small>PROBLEM</small><p>A gaming community needed one place for alliance information, live rosters, applications, rankings, voting and updates. I built Kingdom846 for them, and real members use it.</p></section><section><small>ENGINEERING DECISION</small><p>The React front end talks to an Express API, and the data lives in SQLite. Admins, alliance leaders and War Room users each get different permissions. Login is rate-limited, saves check the version first, and the Royal Advisor runs on the server.</p></section></div></div><section class="case-study-story" aria-labelledby="kingdom-decision-title"><div class="case-study-heading"><small>ONE DESIGN DECISION</small><h4 id="kingdom-decision-title">Preventing one teammate from silently overwriting another</h4></div><div class="case-study-steps"><article><span>01</span><h5>The problem</h5><p>Several War Room users can edit the same roster. With a plain last-write-wins save, one person could wipe out someone else’s newer changes without either of them noticing.</p></article><article><span>02</span><h5>The fix</h5><p>Each save includes the version the editor started from. If that version is out of date, the API rejects the save with a conflict instead of overwriting.</p></article><article><span>03</span><h5>What the editor sees</h5><p>The page shows who saved the latest version. The editor can load it, or choose to replace it on purpose.</p></article></div></section><div class="workflow-label"><span>ARCHITECTURE FLOW</span><b>ILLUSTRATED WORKFLOW</b></div><div class="architecture-flow"><div class="flow-stage"><small>01 · EXPERIENCE</small><b>React + Vite</b><em>Responsive portal</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>02 · SERVICES</small><b>Express API</b><em>Role-based access</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>03 · DATA</small><b>SQLite</b><em>Live community state</em></div><div class="flow-link"><i></i></div><div class="flow-stage"><small>04 · OPERATE</small><b>Production site</b><em>Real users + updates</em></div></div><div class="project-signals" aria-label="Engineering focus"><span>Role-based access</span><span>Conflict-safe writes</span><span>Recoverable editing</span></div><div class="project-footer"><div class="tags"><span>React</span><span>Express</span><span>SQLite</span><span>REST APIs</span></div><a href="https://kingdom846.com" target="_blank" rel="noreferrer">Visit live website ↗</a></div>
 </article>
@@ -354,9 +366,11 @@
 <a class="engineering-note-tile" href="notes/retry-safe-monthly-loads.html"><span>03 · NYC TAXI LAKEHOUSE</span><h4>A batch is finished only after its output commits</h4><p>Making monthly loads safe to rerun, using partition replacement and a manifest.</p><small>PySpark · Manifests · Backfills</small></a>
 <a class="engineering-note-tile" href="notes/incremental-model-lookback.html"><span>04 · RETAIL WAREHOUSE</span><h4>Late data is why incremental models need a lookback</h4><p>Reprocessing a small trailing window without duplicating yesterday’s orders.</p><small>dbt · Incremental SQL · Testing</small></a>
 <a class="engineering-note-tile" href="notes/terraform-production-guardrails.html"><span>05 · DATA PLATFORM TERRAFORM</span><h4>Asking for force-destroy is not the same as receiving it</h4><p>Blocking risky settings in production and checking it at plan time.</p><small>Terraform · AWS · Guardrails</small></a>
+<a class="engineering-note-tile" href="notes/fresh-data-predictions.html"><span>06 · GLUCOSE HUD</span><h4>A prediction is only as good as its last reading</h4><p>Warning about a low before it happens, and staying quiet when the data is stale.</p><small>TypeScript · Time series · Testing</small></a>
+<a class="engineering-note-tile" href="notes/messy-contact-imports.html"><span>07 · WHO’S WHO</span><h4>Every contact export is its own file format</h4><p>Turning contact cards, CSV exports and meeting invites into one small, private record.</p><small>TypeScript · Parsing · Privacy</small></a>
 </div>
 </section>
-<noscript><nav class="project-fallback-links" aria-label="More project repositories"><a href="https://github.com/Bhanu047/weblog-stream">Weblog Stream</a><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse">NYC Taxi Lakehouse</a><a href="https://github.com/Bhanu047/retail-warehouse">Retail Warehouse</a><a href="https://github.com/Bhanu047/data-platform-terraform">Data Platform Terraform</a></nav></noscript>
+<noscript><nav class="project-fallback-links" aria-label="More project repositories"><a href="https://github.com/Bhanu047/weblog-stream">Weblog Stream</a><a href="https://github.com/Bhanu047/nyc-taxi-lakehouse">NYC Taxi Lakehouse</a><a href="https://github.com/Bhanu047/retail-warehouse">Retail Warehouse</a><a href="https://github.com/Bhanu047/data-platform-terraform">Data Platform Terraform</a><a href="https://github.com/Bhanu047/glucose-hud-g2">Glucose HUD</a><a href="https://github.com/Bhanu047/whos-who-g2">Who’s Who</a></nav></noscript>
 </section>
 <section class="stack dark" id="stack">
 <div class="section-title">
@@ -456,7 +470,7 @@
 <span>© <b id="year">2026</b> BHANU VEJENDLA</span>
 <span>Senior Data Engineer · Raleigh, NC</span>
 </footer>
-<script src="script.js?v=20261031-recruiter9">
+<script src="script.js?v=20261111-g2">
 </script>
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Every contact export is its own file format — Bhanu Vejendla</title>
+<meta name="description" content="Bhanu Vejendla on importing vCards, CSV exports and meeting invites into one small record for Even G2 glasses.">
+<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=3">
+<meta name="theme-color" content="#172033">
+<link rel="canonical" href="https://bhanuvejendla.com/notes/messy-contact-imports.html">
+<meta property="og:title" content="Every contact export is its own file format — Bhanu Vejendla">
+<meta property="og:description" content="How Who’s Who turns contact cards, CSV exports and calendar invites into the same record, and drops what it doesn’t need.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bhanuvejendla.com/notes/messy-contact-imports.html">
+<meta property="og:image" content="https://bhanuvejendla.com/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=20261111-g2">
+</head>
+<body class="note-page">
+<a class="skip-link" href="#article">Skip to article</a>
+<header>
+<a class="logo" href="/">
+<img class="logo-mark" src="/assets/bv-mark.svg" alt="" aria-hidden="true">
+<span>BHANU VEJENDLA</span>
+</a>
+<nav aria-label="Article navigation">
+<a href="/#work">Projects</a>
+<a href="/#about">About</a>
+</nav>
+<div class="social">
+<a href="https://github.com/Bhanu047/whos-who-g2" target="_blank" rel="noreferrer">Source ↗</a>
+<a class="contact" href="/#contact">Contact me</a>
+</div>
+</header>
+<main class="note-main" id="article" tabindex="-1">
+<article>
+<div class="note-hero">
+<a class="note-back" href="/#project-whos-who">← Who’s Who case study</a>
+<p class="note-kicker">ENGINEERING NOTE · DATA INGESTION</p>
+<h1>Every contact export is its own file format.</h1>
+<p class="note-deck">Who’s Who can’t read your phone’s contacts or calendar, so it imports the files you export instead. Each app writes the same person in a slightly different way, and the parser has to cope with all of them.</p>
+<dl class="note-facts">
+<div><dt>Formats</dt><dd>vCard 2.1–4.0 · CSV · .ics</dd></div>
+<div><dt>Kept</dt><dd>Name, role, company, notes</dd></div>
+<div><dt>Validation</dt><dd>14 automated tests</dd></div>
+</dl>
+</div>
+
+<section class="note-section">
+<p class="note-section-number">01 · THE PROBLEM</p>
+<h2>One person, five different files.</h2>
+<p>Even Hub gives plugins no access to contacts or calendars, so importing files was the only option. Every source turned out to have its own habits. iPhone exports fold long lines and prefix fields like <code>item1.ORG</code>. vCard 2.1 files use quoted-printable, so “José” arrives as <code>Jos=C3=A9</code>. Google Contacts renamed its CSV columns between export versions. LinkedIn splits first and last names into separate columns. Meeting invites list the organizer twice and include the meeting room as an attendee.</p>
+<figure class="write-path" aria-labelledby="vcf-caption">
+<div class="write-path-danger"><small>READ AS-IS</small><strong>Jos=C3=A9 Garc=C3=ADa</strong><span>vCard 2.1, quoted-printable</span></div>
+<i aria-hidden="true">→</i>
+<div><small>DECODED</small><strong>José García</strong><span>Same field, readable</span></div>
+<figcaption id="vcf-caption">The same name field from an older vCard export, before and after decoding.</figcaption>
+</figure>
+</section>
+
+<section class="note-section">
+<p class="note-section-number">02 · THE FIX</p>
+<h2>Turn every format into the same small record.</h2>
+<p>Each parser ends in the same shape: a name plus role, company, notes and a couple of conversation cues. For CSV files, header names are matched against a list of aliases, so “Organization Name”, “Organization 1 - Name”, “Company” and “Employer” all end up in the same field. vCards are unfolded first, then item prefixes are stripped and quoted-printable values decoded.</p>
+<p>Invites are de-duplicated by email address, so the organizer appears once and gets tagged. Rooms and resources are skipped. If a name is missing, it’s worked out from the email address, and the company comes from the domain unless it’s a free-mail provider like Gmail. Phone numbers, emails and addresses are dropped on purpose. The glasses only need what helps in a conversation.</p>
+<pre class="note-code"><code>// Google Contacts CSV: "Organization Title" (new) / "Organization 1 - Title" (old)
+role: /^(role|title|job ?title|position|relation(ship)?|organi[sz]ation( 1 -)? title)$/i,
+// Google Contacts CSV: "Organization Name" (new) / "Organization 1 - Name" (old)
+org: /^(company( name)?|org(anization|anisation)?|employer|team|school|organi[sz]ation( 1 -)? name)$/i,</code></pre>
+</section>
+
+<section class="note-section">
+<p class="note-section-number">03 · HOW I TESTED IT</p>
+<h2>Testing with real export quirks</h2>
+<p>The parsers are plain functions, so each test feeds in a small file that copies one export’s quirks and checks the people that come out.</p>
+<ul class="note-checks">
+<li>An iPhone vCard 3.0 with folded lines, escaped commas and an item-prefixed company, where the phone number must not appear in the result.</li>
+<li>A vCard 2.1 name in quoted-printable decodes to “José García”, and a card with no name is skipped.</li>
+<li>Google Contacts CSVs in both the new and the old column format.</li>
+<li>A LinkedIn export with separate first and last name columns, plus CSV and TSV files without a header.</li>
+<li>A meeting invite gives one group, with the organizer tagged, the room skipped and a name worked out from an email address.</li>
+</ul>
+</section>
+
+<section class="note-section note-tradeoff">
+<p class="note-section-number">04 · WHAT IT DOESN’T COVER</p>
+<h2>Names from email addresses are a guess.</h2>
+<p><code>j.smith+work@contoso.co.uk</code> becomes “J Smith” at “Contoso”. That’s usually close enough, but an initial stays an initial, and a personal domain that isn’t on the free-mail list will show up as a company. You can fix any card in the phone editor. Imports are also a snapshot: if your contacts change, you export and import again.</p>
+<p>It’s the same job as ingesting data from any third-party system. Expect each source to have its own format, map everything into one schema, and only keep the fields you actually need.</p>
+</section>
+
+<aside class="note-source">
+<div><small>SOURCE CODE</small><h2>The parsers and tests are on GitHub.</h2><p>The repo has the contact and invite parsers, the phone editor and the glasses layout.</p></div>
+<div class="note-source-links"><a href="https://github.com/Bhanu047/whos-who-g2/blob/main/src/people.ts" target="_blank" rel="noreferrer">Open the parsers ↗</a><a href="https://github.com/Bhanu047/whos-who-g2/blob/main/test/people.test.mjs" target="_blank" rel="noreferrer">Read the tests ↗</a></div>
+</aside>
+
+<nav class="note-series" aria-labelledby="note-series-title">
+<h2 id="note-series-title">More engineering notes</h2>
+<div class="note-series-list">
+<a href="/notes/conflict-safe-collaboration.html">01 · Conflict-safe collaboration</a>
+<a href="/notes/replay-safe-streaming.html">02 · Replay-safe streaming</a>
+<a href="/notes/retry-safe-monthly-loads.html">03 · Retry-safe monthly loads</a>
+<a href="/notes/incremental-model-lookback.html">04 · Incremental model lookbacks</a>
+<a href="/notes/terraform-production-guardrails.html">05 · Terraform production guardrails</a>
+<a href="/notes/fresh-data-predictions.html">06 · Fresh-data predictions</a>
+<a href="/notes/messy-contact-imports.html" aria-current="page">07 · Messy contact imports</a>
+</div>
+</nav>
+</article>
+</main>
+<footer>
+<span>© 2026 BHANU VEJENDLA</span>
+<a href="/#work">Back to projects ↑</a>
+</footer>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "bc1cd3013cbb439fb1bbdcb2f71dd5ee"}'></script>
+</body>
+</html>
