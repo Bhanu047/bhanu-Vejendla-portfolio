@@ -26,7 +26,7 @@ are consolidated while responsive rules retain their cascade ordering.
 
 `python scripts/check_site.py` runs standard-library checks. CI installs pinned
 Playwright tooling and runs `node scripts/check_browser.cjs` in Chromium.
-Browser checks cover seven portfolio widths (360–1692px), all five engineering notes at
+Browser checks cover seven portfolio widths (360–1692px), all 47 skills as logo tiles, all seven engineering notes at
 mobile and desktop widths, heading collisions, horizontal
 overflow, project selection and keyboard navigation, portrait loading, JavaScript
 fallback, and fallback content with JavaScript disabled or blocked.
@@ -46,9 +46,9 @@ For local preview, run `python -m http.server 8000` and open
 
 ## Recruiter experience
 
-The core stack is shown first, followed by the complete skills list. All skills
-are visible immediately, including without JavaScript. Experience entries separate outcomes
-from supporting contributions and reuse only previously supplied claims.
+All 47 skills are shown as logo tiles, including without JavaScript. Experience entries lead with
+an outcome line, bold the key terms and end with a one-line stack summary. They reuse
+only previously supplied claims; no new metrics have been added.
 
 Each project includes inspectable evidence with links pinned to reviewed
 repository commits. Excerpts are identified as tests, sample data or models;
@@ -75,7 +75,8 @@ claim from the owner's existing CV, without adding throughput benchmarks.
 
 Each case study supports direct fragment URLs:
 `#project-kingdom846`, `#project-weblog-stream`, `#project-nyc-taxi-lakehouse`,
-`#project-retail-warehouse` and `#project-data-platform-terraform`.
+`#project-retail-warehouse`, `#project-data-platform-terraform`,
+`#project-glucose-hud` and `#project-whos-who`.
 Opening a link selects the corresponding tab and scrolls to Projects. Tab
 selection updates the URL, and browser Back/Forward restores the selection.
 Keyboard selection replaces the current history entry. Unsupported project
@@ -91,6 +92,15 @@ to work.
 The About copy now connects Bhanu's India-to-North-Carolina career path to his
 focus on dependable data systems. Each featured project now has a standalone
 technical note grounded in its implementation: conflict-safe collaboration,
-replay-safe streaming, retry-safe monthly loads, incremental-model lookbacks and
-Terraform production guardrails. The homepage presents the five-note series and
+replay-safe streaming, retry-safe monthly loads, incremental-model lookbacks,
+Terraform production guardrails, fresh-data predictions (Glucose HUD) and messy
+contact imports (Who's Who). The homepage presents the seven-note series and
 each project tab links directly to its corresponding note.
+
+## Even G2 projects
+
+Glucose HUD and Who's Who are apps for Even Realities G2 smart glasses. Their
+case studies, test excerpts and notes are based on the public repositories
+`Bhanu047/glucose-hud-g2` (28 tests) and `Bhanu047/whos-who-g2` (14 tests), with
+evidence links pinned to the reviewed commits. Projects with a `showcase` entry
+in `script.js` get the screenshot layout used by Kingdom846.

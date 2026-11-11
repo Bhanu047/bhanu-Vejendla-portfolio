@@ -53,18 +53,16 @@ const server = http.createServer((req, res) => {
       assert(Math.abs(projectLayout.tabsWidth - projectLayout.detailWidth) < 2, `project uses full width at ${width}px`);
       assert.deepEqual(issues, [], `layout at ${width}px`);
       assert.deepEqual(errors, [], `JavaScript errors at ${width}px`);
-      assert.deepEqual(await page.locator('.hero-visual .proof strong').allTextContents(), ['7+', '3', '5', '4']);
+      assert.deepEqual(await page.locator('.hero-visual .proof strong').allTextContents(), ['7+', '3', '7', '4']);
       const portrait = page.locator('.portrait img');
       await portrait.scrollIntoViewIfNeeded();
       await portrait.evaluate(img => img.decode());
       assert(await portrait.evaluate(img => img.naturalWidth > 0));
-      const showcase = page.locator('.project-showcase img');
-      await showcase.scrollIntoViewIfNeeded();
-      await showcase.evaluate(img => img.decode());
-      assert(await showcase.evaluate(img => img.naturalWidth > 0));
+      assert.equal(await page.locator('.workflow-track li').count(), 6);
       assert.equal(await page.locator('.stack-group').count(), 4);
       assert.equal(await page.locator('.stack-group .logo-grid > span').count(), 47);
-      assert.equal(await page.locator('.engineering-note-tile').count(), 5);
+      assert.equal(await page.getByRole('tab').first().getAttribute('data-project'), 'kingdom');
+      assert.equal(await page.locator('.engineering-note-tile').count(), 7);
       assert(await page.locator('.stack-group').first().isVisible());
       const first = page.getByRole('tab').first();
       await first.focus();
@@ -77,13 +75,23 @@ const server = http.createServer((req, res) => {
         assert.equal(await tab.getAttribute('aria-selected'), 'true');
         assert(await page.locator('.project-footer a').last().isVisible());
         if (await tab.getAttribute('data-project') === 'kingdom') {
-          assert(await page.locator('.project-showcase img').isVisible());
+          const showcase = page.locator('.project-showcase img');
+          await showcase.scrollIntoViewIfNeeded();
+          await showcase.evaluate(img => img.decode());
+          assert(await showcase.evaluate(img => img.naturalWidth > 0));
+          assert(await showcase.isVisible());
           assert(await page.locator('.case-study-story').isVisible());
           assert.match(await page.locator('.case-study-story').innerText(), /silently overwriting another/);
           assert.equal(await page.getByRole('link', { name: 'Open live platform ↗', exact: true }).count(), 0);
         } else {
           assert(await page.locator('.project-artifacts h4').isVisible());
           assert(await page.locator('.artifact-card a').first().isVisible());
+          if (['glucose', 'whoswho'].includes(await tab.getAttribute('data-project'))) {
+            const shot = page.locator('.project-showcase img');
+            await shot.scrollIntoViewIfNeeded();
+            await shot.evaluate(img => img.decode());
+            assert(await shot.evaluate(img => img.naturalWidth > 0));
+          }
         }
         assert(await page.getByRole('link', { name: 'Read engineering note →', exact: true }).isVisible());
       }
@@ -98,7 +106,7 @@ const server = http.createServer((req, res) => {
     await motionPage.goto(url);
     await motionPage.locator('.hero-visual .proof').scrollIntoViewIfNeeded();
     await motionPage.waitForTimeout(1600);
-    assert.deepEqual(await motionPage.locator('.hero-visual .proof strong').allTextContents(), ['7+', '3', '5', '4']);
+    assert.deepEqual(await motionPage.locator('.hero-visual .proof strong').allTextContents(), ['7+', '3', '7', '4']);
     await motionPage.close();
     const projects = [
       ['kingdom846', 'Kingdom846'],
@@ -106,6 +114,8 @@ const server = http.createServer((req, res) => {
       ['nyc-taxi-lakehouse', 'NYC Taxi Lakehouse'],
       ['retail-warehouse', 'Retail Warehouse'],
       ['data-platform-terraform', 'Data Platform Terraform'],
+      ['glucose-hud', 'Glucose HUD'],
+      ['whos-who', 'Who’s Who'],
     ];
     const linkedPage = await browser.newPage({ reducedMotion: 'reduce' });
     for (const [slug, title] of projects) {
@@ -151,6 +161,8 @@ const server = http.createServer((req, res) => {
       ['retry-safe-monthly-loads.html', 'A batch is finished only after its output commits.'],
       ['incremental-model-lookback.html', 'Late data is why incremental models need a lookback.'],
       ['terraform-production-guardrails.html', 'Asking for force-destroy is not the same as receiving it.'],
+      ['fresh-data-predictions.html', 'A prediction is only as good as its last reading.'],
+      ['messy-contact-imports.html', 'Every contact export is its own file format.'],
     ];
     for (const [slug, heading] of notes) {
       const notePage = await browser.newPage({ viewport: { width: 390, height: 900 }, reducedMotion: 'reduce' });
@@ -158,13 +170,13 @@ const server = http.createServer((req, res) => {
       await notePage.getByRole('heading', { name: heading, exact: true }).waitFor();
       assert.equal(await notePage.locator('.note-section').count(), 4);
       assert(await notePage.locator('.note-source-links a').count() >= 1);
-      assert.equal(await notePage.locator('.note-series-list a').count(), 5);
+      assert.equal(await notePage.locator('.note-series-list a').count(), 7);
       assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
       await notePage.setViewportSize({ width: 1280, height: 900 });
       assert.equal(await notePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
       await notePage.close();
     }
-    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, deeper case study, 5 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
+    console.log('Browser checks passed: 7 portfolio viewports, proof count-up, workflow, all 47 skills, deeper case study, 7 engineering notes, project evidence, direct links and history, clipboard success/fallback and JavaScript fallback.');
   } finally {
     if (browser) await browser.close();
     server.close();

@@ -64,6 +64,8 @@ def main() -> int:
         "notes/retry-safe-monthly-loads.html",
         "notes/incremental-model-lookback.html",
         "notes/terraform-production-guardrails.html",
+        "notes/fresh-data-predictions.html",
+        "notes/messy-contact-imports.html",
     )
     titles: list[str] = []
 
